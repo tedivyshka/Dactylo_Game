@@ -1,0 +1,23 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.0.13'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'WordList'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+// il manque dependencies {}
+
+
+javafx {
+    version = "17"
+    modules = [ 'javafx.controls' ]
+}
