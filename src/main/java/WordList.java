@@ -1,5 +1,6 @@
+package model;
+
 import java.io.*;  // Import the File class
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -11,7 +12,7 @@ public class WordList{
     public static void generateList(){
         BufferedReader bf;
         try {
-            bf = new BufferedReader(new FileReader("src/main/resources/wordlist.txt"));
+            bf = new BufferedReader(new FileReader("resources/wordlist.txt"));
         }
         catch (FileNotFoundException e) {
             System.out.println("Can't find file \"resources/wordlist.txt\".");
@@ -24,6 +25,9 @@ public class WordList{
                 line = bf.readLine();
             } catch (IOException e) { break; };
         }
+        try {
+			bf.close();
+		} catch (IOException e) {}
     }
 
     public static List<String> startingList(){
@@ -40,4 +44,11 @@ public class WordList{
         generateList();
         System.out.println(startingList().toString());
     }
+
+	public static void update(List<String> currentList) {
+		currentList.remove(0);
+        Random rand = new Random();
+		int randEntry = rand.nextInt(wordList.size() + 1);
+		currentList.add(wordList.get(randEntry));
+	}
 }
