@@ -20,17 +20,17 @@ import javafx.scene.layout.BorderPane;
 
 public class View extends Application {
 
-    private final Controller controller = new Controller();
+    private Controller controller = new Controller();
     private static PlayerInput input;
 
     private StyleClassedTextArea text = null;
 
-    /*
+
     public View(Controller c) {
         this.controller = c;
     }
 
-     */
+
 
 
     @Override
@@ -71,13 +71,16 @@ public class View extends Application {
             primaryStage.setTitle("Dactylo-Game");
             primaryStage.setScene(scene);
 
-            input = new PlayerInput(controller.getGame());
 
 
             scene.setOnKeyTyped(new EventHandler<KeyEvent>() {
                 @Override
                 public void handle(KeyEvent event) {
-                    input.keyPressed(event);
+                    controller.keyPressed(event);
+                    Platform.runLater(() -> {
+                        controller.update();
+                    });
+
                 }
             });
 
@@ -101,26 +104,28 @@ public class View extends Application {
 
 
     public static void main(String[] args) {
+        Platform.setImplicitExit(false);
         Controller controller = new Controller();
         controller.changeMode(0);
         controller.getGame().init();
+        // on commence par start la GUI
         Platform.runLater(() -> {
             try {
-                View v1 = new View();
+                System.out.println("set view");
+                View v1 = new View(controller);
                 controller.setView(v1);
                 Stage stage = new Stage();
                 v1.start(stage);
-
-                v1.printText("test1 ");
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
-        Platform.runLater(() -> {
-            controller.getView().printText("test2 ");
-        });
+        System.out.println("first update view");
+        controller.updateFirst();
+        System.out.println("view = " + controller.getView());
     }
+
 }
 
 
