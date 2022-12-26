@@ -4,9 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameNormalSolo extends Game {
+	private static int wordsToWin = 4;
+	private static int charactersForWord = 5;
 	private List<String> currentList;
 	private int currentPos;
 	private int score;
+	private int correctCharacters;
+	private int typedCharacters;
+	private boolean gameRunning;
+	private long startTime;
+
 
 	@Override
 	public void init() {
@@ -14,6 +21,10 @@ public class GameNormalSolo extends Game {
 		this.currentList = WordList.startingList();
 		this.currentPos = 0;
 		this.score = 0;
+		this.correctCharacters = 0;
+		this.typedCharacters = 0;
+		this.gameRunning = true;
+		this.startTime = System.nanoTime();
 	}
 	
 	public static void main(String[] args) {
@@ -30,14 +41,25 @@ public class GameNormalSolo extends Game {
 
 	@Override
 	public boolean keyInput(int k) {
-		// TODO handle input (character k)
+		this.typedCharacters++;
 		if(k == ' ') {
 			String word = this.currentList.get(0);
 			if(word.length() == this.currentPos) {
 				//Word done -> move to next one
+				this.correctCharacters++;
 				this.score++;
 				this.currentPos = 0;
-				WordList.update(currentList); //Update list, remove head and add new word
+
+				if(wordsToWin - this.score >= this.currentList.size()){
+					WordList.update(currentList,true); //Update list, remove head and add new word
+				}else{
+					WordList.update(currentList,false);
+				}
+				if(this.wordsToWin == this.score) {
+					System.out.println("Game finished");
+					gameFinished();
+				}
+
 				System.out.println("Finished word: " + word + " , score = " + this.score);
 				return true;
 			}
@@ -52,12 +74,24 @@ public class GameNormalSolo extends Game {
 			}
 			else if (k == word.charAt(this.currentPos)) {
 				this.currentPos++;
+				this.correctCharacters++;
 				return true;
 			}else {
 				System.out.println("Expected " + word.charAt(this.currentPos) + " ; got " + (char)k);
 				return false;
 			}
 		}
+	}
+
+	private void gameFinished() {
+		long timeToFinishMillisecond = (System.nanoTime() - this.startTime) / 1000000;
+		double timeToFinish = ((double) timeToFinishMillisecond) / 1000;
+		double timeInMinutes = timeToFinish / 60;
+		double speed = this.correctCharacters / (timeInMinutes * charactersForWord); //vitesse
+		System.out.println("Time in seconds: " + timeToFinish + "s");
+		System.out.println("Speed: " + speed + "MPM");
+		System.out.println("Precision: " + this.getPrecision() + "%");
+		this.gameRunning = false;
 	}
 
 	@Override
@@ -70,5 +104,8 @@ public class GameNormalSolo extends Game {
 		return this.currentList;
 	}
 
+	public int getPrecision(){
+		return ( this.correctCharacters / this.typedCharacters ) * 100;
+	}
 
 }

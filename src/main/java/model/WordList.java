@@ -45,10 +45,12 @@ public class WordList{
         System.out.println(startingList().toString());
     }
 
-	public static void update(List<String> currentList) {
+	public static void update(List<String> currentList, boolean addNew) {
 		currentList.remove(0);
-        Random rand = new Random();
-		int randEntry = rand.nextInt(wordList.size() + 1);
-		currentList.add(wordList.get(randEntry));
+        if(addNew) {
+            Random rand = new Random();
+            int randEntry = rand.nextInt(wordList.size() + 1);
+            currentList.add(wordList.get(randEntry));
+        }
 	}
 }
