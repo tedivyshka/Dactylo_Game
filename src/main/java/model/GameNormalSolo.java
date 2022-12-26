@@ -84,13 +84,10 @@ public class GameNormalSolo extends Game {
 	}
 
 	private void gameFinished() {
-		long timeToFinishMillisecond = (System.nanoTime() - this.startTime) / 1000000;
-		double timeToFinish = ((double) timeToFinishMillisecond) / 1000;
-		double timeInMinutes = timeToFinish / 60;
-		double speed = this.correctCharacters / (timeInMinutes * charactersForWord); //vitesse
-		System.out.println("Time in seconds: " + timeToFinish + "s");
-		System.out.println("Speed: " + speed + "MPM");
-		System.out.println("Precision: " + this.getPrecision() + "%");
+		double precision = this.getPrecision();
+		double speed = this.getSpeed(); //vitesse
+		System.out.println("Speed: " + speed + " MPM");
+		System.out.println("Precision: " + precision + "%");
 		this.gameRunning = false;
 	}
 
@@ -104,8 +101,19 @@ public class GameNormalSolo extends Game {
 		return this.currentList;
 	}
 
-	public int getPrecision(){
-		return ( this.correctCharacters / this.typedCharacters ) * 100;
+	public double getPrecision(){
+		double result = ( (float) this.correctCharacters / (float) this.typedCharacters ) * 100;
+		return ((double) Math.round(result * 10)) / 10;
+	}
+
+	public double getSpeed(){
+		long timeToFinishMillisecond = (System.nanoTime() - this.startTime) / 1000000;
+		double timeToFinish = ((double) timeToFinishMillisecond) / 1000;
+		double timeInMinutes = timeToFinish / 60;
+		double result = this.correctCharacters / (timeInMinutes * charactersForWord) ;
+		result = result * 1000;
+		long tmp = Math.round(result);
+		return (double) tmp / 1000;
 	}
 
 }
