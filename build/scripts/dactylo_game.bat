@@ -14,7 +14,7 @@
 @rem limitations under the License.
 @rem
 
-@if "%DEBUG%"=="" @echo off
+@if "%DEBUG%" == "" @echo off
 @rem ##########################################################################
 @rem
 @rem  dactylo_game startup script for Windows
@@ -25,8 +25,7 @@
 if "%OS%"=="Windows_NT" setlocal
 
 set DIRNAME=%~dp0
-if "%DIRNAME%"=="" set DIRNAME=.
-@rem This is normally unused
+if "%DIRNAME%" == "" set DIRNAME=.
 set APP_BASE_NAME=%~n0
 set APP_HOME=%DIRNAME%..
 
@@ -41,7 +40,7 @@ if defined JAVA_HOME goto findJavaFromJavaHome
 
 set JAVA_EXE=java.exe
 %JAVA_EXE% -version >NUL 2>&1
-if %ERRORLEVEL% equ 0 goto execute
+if "%ERRORLEVEL%" == "0" goto execute
 
 echo.
 echo ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
@@ -68,23 +67,21 @@ goto fail
 :execute
 @rem Setup the command line
 
-set CLASSPATH=%APP_HOME%\lib\dactylo_game.jar;%APP_HOME%\lib\javafx-controls-17-linux.jar;%APP_HOME%\lib\javafx-graphics-17-linux.jar;%APP_HOME%\lib\javafx-graphics-17.jar;%APP_HOME%\lib\javafx-base-17-linux.jar;%APP_HOME%\lib\javafx-base-17.jar
+set CLASSPATH=%APP_HOME%\lib\dactylo_game-1.0-SNAPSHOT.jar;%APP_HOME%\lib\richtextfx-0.11.0.jar;%APP_HOME%\lib\gson-2.10.jar;%APP_HOME%\lib\javafx-fxml-11-win.jar;%APP_HOME%\lib\javafx-controls-17-linux.jar;%APP_HOME%\lib\javafx-controls-17-win.jar;%APP_HOME%\lib\javafx-controls-17.jar;%APP_HOME%\lib\javafx-graphics-17-linux.jar;%APP_HOME%\lib\javafx-graphics-17-win.jar;%APP_HOME%\lib\javafx-graphics-17.jar;%APP_HOME%\lib\javafx-base-17-linux.jar;%APP_HOME%\lib\javafx-base-17-win.jar;%APP_HOME%\lib\javafx-base-17.jar;%APP_HOME%\lib\undofx-2.1.1.jar;%APP_HOME%\lib\flowless-0.7.0.jar;%APP_HOME%\lib\reactfx-2.0-M5.jar;%APP_HOME%\lib\wellbehavedfx-0.3.3.jar
 
 
 @rem Execute dactylo_game
-"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %DACTYLO_GAME_OPTS%  -classpath "%CLASSPATH%"  %*
+"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %DACTYLO_GAME_OPTS%  -classpath "%CLASSPATH%" view.View %*
 
 :end
 @rem End local scope for the variables with windows NT shell
-if %ERRORLEVEL% equ 0 goto mainEnd
+if "%ERRORLEVEL%"=="0" goto mainEnd
 
 :fail
 rem Set variable DACTYLO_GAME_EXIT_CONSOLE if you need the _script_ return code instead of
 rem the _cmd.exe /c_ return code!
-set EXIT_CODE=%ERRORLEVEL%
-if %EXIT_CODE% equ 0 set EXIT_CODE=1
-if not ""=="%DACTYLO_GAME_EXIT_CONSOLE%" exit %EXIT_CODE%
-exit /b %EXIT_CODE%
+if  not "" == "%DACTYLO_GAME_EXIT_CONSOLE%" exit 1
+exit /b 1
 
 :mainEnd
 if "%OS%"=="Windows_NT" endlocal

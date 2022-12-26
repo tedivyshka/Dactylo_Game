@@ -4,20 +4,28 @@ plugins {
     id 'org.openjfx.javafxplugin' version '0.0.13'
 }
 
-jar {
-    manifest {
-        attributes 'Main-Class': 'WordList'
-    }
+configurations {
+    testCompile
 }
+
+version '1.0-SNAPSHOT'
 
 repositories {
     mavenCentral()
 }
 
-// il manque dependencies {}
-
+dependencies {
+    implementation 'org.fxmisc.richtext:richtextfx:0.11.0'
+    implementation 'org.fxmisc.richtext:richtextfx:0.11.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
+    implementation group: 'org.fxmisc.richtext', name: 'richtextfx', version: '0.11.0'
+    implementation 'com.google.code.gson:gson:2.10'
+}
 
 javafx {
     version = "17"
     modules = [ 'javafx.controls' ]
 }
+mainClassName = 'view.View'
+//mainClassName = 'controller.Controller'
