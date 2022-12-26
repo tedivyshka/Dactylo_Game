@@ -1,8 +1,11 @@
 package view;
 
 import controller.Controller;
+import controller.PlayerInput;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import org.fxmisc.richtext.StyleClassedTextArea;
@@ -18,6 +21,7 @@ import javafx.scene.layout.BorderPane;
 public class View extends Application {
 
     private final Controller controller = new Controller();
+    private static PlayerInput input;
 
     private StyleClassedTextArea text = null;
 
@@ -56,6 +60,7 @@ public class View extends Application {
             root.setTop(topBar);
 
             this.text = new StyleClassedTextArea();
+            text.setEditable(false);
 
             VBox vbox = new VBox(text);
             vbox.setPadding(new Insets(10));
@@ -64,8 +69,19 @@ public class View extends Application {
             Scene scene = new Scene(root, 1080, 720);
             scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
             primaryStage.setTitle("Dactylo-Game");
-
             primaryStage.setScene(scene);
+
+            input = new PlayerInput(controller.getGame());
+
+
+            scene.setOnKeyTyped(new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent event) {
+                    input.keyPressed(event);
+                }
+            });
+
+            root.requestFocus();
             primaryStage.show();
         }
         catch (Exception e){

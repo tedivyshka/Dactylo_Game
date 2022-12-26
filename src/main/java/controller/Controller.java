@@ -10,11 +10,11 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 public class Controller extends KeyAdapter {
-    private Game game;
+    private static Game game = new GameNormalSolo();;
     private View view;
 
     public void changeMode(int i) {
-        this.game = Game.of(i);
+        game = Game.of(i);
     }
 
 
