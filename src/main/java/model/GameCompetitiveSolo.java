@@ -86,4 +86,10 @@ public class GameCompetitiveSolo extends Game{
             this.blueWordsPos.add(this.currentList.size() - 1);
         }
     }
+
+
+    @Override
+    public int getPos() {
+        return this.currentPos;
+    }
 }
