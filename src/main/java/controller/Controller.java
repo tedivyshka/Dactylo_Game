@@ -7,6 +7,7 @@ import view.View;
 import javafx.scene.input.KeyEvent;
 
 import javax.swing.*;
+import java.util.Iterator;
 import java.util.List;
 
 public class Controller {
@@ -36,7 +37,8 @@ public class Controller {
         Platform.runLater(() -> {
             if(view != null) {
                 view.resetText();
-                for (String s : l) {
+                for (Iterator<String> it = l.iterator(); it.hasNext(); ) {
+                    String s = it.next();
                     view.printText(s);
                 }
                 view.colorWord(x);
