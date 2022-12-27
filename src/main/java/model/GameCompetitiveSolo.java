@@ -129,7 +129,7 @@ public class GameCompetitiveSolo extends Game{
             this.score++;
             if (score % 100 == 0) this.levelUp();
             if (this.blueWordsPos.size() > 0 && this.blueWordsPos.get(0) == 0) {
-                this.lives++;
+                this.lives+= word.length();
                 this.blueWordsPos.remove(0);
             }
         }else{
