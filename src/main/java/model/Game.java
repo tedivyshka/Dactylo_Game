@@ -1,5 +1,7 @@
 package model;
 
+import controller.Controller;
+
 import java.util.List;
 
 public abstract class Game {
@@ -18,8 +20,6 @@ public abstract class Game {
 
 	public abstract List<String> getList();
 
-	public abstract void init();
-
 	public abstract double getPrecision();
 
 	public abstract double getSpeed();
@@ -29,4 +29,8 @@ public abstract class Game {
 	public abstract boolean isRunning();
 
 	public abstract double getRegularity();
+
+	public abstract void init(Controller controller);
+
+	public abstract void cancelTimer();
 }

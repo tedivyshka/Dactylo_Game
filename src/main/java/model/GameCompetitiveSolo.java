@@ -1,8 +1,8 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import controller.Controller;
+
+import java.util.*;
 
 public class GameCompetitiveSolo extends Game{
     private List<String> currentList;
@@ -14,10 +14,13 @@ public class GameCompetitiveSolo extends Game{
     private boolean gameRunning;
     private List<Integer> blueWordsPos; //Les positions des mots bleu qui ajoutent des vies
     private static int bonusRate; // % possibilite d'avoir un mot bonus
+    private Timer timer;
+    private Controller controller;
 
-    @Override
-    public void init() {
+
+    public void init(Controller c) {
         WordList.generateList();
+        this.controller = c;
         this.currentList = WordList.startingList();
         this.currentPos = 0;
         this.lives = 0;
@@ -25,12 +28,17 @@ public class GameCompetitiveSolo extends Game{
         this.timeBetweenWords = 3;
         this.gameRunning = true;
         this.blueWordsPos = new ArrayList<Integer>();
+        this.timer = new Timer();
+        timerStart();
+    }
+
+    @Override
+    public void cancelTimer() {
+        this.timer.cancel();
     }
 
 
-
     public boolean keyInput(int k) {
-        System.out.println("Got input\n");
         if(k == ' ') {
             String word = this.currentList.get(0);
             if(word.length() == this.currentPos) {
@@ -39,7 +47,7 @@ public class GameCompetitiveSolo extends Game{
                 this.score++;
                 if(score == 100) this.levelUp();
                 System.out.println("Finished word: " + word + " , lives left = " + this.lives);
-                this.currentList.remove(0);
+                this.updateList();
                 return true;
             }
             return false;
@@ -69,6 +77,20 @@ public class GameCompetitiveSolo extends Game{
         this.level++;
         this.score = 0;
         this.timeBetweenWords = (int) (3 * Math.pow(0.9,level));
+        timer.cancel();
+        timerStart();
+    }
+
+    private void timerStart() {
+        TimerTask task = new TimerTask(){
+            @Override
+            public void run() {
+                System.out.println("Adding new word\n");
+                WordList.addWord(currentList);
+                controller.update();
+            }
+        };
+        timer.schedule(task,0,this.timeBetweenWords * 1000);
     }
 
     @Override
@@ -82,7 +104,8 @@ public class GameCompetitiveSolo extends Game{
     }
 
     public void updateList(){
-        WordList.update(this.currentList,true);
+        boolean addNew = this.currentList.size() < 8;
+        WordList.update(this.currentList,addNew);
         for(int i = 0; i < this.blueWordsPos.size() ; i++) this.blueWordsPos.set(i, this.blueWordsPos.get(i) - 1);
         Random rand = new Random();
         int randEntry = rand.nextInt(101);

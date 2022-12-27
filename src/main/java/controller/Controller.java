@@ -14,15 +14,15 @@ public class Controller {
     private View view;
 
     public void changeMode(int i) {
+        this.game.cancelTimer();
         this.game = Game.of(i);
-        this.game.init();
+        this.game.init(this);
         this.update();
     }
 
 
     public void keyPressed(KeyEvent e){
         char k = e.getCharacter().charAt(0);
-        System.out.println("Controller input\n");
         game.keyInput(k);
 
     }

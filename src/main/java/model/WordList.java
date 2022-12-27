@@ -53,4 +53,10 @@ public class WordList{
             currentList.add(wordList.get(randEntry));
         }
 	}
+
+    public static void addWord(List<String> currentList){
+        Random rand = new Random();
+        int randEntry = rand.nextInt(wordList.size() + 1);
+        currentList.add(wordList.get(randEntry));
+    }
 }

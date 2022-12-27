@@ -77,9 +77,7 @@ public class View extends Application {
             scene.setOnKeyTyped(new EventHandler<KeyEvent>() {
                 @Override
                 public void handle(KeyEvent event) {
-                    System.out.println("input\n");
                     if(controller.isGameRunning()) {
-                        System.out.println("Giving input\n");
                         controller.keyPressed(event);
                         controller.update();
                         if(!controller.isGameRunning()){
@@ -124,7 +122,7 @@ public class View extends Application {
         Platform.setImplicitExit(false);
         Controller controller = new Controller();
         controller.changeMode(0);
-        controller.getGame().init();
+        controller.getGame().init(controller);
         // on commence par start la GUI
         Platform.runLater(() -> {
             try {

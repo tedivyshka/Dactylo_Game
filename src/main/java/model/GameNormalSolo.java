@@ -1,5 +1,7 @@
 package model;
 
+import controller.Controller;
+
 import java.util.List;
 
 public class GameNormalSolo extends Game {
@@ -17,7 +19,7 @@ public class GameNormalSolo extends Game {
 
 
 	@Override
-	public void init() {
+	public void init(Controller c) {
 		WordList.generateList();
 		this.currentList = WordList.startingList();
 		this.currentPos = 0;
@@ -29,6 +31,8 @@ public class GameNormalSolo extends Game {
 		this.previousCorrectCharTime = 0;
 	}
 
+	@Override
+	public void cancelTimer() {}
 
 
 	@Override
