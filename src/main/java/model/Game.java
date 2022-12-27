@@ -20,5 +20,13 @@ public abstract class Game {
 
 	public abstract void init();
 
+	public abstract double getPrecision();
+
+	public abstract double getSpeed();
+
 	public abstract int getPos();
+
+	public abstract boolean isRunning();
+
+	public abstract double getRegularity();
 }

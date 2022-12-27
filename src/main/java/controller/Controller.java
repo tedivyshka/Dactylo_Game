@@ -53,4 +53,18 @@ public class Controller {
     }
 
 
+    public boolean isGameRunning() {
+        return game.isRunning();
+    }
+
+    public void getStats() {
+        Platform.runLater(() -> {
+            String s = "";
+            s += "Speed: " + game.getSpeed() + " MPM\n";
+            s += "Precision: " + game.getPrecision() + "%\n";
+            s += "Regularity: " + game.getRegularity() + "ms\n";
+            view.setEndScreen(s);
+        });
+
+    }
 }

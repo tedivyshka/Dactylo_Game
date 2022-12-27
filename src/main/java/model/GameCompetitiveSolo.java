@@ -27,6 +27,8 @@ public class GameCompetitiveSolo extends Game{
         this.blueWordsPos = new ArrayList<Integer>();
     }
 
+
+
     public boolean keyInput(int k) {
         if(k == ' ') {
             String word = this.currentList.get(0);
@@ -91,5 +93,24 @@ public class GameCompetitiveSolo extends Game{
     @Override
     public int getPos() {
         return this.currentPos;
+    }
+
+    @Override
+    public boolean isRunning() {
+        return false;
+    }
+
+    @Override
+    public double getPrecision() {
+        return 0;
+    }
+
+    @Override
+    public double getSpeed() {
+        return 0;
+    }
+    @Override
+    public double getRegularity() {
+        return 0;
     }
 }

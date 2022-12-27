@@ -1,7 +1,6 @@
 package view;
 
 import controller.Controller;
-import controller.PlayerInput;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -77,8 +76,16 @@ public class View extends Application {
             scene.setOnKeyTyped(new EventHandler<KeyEvent>() {
                 @Override
                 public void handle(KeyEvent event) {
-                    controller.keyPressed(event);
-                    controller.update();
+                    if(controller.isGameRunning()) {
+                        controller.keyPressed(event);
+                        controller.update();
+                        if(!controller.isGameRunning()){
+                            System.out.println("game no more running\n");
+                            System.out.println(this);
+                            //on affiche les statistiques
+                            controller.getStats();
+                        }
+                    }
 
                 }
             });
@@ -98,6 +105,7 @@ public class View extends Application {
 
 
     public void resetText() {
+        System.out.println(this);
         this.text.replaceText("");
     }
 
@@ -128,6 +136,9 @@ public class View extends Application {
         controller.update();
     }
 
+    public void setEndScreen(String stats) {
+        this.text.replaceText(stats);
+    }
 }
 
 

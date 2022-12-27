@@ -1,6 +1,5 @@
 package model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GameNormalSolo extends Game {
@@ -102,12 +101,13 @@ public class GameNormalSolo extends Game {
 		return this.currentList;
 	}
 
+	@Override
 	public double getPrecision(){
 		double result = ( (float) this.correctCharacters / (float) this.typedCharacters ) * 100;
 		return ((double) Math.round(result * 10)) / 10;
 	}
 
-
+	@Override
 	public double getSpeed(){
 		long timeToFinishMillisecond = (System.nanoTime() - this.startTime) / 1000000;
 		double timeToFinish = ((double) timeToFinishMillisecond) / 1000;
@@ -123,6 +123,12 @@ public class GameNormalSolo extends Game {
 		return this.currentPos;
 	}
 
+	@Override
+	public boolean isRunning() {
+		return this.gameRunning;
+	}
+
+	@Override
 	public double getRegularity(){
 		double result = (double) this.regularitySum / (double) (1000000 * (this.correctCharacters-1)) ;
 		result = result * 1000;
