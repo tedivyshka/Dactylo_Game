@@ -20,6 +20,8 @@ public class GameNormalSolo extends Game {
 
 	@Override
 	public void init(Controller c) {
+		super.mode = Mode.SOLO;
+
 		WordList.generateList();
 		this.currentList = WordList.startingList();
 		this.currentPos = 0;
@@ -29,14 +31,6 @@ public class GameNormalSolo extends Game {
 		this.gameRunning = true;
 		this.startTime = System.nanoTime();
 		this.previousCorrectCharTime = 0;
-	}
-
-	@Override
-	public void cancelTimer() {}
-
-	@Override
-	public List<Integer> getBlueWordsPos() {
-		return null;
 	}
 
 

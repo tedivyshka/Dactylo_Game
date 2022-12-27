@@ -1,20 +1,22 @@
 package view;
 
+import com.sun.javafx.sg.prism.NGShape;
 import controller.Controller;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
+import javafx.scene.layout.*;
+import model.GameCompetitiveSolo;
+import model.Mode;
 import org.fxmisc.richtext.StyleClassedTextArea;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
 
 import java.util.List;
 import java.util.Objects;
@@ -25,6 +27,11 @@ public class View extends Application {
     private final Controller controller;
 
     private StyleClassedTextArea text = null;
+
+    private StyleClassedTextArea additionnalInfo = null;
+
+
+
 
 
     public View(Controller c) {
@@ -61,14 +68,21 @@ public class View extends Application {
             HBox.setHgrow(exit, Priority.NEVER);
             root.setTop(topBar);
 
+
             this.text = new StyleClassedTextArea();
             text.setEditable(false);
-            
-            VBox vbox = new VBox(text);
-            vbox.setPadding(new Insets(10));
+            text.setWrapText(true);
+
+            this.additionnalInfo = new StyleClassedTextArea();
+            additionnalInfo.setEditable(false);
+            additionnalInfo.setWrapText(false);
+
+
+            VBox vbox = new VBox(text,additionnalInfo);
             root.setCenter(vbox);
 
-            Scene scene = new Scene(root, 1080, 720);
+
+            Scene scene = new Scene(root, 1080, 180);
             scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("style.css")).toExternalForm());
             primaryStage.setTitle("Dactylo-Game");
             primaryStage.setScene(scene);
@@ -82,7 +96,8 @@ public class View extends Application {
                         controller.keyPressed(event);
                         controller.update();
                         if(!controller.isGameRunning()){
-                            controller.getGame().cancelTimer();
+                            if(controller.getGame().getMode().equals(Mode.COMPETITIVE)) ((GameCompetitiveSolo) controller.getGame()).cancelTimer();
+
                             System.out.println("game no more running\n");
                             System.out.println(this);
                             //on affiche les statistiques
@@ -91,6 +106,8 @@ public class View extends Application {
                     }
 
                 }
+
+
             });
 
             root.requestFocus();
@@ -115,21 +132,24 @@ public class View extends Application {
     public void colorWord(int pos){
         this.text.setStyleClass(0, this.text.getLength(), "black");
         this.text.setStyleClass(0, pos, "green");
-        this.text.setStyleClass(pos, this.text.getLength(), "black");
-        List<Integer> blueWordList = this.controller.getGame().getBlueWordsPos();
-        List<String> currentList = this.controller.getGame().getList();
-        if(blueWordList != null) {
-            for (Integer i : blueWordList) {
-                if (i < 0) continue;
-                int position = 0;
-                for (int j = 0; j < i; j++) {
-                    position += currentList.get(j).length();
-                    position++;
+
+        if(this.controller.getGame().getMode().equals( Mode.COMPETITIVE)) {
+            this.text.setStyleClass(pos, this.text.getLength(), "black");
+            List<Integer> blueWordList = ((GameCompetitiveSolo) this.controller.getGame()).getBlueWordsPos();
+            List<String> currentList = this.controller.getGame().getList();
+            if (blueWordList != null) {
+                for (Integer i : blueWordList) {
+                    if (i < 0) continue;
+                    int position = 0;
+                    for (int j = 0; j < i; j++) {
+                        position += currentList.get(j).length();
+                        position++;
+                    }
+                    this.text.setStyleClass(position, position + currentList.get(i).length(), "blue");
                 }
-                this.text.setStyleClass(position, position + currentList.get(i).length(), "blue");
             }
+            this.text.setStyleClass(0, pos, "green");
         }
-        this.text.setStyleClass(0, pos, "green");
     }
 
 
@@ -137,7 +157,7 @@ public class View extends Application {
     public static void main(String[] args) {
         Platform.setImplicitExit(false);
         Controller controller = new Controller();
-        controller.changeMode(0);
+        controller.init();
         controller.getGame().init(controller);
         // on commence par start la GUI
         Platform.runLater(() -> {
@@ -158,6 +178,13 @@ public class View extends Application {
         this.text.replaceText(stats);
         this.text.setStyleClass(0, this.text.getLength(), "black");
     }
+
+
+    public void printLives(int lives) {
+        this.additionnalInfo.replaceText("lives : " + lives);
+;
+    }
+
 }
 
 

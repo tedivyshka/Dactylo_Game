@@ -20,13 +20,14 @@ public class GameCompetitiveSolo extends Game{
     private long regularitySum;
     private long previousCorrectCharTime;
     private List<Integer> blueWordsPos; //Les positions des mots bleu qui ajoutent des vies
-    private static int bonusRate = 20; // % possibilite d'avoir un mot bonus
-    private static int maxWordsInList = 16;
+    private static final int maxWordsInList = 16;
     private Timer timer;
     private Controller controller;
 
 
     public void init(Controller c) {
+        super.mode = Mode.COMPETITIVE;
+
         WordList.generateList();
         this.controller = c;
         this.currentList = WordList.startingList();
@@ -43,16 +44,17 @@ public class GameCompetitiveSolo extends Game{
         this.startTime = System.nanoTime();
     }
 
-    @Override
     public void cancelTimer() {
         this.timer.cancel();
     }
 
-    @Override
     public List<Integer> getBlueWordsPos() {
         return this.blueWordsPos;
     }
 
+    public int getLives() {
+        return this.lives;
+    }
 
     public boolean keyInput(int k) {
         this.typedCharacters++;
@@ -157,6 +159,8 @@ public class GameCompetitiveSolo extends Game{
         for(int i = 0; i < this.blueWordsPos.size() ; i++) this.blueWordsPos.set(i, this.blueWordsPos.get(i) - 1);
         Random rand = new Random();
         int randEntry = rand.nextInt(101);
+        // % possibilite d'avoir un mot bonus
+        int bonusRate = 20;
         if(randEntry < bonusRate){
             this.blueWordsPos.add(this.currentList.size() - 1);
             System.out.println("Added blue word, current blue word count: \n" + this.blueWordsPos.size());

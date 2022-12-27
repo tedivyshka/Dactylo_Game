@@ -2,6 +2,8 @@ package controller;
 
 import javafx.application.Platform;
 import model.Game;
+import model.GameCompetitiveSolo;
+import model.Mode;
 import view.View;
 
 import javafx.scene.input.KeyEvent;
@@ -14,8 +16,16 @@ public class Controller {
     private Game game = Game.of(0);
     private View view;
 
+
+    public void init() {
+        this.game = Game.of(0);
+        this.game.init(this);
+        this.update();
+    }
     public void changeMode(int i) {
-        this.game.cancelTimer();
+        if(this.game != null) {
+            if (this.game.getMode().equals(Mode.COMPETITIVE)) ((GameCompetitiveSolo) this.game).cancelTimer();
+        }
         this.game = Game.of(i);
         this.game.init(this);
         this.update();
@@ -43,7 +53,12 @@ public class Controller {
                 }
                 view.colorWord(x);
             }
+
+            if(game.getMode().equals(Mode.COMPETITIVE)){
+                view.printLives(((GameCompetitiveSolo)game).getLives());
+            }
         });
+
     }
 
     public void setView(View v1) {
@@ -64,13 +79,17 @@ public class Controller {
     }
 
     public void getStats() {
+        String s = "Speed: " + game.getSpeed() + " MPM\n"
+                + "Precision: " + game.getPrecision()
+                + "%\n"
+                + "Regularity: " + game.getRegularity() + "ms\n";
+
         Platform.runLater(() -> {
-            String s = "";
-            s += "Speed: " + game.getSpeed() + " MPM\n";
-            s += "Precision: " + game.getPrecision() + "%\n";
-            s += "Regularity: " + game.getRegularity() + "ms\n";
             view.setEndScreen(s);
         });
 
     }
+
+
+
 }
