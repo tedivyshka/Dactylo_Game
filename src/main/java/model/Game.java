@@ -6,7 +6,7 @@ public abstract class Game {
 	public static Game of(int gamemode) {
 		switch(gamemode) {
 			case 0 : return new GameNormalSolo();
-			case 1 : return null; //TODO Game Normal Competitive
+			case 1 : return new GameCompetitiveSolo();
 			case 2 : return null; //TODO Game MultiPlayer
 		}
 		return null;

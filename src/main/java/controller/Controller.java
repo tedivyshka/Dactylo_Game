@@ -10,17 +10,19 @@ import javax.swing.*;
 import java.util.List;
 
 public class Controller {
-    private static Game game = Game.of(0);
+    private Game game = Game.of(0);
     private View view;
 
     public void changeMode(int i) {
-        game = Game.of(i);
-        //todo changer la vue
+        this.game = Game.of(i);
+        this.game.init();
+        this.update();
     }
 
 
     public void keyPressed(KeyEvent e){
         char k = e.getCharacter().charAt(0);
+        System.out.println("Controller input\n");
         game.keyInput(k);
 
     }
@@ -32,11 +34,13 @@ public class Controller {
         List<String> l = game.getList();
 
         Platform.runLater(() -> {
-            view.resetText();
-            for(String s : l){
-                view.printText(s);
+            if(view != null) {
+                view.resetText();
+                for (String s : l) {
+                    view.printText(s);
+                }
+                view.colorWord(x);
             }
-            view.colorWord(x);
         });
     }
 
@@ -49,7 +53,7 @@ public class Controller {
     }
 
     public Game getGame() {
-        return Controller.game;
+        return this.game;
     }
 
 

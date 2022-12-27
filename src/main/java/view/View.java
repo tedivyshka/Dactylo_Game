@@ -42,14 +42,15 @@ public class View extends Application {
             Button exit = new Button("exit");
             exit.setOnAction(e -> System.exit(0));
             Menu newGame = new Menu("New game");
+
             MenuItem soloMode = new MenuItem("Single-player");
             soloMode.setOnAction(e -> this.controller.changeMode(0)); // appel controller
 
             MenuItem multiMode = new MenuItem("Multiplayer");
-            soloMode.setOnAction(e -> this.controller.changeMode(1)); // appel controller
+            multiMode.setOnAction(e -> this.controller.changeMode(2)); // appel controller
 
             MenuItem competitiveMode = new MenuItem("Normal Competitive");
-            soloMode.setOnAction(e -> this.controller.changeMode(2)); // appel controller
+            competitiveMode.setOnAction(e -> this.controller.changeMode(1)); // appel controller
 
             newGame.getItems().addAll(soloMode, multiMode, competitiveMode);
             menuBar.getMenus().addAll(newGame);
@@ -76,7 +77,9 @@ public class View extends Application {
             scene.setOnKeyTyped(new EventHandler<KeyEvent>() {
                 @Override
                 public void handle(KeyEvent event) {
+                    System.out.println("input\n");
                     if(controller.isGameRunning()) {
+                        System.out.println("Giving input\n");
                         controller.keyPressed(event);
                         controller.update();
                         if(!controller.isGameRunning()){
@@ -114,6 +117,7 @@ public class View extends Application {
         this.text.setStyleClass(0, pos, "green");
 
     }
+
 
 
     public static void main(String[] args) {

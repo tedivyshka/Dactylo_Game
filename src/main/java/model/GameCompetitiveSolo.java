@@ -30,6 +30,7 @@ public class GameCompetitiveSolo extends Game{
 
 
     public boolean keyInput(int k) {
+        System.out.println("Got input\n");
         if(k == ' ') {
             String word = this.currentList.get(0);
             if(word.length() == this.currentPos) {
@@ -38,6 +39,7 @@ public class GameCompetitiveSolo extends Game{
                 this.score++;
                 if(score == 100) this.levelUp();
                 System.out.println("Finished word: " + word + " , lives left = " + this.lives);
+                this.currentList.remove(0);
                 return true;
             }
             return false;
@@ -97,7 +99,7 @@ public class GameCompetitiveSolo extends Game{
 
     @Override
     public boolean isRunning() {
-        return false;
+        return this.gameRunning;
     }
 
     @Override
