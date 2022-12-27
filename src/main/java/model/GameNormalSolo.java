@@ -26,18 +26,8 @@ public class GameNormalSolo extends Game {
 		this.gameRunning = true;
 		this.startTime = System.nanoTime();
 	}
-	
-	public static void main(String[] args) {
 
-		GameNormalSolo game = new GameNormalSolo();
-		game.init();
-        System.out.println(game.currentList.toString());
-        String word1 = game.currentList.get(0);
-        for(int i = 0; i < word1.length()-1; i++) {
-        	game.keyInput(word1.charAt(i+1));
-        }
-    	game.keyInput(' ');
-	}
+
 
 	@Override
 	public boolean keyInput(int k) {
@@ -115,5 +105,11 @@ public class GameNormalSolo extends Game {
 		long tmp = Math.round(result);
 		return (double) tmp / 1000;
 	}
+
+	@Override
+	public int getPos() {
+		return this.currentPos;
+	}
+
 
 }

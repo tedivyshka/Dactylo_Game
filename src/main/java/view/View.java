@@ -17,11 +17,12 @@ import javafx.stage.Stage;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 
+import java.util.Objects;
+
 
 public class View extends Application {
 
-    private Controller controller = new Controller();
-    private static PlayerInput input;
+    private final Controller controller;
 
     private StyleClassedTextArea text = null;
 
@@ -55,8 +56,8 @@ public class View extends Application {
             menuBar.getMenus().addAll(newGame);
 
             HBox topBar = new HBox(menuBar, exit);
-            topBar.setHgrow(menuBar, Priority.ALWAYS);
-            topBar.setHgrow(exit, Priority.NEVER);
+            HBox.setHgrow(menuBar, Priority.ALWAYS);
+            HBox.setHgrow(exit, Priority.NEVER);
             root.setTop(topBar);
 
             this.text = new StyleClassedTextArea();
@@ -67,7 +68,7 @@ public class View extends Application {
             root.setCenter(vbox);
 
             Scene scene = new Scene(root, 1080, 720);
-            scene.getStylesheets().add(getClass().getResource("style.css").toExternalForm());
+            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("style.css")).toExternalForm());
             primaryStage.setTitle("Dactylo-Game");
             primaryStage.setScene(scene);
 
@@ -77,9 +78,7 @@ public class View extends Application {
                 @Override
                 public void handle(KeyEvent event) {
                     controller.keyPressed(event);
-                    Platform.runLater(() -> {
-                        controller.update();
-                    });
+                    controller.update();
 
                 }
             });
@@ -102,6 +101,12 @@ public class View extends Application {
         this.text.replaceText("");
     }
 
+    public void colorWord(int pos){
+        System.out.println("0 to pos = " + pos);
+        if(pos == 1) this.text.setStyleClass(0, 1, "green");
+        if(pos > 1) this.text.setStyleClass(pos - 1, pos, "green");
+    }
+
 
     public static void main(String[] args) {
         Platform.setImplicitExit(false);
@@ -111,7 +116,6 @@ public class View extends Application {
         // on commence par start la GUI
         Platform.runLater(() -> {
             try {
-                System.out.println("set view");
                 View v1 = new View(controller);
                 controller.setView(v1);
                 Stage stage = new Stage();
@@ -121,9 +125,7 @@ public class View extends Application {
                 e.printStackTrace();
             }
         });
-        System.out.println("first update view");
-        controller.updateFirst();
-        System.out.println("view = " + controller.getView());
+        controller.update();
     }
 
 }

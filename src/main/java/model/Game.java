@@ -19,4 +19,6 @@ public abstract class Game {
 	public abstract List<String> getList();
 
 	public abstract void init();
+
+	public abstract int getPos();
 }
