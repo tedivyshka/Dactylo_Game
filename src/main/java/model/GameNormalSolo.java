@@ -13,6 +13,8 @@ public class GameNormalSolo extends Game {
 	private int typedCharacters;
 	private boolean gameRunning;
 	private long startTime;
+	private long regularitySum;
+	private long previousCorrectCharTime;
 
 
 	@Override
@@ -25,6 +27,7 @@ public class GameNormalSolo extends Game {
 		this.typedCharacters = 0;
 		this.gameRunning = true;
 		this.startTime = System.nanoTime();
+		this.previousCorrectCharTime = 0;
 	}
 
 
@@ -65,6 +68,12 @@ public class GameNormalSolo extends Game {
 			else if (k == word.charAt(this.currentPos)) {
 				this.currentPos++;
 				this.correctCharacters++;
+				if(this.previousCorrectCharTime == 0){
+					this.previousCorrectCharTime = System.nanoTime();
+				}else{
+					this.regularitySum += (System.nanoTime() - this.previousCorrectCharTime);
+					this.previousCorrectCharTime = System.nanoTime();
+				}
 				return true;
 			}else {
 				System.out.println("Expected " + word.charAt(this.currentPos) + " ; got " + (char)k);
@@ -76,8 +85,10 @@ public class GameNormalSolo extends Game {
 	private void gameFinished() {
 		double precision = this.getPrecision();
 		double speed = this.getSpeed(); //vitesse
+		double regularity = this.getRegularity();
 		System.out.println("Speed: " + speed + " MPM");
 		System.out.println("Precision: " + precision + "%");
+		System.out.println("Regularity: " + regularity + "ms");
 		this.gameRunning = false;
 	}
 
@@ -111,5 +122,10 @@ public class GameNormalSolo extends Game {
 		return this.currentPos;
 	}
 
-
+	public double getRegularity(){
+		double result = (double) this.regularitySum / (double) (1000000 * this.correctCharacters) ;
+		result = result * 1000;
+		long tmp = Math.round(result);
+		return (double) tmp / 1000;
+	}
 }
