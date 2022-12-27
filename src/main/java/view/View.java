@@ -104,6 +104,7 @@ public class View extends Application {
     public void colorWord(int pos){
         this.text.setStyleClass(0, this.text.getLength(), "black");
         this.text.setStyleClass(0, pos, "green");
+
     }
 
 

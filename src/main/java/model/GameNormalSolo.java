@@ -107,6 +107,7 @@ public class GameNormalSolo extends Game {
 		return ((double) Math.round(result * 10)) / 10;
 	}
 
+
 	public double getSpeed(){
 		long timeToFinishMillisecond = (System.nanoTime() - this.startTime) / 1000000;
 		double timeToFinish = ((double) timeToFinishMillisecond) / 1000;
