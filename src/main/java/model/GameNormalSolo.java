@@ -123,7 +123,7 @@ public class GameNormalSolo extends Game {
 	}
 
 	public double getRegularity(){
-		double result = (double) this.regularitySum / (double) (1000000 * this.correctCharacters) ;
+		double result = (double) this.regularitySum / (double) (1000000 * (this.correctCharacters-1)) ;
 		result = result * 1000;
 		long tmp = Math.round(result);
 		return (double) tmp / 1000;
