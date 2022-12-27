@@ -5,7 +5,7 @@ import controller.Controller;
 import java.util.List;
 
 public class GameNormalSolo extends Game {
-	private static int wordsToWin = 4;
+	private static int wordsToWin = 20;
 	private static int charactersForWord = 5;
 	private List<String> currentList;
 	private int currentPos;
@@ -33,6 +33,11 @@ public class GameNormalSolo extends Game {
 
 	@Override
 	public void cancelTimer() {}
+
+	@Override
+	public List<Integer> getBlueWordsPos() {
+		return null;
+	}
 
 
 	@Override

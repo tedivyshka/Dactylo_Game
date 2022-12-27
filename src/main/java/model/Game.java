@@ -5,6 +5,7 @@ import controller.Controller;
 import java.util.List;
 
 public abstract class Game {
+
 	public static Game of(int gamemode) {
 		switch(gamemode) {
 			case 0 : return new GameNormalSolo();
@@ -33,4 +34,6 @@ public abstract class Game {
 	public abstract void init(Controller controller);
 
 	public abstract void cancelTimer();
+	public abstract List<Integer> getBlueWordsPos();
+
 }

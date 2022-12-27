@@ -13,7 +13,8 @@ public class GameCompetitiveSolo extends Game{
     private int timeBetweenWords; //Ajouter un mot après chaque timeBetweenWords en secondes
     private boolean gameRunning;
     private List<Integer> blueWordsPos; //Les positions des mots bleu qui ajoutent des vies
-    private static int bonusRate; // % possibilite d'avoir un mot bonus
+    private static int bonusRate = 20; // % possibilite d'avoir un mot bonus
+    private static int maxWordsInList = 16;
     private Timer timer;
     private Controller controller;
 
@@ -23,7 +24,7 @@ public class GameCompetitiveSolo extends Game{
         this.controller = c;
         this.currentList = WordList.startingList();
         this.currentPos = 0;
-        this.lives = 0;
+        this.lives = 20;
         this.level = 1;
         this.timeBetweenWords = 3;
         this.gameRunning = true;
@@ -37,6 +38,11 @@ public class GameCompetitiveSolo extends Game{
         this.timer.cancel();
     }
 
+    @Override
+    public List<Integer> getBlueWordsPos() {
+        return this.blueWordsPos;
+    }
+
 
     public boolean keyInput(int k) {
         if(k == ' ') {
@@ -46,6 +52,10 @@ public class GameCompetitiveSolo extends Game{
                 this.currentPos = 0;
                 this.score++;
                 if(score == 100) this.levelUp();
+                if(this.blueWordsPos.size() > 0 && this.blueWordsPos.get(0) == 0){
+                    this.lives++;
+                    this.blueWordsPos.remove(0);
+                }
                 System.out.println("Finished word: " + word + " , lives left = " + this.lives);
                 this.updateList();
                 return true;
@@ -87,10 +97,29 @@ public class GameCompetitiveSolo extends Game{
             public void run() {
                 System.out.println("Adding new word\n");
                 WordList.addWord(currentList);
+                if(currentList.size() > maxWordsInList) validateCurrentWord();
                 controller.update();
             }
         };
         timer.schedule(task,0,this.timeBetweenWords * 1000);
+    }
+
+    private void validateCurrentWord() {
+        String word = this.currentList.get(0);
+        if(word.length() == this.currentPos) {
+            this.score++;
+            if (score % 100 == 0) this.levelUp();
+            if (this.blueWordsPos.size() > 0 && this.blueWordsPos.get(0) == 0) {
+                this.lives++;
+                this.blueWordsPos.remove(0);
+            }
+        }else{
+            this.lives--;
+        }
+        System.out.print(this.lives + "\n");
+        this.currentPos = 0;
+        this.currentList.remove(0);
+        for(int i = 0; i < this.blueWordsPos.size() ; i++) this.blueWordsPos.set(i, this.blueWordsPos.get(i) - 1);
     }
 
     @Override
@@ -111,6 +140,7 @@ public class GameCompetitiveSolo extends Game{
         int randEntry = rand.nextInt(101);
         if(randEntry < bonusRate){
             this.blueWordsPos.add(this.currentList.size() - 1);
+            System.out.println("Added blue word, current blue word count: \n" + this.blueWordsPos.size());
         }
     }
 

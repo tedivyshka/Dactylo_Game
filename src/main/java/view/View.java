@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 
+import java.util.List;
 import java.util.Objects;
 
 
@@ -62,7 +63,7 @@ public class View extends Application {
 
             this.text = new StyleClassedTextArea();
             text.setEditable(false);
-
+            
             VBox vbox = new VBox(text);
             vbox.setPadding(new Insets(10));
             root.setCenter(vbox);
@@ -81,6 +82,7 @@ public class View extends Application {
                         controller.keyPressed(event);
                         controller.update();
                         if(!controller.isGameRunning()){
+                            controller.getGame().cancelTimer();
                             System.out.println("game no more running\n");
                             System.out.println(this);
                             //on affiche les statistiques
@@ -113,7 +115,21 @@ public class View extends Application {
     public void colorWord(int pos){
         this.text.setStyleClass(0, this.text.getLength(), "black");
         this.text.setStyleClass(0, pos, "green");
-
+        this.text.setStyleClass(pos, this.text.getLength(), "black");
+        List<Integer> blueWordList = this.controller.getGame().getBlueWordsPos();
+        List<String> currentList = this.controller.getGame().getList();
+        if(blueWordList != null) {
+            for (Integer i : blueWordList) {
+                if (i < 0) continue;
+                int position = 0;
+                for (int j = 0; j < i; j++) {
+                    position += currentList.get(j).length();
+                    position++;
+                }
+                this.text.setStyleClass(position, position + currentList.get(i).length(), "blue");
+            }
+        }
+        this.text.setStyleClass(0, pos, "green");
     }
 
 
@@ -140,6 +156,7 @@ public class View extends Application {
 
     public void setEndScreen(String stats) {
         this.text.replaceText(stats);
+        this.text.setStyleClass(0, this.text.getLength(), "black");
     }
 }
 
