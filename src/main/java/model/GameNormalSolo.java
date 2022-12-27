@@ -113,7 +113,8 @@ public class GameNormalSolo extends Game {
 	@Override
 	public double getPrecision(){
 		double result = ( (float) this.correctCharacters / (float) this.typedCharacters ) * 100;
-		return ((double) Math.round(result * 10)) / 10;
+		result = Math.round(result * 10);
+		return result / 10;
 	}
 
 	@Override
@@ -128,6 +129,14 @@ public class GameNormalSolo extends Game {
 	}
 
 	@Override
+	public double getRegularity(){
+		double result = (double) this.regularitySum / (double) (1000000 * (this.correctCharacters-1)) ;
+		result = result * 1000;
+		long tmp = Math.round(result);
+		return (double) tmp / 1000;
+	}
+
+	@Override
 	public int getPos() {
 		return this.currentPos;
 	}
@@ -135,13 +144,5 @@ public class GameNormalSolo extends Game {
 	@Override
 	public boolean isRunning() {
 		return this.gameRunning;
-	}
-
-	@Override
-	public double getRegularity(){
-		double result = (double) this.regularitySum / (double) (1000000 * (this.correctCharacters-1)) ;
-		result = result * 1000;
-		long tmp = Math.round(result);
-		return (double) tmp / 1000;
 	}
 }

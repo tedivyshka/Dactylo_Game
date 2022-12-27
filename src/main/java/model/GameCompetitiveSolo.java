@@ -11,7 +11,14 @@ public class GameCompetitiveSolo extends Game{
     private int score;
     private int level;
     private int timeBetweenWords; //Ajouter un mot après chaque timeBetweenWords en secondes
+
+    private static int charactersForWord = 5;
+    private int correctCharacters;
+    private int typedCharacters;
     private boolean gameRunning;
+    private long startTime;
+    private long regularitySum;
+    private long previousCorrectCharTime;
     private List<Integer> blueWordsPos; //Les positions des mots bleu qui ajoutent des vies
     private static int bonusRate = 20; // % possibilite d'avoir un mot bonus
     private static int maxWordsInList = 16;
@@ -24,6 +31,8 @@ public class GameCompetitiveSolo extends Game{
         this.controller = c;
         this.currentList = WordList.startingList();
         this.currentPos = 0;
+        this.correctCharacters = 0;
+        this.typedCharacters = 0;
         this.lives = 20;
         this.level = 1;
         this.timeBetweenWords = 3;
@@ -31,6 +40,7 @@ public class GameCompetitiveSolo extends Game{
         this.blueWordsPos = new ArrayList<Integer>();
         this.timer = new Timer();
         timerStart();
+        this.startTime = System.nanoTime();
     }
 
     @Override
@@ -45,10 +55,12 @@ public class GameCompetitiveSolo extends Game{
 
 
     public boolean keyInput(int k) {
+        this.typedCharacters++;
         if(k == ' ') {
             String word = this.currentList.get(0);
             if(word.length() == this.currentPos) {
                 //Word done -> move to next one
+                this.correctCharacters++;
                 this.currentPos = 0;
                 this.score++;
                 if(score == 100) this.levelUp();
@@ -73,6 +85,13 @@ public class GameCompetitiveSolo extends Game{
             }
             else if (k == word.charAt(this.currentPos)) {
                 this.currentPos++;
+                this.correctCharacters++;
+                if(this.previousCorrectCharTime == 0){
+                    this.previousCorrectCharTime = System.nanoTime();
+                }else{
+                    this.regularitySum += (System.nanoTime() - this.previousCorrectCharTime);
+                    this.previousCorrectCharTime = System.nanoTime();
+                }
                 return true;
             }else {
                 System.out.println("Expected " + word.charAt(this.currentPos) + " ; got " + (char)k);
@@ -156,16 +175,28 @@ public class GameCompetitiveSolo extends Game{
     }
 
     @Override
-    public double getPrecision() {
-        return 0;
+    public double getPrecision(){
+        double result = ( (float) this.correctCharacters / (float) this.typedCharacters ) * 100;
+        result = Math.round(result * 10);
+        return result / 10;
     }
 
     @Override
-    public double getSpeed() {
-        return 0;
+    public double getSpeed(){
+        long timeToFinishMillisecond = (System.nanoTime() - this.startTime) / 1000000;
+        double timeToFinish = ((double) timeToFinishMillisecond) / 1000;
+        double timeInMinutes = timeToFinish / 60;
+        double result = this.correctCharacters / (timeInMinutes * charactersForWord) ;
+        result = result * 1000;
+        long tmp = Math.round(result);
+        return (double) tmp / 1000;
     }
+
     @Override
-    public double getRegularity() {
-        return 0;
+    public double getRegularity(){
+        double result = (double) this.regularitySum / (double) (1000000 * (this.correctCharacters-1)) ;
+        result = result * 1000;
+        long tmp = Math.round(result);
+        return (double) tmp / 1000;
     }
 }
