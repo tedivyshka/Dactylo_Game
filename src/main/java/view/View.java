@@ -103,9 +103,7 @@ public class View extends Application {
 
     public void colorWord(int pos){
         this.text.setStyleClass(0, this.text.getLength(), "black");
-        System.out.println("0 to pos = " + pos);
-        //if(pos == 1) this.text.setStyleClass(0, 1, "green");
-        if(pos > 0) this.text.setStyleClass(0, pos, "green");
+        this.text.setStyleClass(0, pos, "green");
     }
 
 
