@@ -95,7 +95,10 @@ public class GameCompetitiveSolo extends Game{
         this.level++;
         this.score = 0;
         this.timeBetweenWords = (int) (3 * Math.pow(0.9,level));
-        timer.cancel();
+        try{
+            this.timer.cancel();
+        }
+        catch (IllegalStateException ex){}
         timerStart();
     }
 
