@@ -2,23 +2,14 @@ package model;
 
 import controller.Controller;
 
+import javax.tools.DocumentationTool;
 import java.util.*;
+import java.util.concurrent.Future;
 
 public class GameCompetitiveSolo extends Game{
-    private List<String> currentList;
-    private int currentPos;
     private int lives;
-    private int score;
     private int level;
     private int timeBetweenWords; //Ajouter un mot après chaque timeBetweenWords en secondes
-
-    private static int charactersForWord = 5;
-    private int correctCharacters;
-    private int typedCharacters;
-    private boolean gameRunning;
-    private long startTime;
-    private long regularitySum;
-    private long previousCorrectCharTime;
     private List<Integer> blueWordsPos; //Les positions des mots bleu qui ajoutent des vies
     private static final int maxWordsInList = 18;
     private Timer timer;
@@ -51,13 +42,6 @@ public class GameCompetitiveSolo extends Game{
         catch (IllegalStateException ex){}
     }
 
-    public List<Integer> getBlueWordsPos() {
-        return this.blueWordsPos;
-    }
-
-    public int getLives() {
-        return this.lives;
-    }
 
     public boolean keyInput(int k) {
         this.typedCharacters++;
@@ -107,7 +91,7 @@ public class GameCompetitiveSolo extends Game{
         }
     }
 
-    private void levelUp() {
+    void levelUp() {
         this.level++;
         this.score = 0;
         this.timeBetweenWords = (int) (3 * Math.pow(0.9,level));
@@ -115,7 +99,7 @@ public class GameCompetitiveSolo extends Game{
         timerStart();
     }
 
-    private void timerStart() {
+    void timerStart() {
         TimerTask task = new TimerTask(){
             @Override
             public void run() {
@@ -125,7 +109,7 @@ public class GameCompetitiveSolo extends Game{
                 controller.update();
             }
         };
-        timer.schedule(task,0,this.timeBetweenWords * 1000);
+        timer.schedule(task,0,this.timeBetweenWords * 1000L);
     }
 
     private void validateCurrentWord() {
@@ -146,20 +130,10 @@ public class GameCompetitiveSolo extends Game{
         for(int i = 0; i < this.blueWordsPos.size() ; i++) this.blueWordsPos.set(i, this.blueWordsPos.get(i) - 1);
     }
 
-    @Override
-    public String getWord() {
-        return this.currentList.get(0);
-    }
-
-    @Override
-    public List<String> getList() {
-        return this.currentList;
-    }
-
     public void updateList(){
         boolean addNew = this.currentList.size() < 8;
         WordList.update(this.currentList,addNew);
-        for(int i = 0; i < this.blueWordsPos.size() ; i++) this.blueWordsPos.set(i, this.blueWordsPos.get(i) - 1);
+        this.blueWordsPos.replaceAll(integer -> integer - 1);
         Random rand = new Random();
         int randEntry = rand.nextInt(101);
         // % possibilite d'avoir un mot bonus
@@ -170,40 +144,27 @@ public class GameCompetitiveSolo extends Game{
         }
     }
 
-
-    @Override
-    public int getPos() {
-        return this.currentPos;
+    public List<Integer> getBlueWordsPos() {
+        return this.blueWordsPos;
     }
 
-    @Override
-    public boolean isRunning() {
-        return this.gameRunning;
+    public int getLives() {
+        return this.lives;
     }
 
-    @Override
-    public double getPrecision(){
-        double result = ( (float) this.correctCharacters / (float) this.typedCharacters ) * 100;
-        result = Math.round(result * 10);
-        return result / 10;
+    public void setLevel(int i) {
+        this.level = i;
     }
 
-    @Override
-    public double getSpeed(){
-        long timeToFinishMillisecond = (System.nanoTime() - this.startTime) / 1000000;
-        double timeToFinish = ((double) timeToFinishMillisecond) / 1000;
-        double timeInMinutes = timeToFinish / 60;
-        double result = this.correctCharacters / (timeInMinutes * charactersForWord) ;
-        result = result * 1000;
-        long tmp = Math.round(result);
-        return (double) tmp / 1000;
+    public int getLevel() {
+        return this.level;
     }
 
-    @Override
-    public double getRegularity(){
-        double result = (double) this.regularitySum / (double) (1000000 * (this.correctCharacters-1)) ;
-        result = result * 1000;
-        long tmp = Math.round(result);
-        return (double) tmp / 1000;
+    public double getTimeBetweenWords() {
+        return this.timeBetweenWords;
+    }
+
+    public void setLives(int i) {
+        this.lives = i;
     }
 }

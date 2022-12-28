@@ -6,16 +6,6 @@ import java.util.List;
 
 public class GameNormalSolo extends Game {
 	private static int wordsToWin = 20;
-	private static int charactersForWord = 5;
-	private List<String> currentList;
-	private int currentPos;
-	private int score;
-	private int correctCharacters;
-	private int typedCharacters;
-	private boolean gameRunning;
-	private long startTime;
-	private long regularitySum;
-	private long previousCorrectCharTime;
 
 
 	@Override
@@ -104,39 +94,5 @@ public class GameNormalSolo extends Game {
 		return this.currentList;
 	}
 
-	@Override
-	public double getPrecision(){
-		double result = ( (float) this.correctCharacters / (float) this.typedCharacters ) * 100;
-		result = Math.round(result * 10);
-		return result / 10;
-	}
 
-	@Override
-	public double getSpeed(){
-		long timeToFinishMillisecond = (System.nanoTime() - this.startTime) / 1000000;
-		double timeToFinish = ((double) timeToFinishMillisecond) / 1000;
-		double timeInMinutes = timeToFinish / 60;
-		double result = this.correctCharacters / (timeInMinutes * charactersForWord) ;
-		result = result * 1000;
-		long tmp = Math.round(result);
-		return (double) tmp / 1000;
-	}
-
-	@Override
-	public double getRegularity(){
-		double result = (double) this.regularitySum / (double) (1000000 * (this.correctCharacters-1)) ;
-		result = result * 1000;
-		long tmp = Math.round(result);
-		return (double) tmp / 1000;
-	}
-
-	@Override
-	public int getPos() {
-		return this.currentPos;
-	}
-
-	@Override
-	public boolean isRunning() {
-		return this.gameRunning;
-	}
 }
