@@ -2,51 +2,58 @@ package model;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameTest {
 
+    private final Game game = new GameNormalSolo();
+
     private static final int GAMEMODE_NORMAL_SOLO = 0;
     private static final int GAMEMODE_COMPETITIVE_SOLO = 1;
+    //private static final int MULTI
+
+
 
     @Test
     void testOf() {
         // Vérifie que les différents modes de jeu sont bien créés
         assertTrue(Game.of(GAMEMODE_NORMAL_SOLO) instanceof GameNormalSolo);
         assertTrue(Game.of(GAMEMODE_COMPETITIVE_SOLO) instanceof GameCompetitiveSolo);
-        assertNull(Game.of(2));
+        //assertTrue(Game.of( "MULTI" instanceof Multi);
+    }
+
+
+    @Test
+    public void testGetPrecision() {
+        game.setCorrectCharacters(5);
+        game.setTypedCharacters(10);
+        assertEquals(50, game.getPrecision(), 0.1);
+
+        game.setCorrectCharacters(5);
+        game.setTypedCharacters(15);
+        assertEquals(33.3, game.getPrecision(), 0.1);
+
+        game.setCorrectCharacters(5);
+        game.setTypedCharacters(5);
+        assertEquals(100, game.getPrecision(), 0.1);
     }
 
     @Test
-    void testAbstractMethods() {
-        // Création d'un objet de test
-        Game game = Game.of(GAMEMODE_NORMAL_SOLO);
+    public void testGetSpeed() {
+        game.setStartTime(System.nanoTime() - 1000000000); // 1 second elapsed
+        game.setCorrectCharacters(5);
+        assertEquals(60, game.getSpeed(), 0.1);
 
-        // Vérifie que les méthodes abstraites sont bien implémentées et retournent des valeurs valides
-        assert game != null;
-        assertFalse(game.keyInput(0));
-        assertNotNull(game.getWord());
-        assertNotNull(game.getList());
-        assertTrue(game.getPrecision() >= 0);
-        assertTrue(game.getSpeed() >= 0);
-        assertTrue(game.getPos() >= 0);
-        assertTrue(game.isRunning());
-        assertTrue(game.getRegularity() >= 0);
-
-        // Vérifie que la méthode init() est bien implémentée
-        game.init(null);
+        game.setStartTime(System.nanoTime() - 2000000000); // 2 seconds elapsed
+        game.setCorrectCharacters(10);
+        assertEquals(60, game.getSpeed(), 0.1);
     }
 
     @Test
-    void testGetMode() {
-        // Création d'un objet de test
-        Game game = Game.of(GAMEMODE_NORMAL_SOLO);
-
-        // Vérifie que la méthode getMode() retourne un objet non-null
-        assert game != null;
-        assertNotNull(game.getMode());
+    public void testGetRegularity() {
+        game.setRegularitySum(5000000); // 5ms
+        game.setCorrectCharacters(2);
+        assertEquals(5, game.getRegularity(), 0.1);
     }
 
 }

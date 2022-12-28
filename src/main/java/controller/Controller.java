@@ -8,7 +8,7 @@ import view.View;
 
 import javafx.scene.input.KeyEvent;
 
-import javax.swing.*;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -48,14 +48,22 @@ public class Controller {
             if(view != null) {
                 view.resetText();
                 for (Iterator<String> it = l.iterator(); it.hasNext(); ) {
-                    String s = it.next();
-                    view.printText(s);
+                    String s = null;
+                    try {
+                        s = it.next();
+                    } catch (ConcurrentModificationException ignored) {
+                    } finally {
+                        view.printText(s);
+                    }
                 }
                 view.colorWord(x);
             }
 
             if(game.getMode().equals(Mode.COMPETITIVE)){
-                view.printLives(((GameCompetitiveSolo)game).getLives());
+                view.printLivesAndLevel(
+                        ((GameCompetitiveSolo)game).getLives(),
+                        ((GameCompetitiveSolo)game).getLevel()
+                );
             }
         });
 

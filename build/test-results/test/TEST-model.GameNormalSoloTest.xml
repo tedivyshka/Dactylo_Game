@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="model.GameNormalSoloTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2022-12-28T16:46:24" hostname="pop-os" time="0.016">
+  <properties/>
+  <testcase name="testInit()" classname="model.GameNormalSoloTest" time="0.004"/>
+  <testcase name="testKeyInput_correctCharacter()" classname="model.GameNormalSoloTest" time="0.004"/>
+  <testcase name="testKeyInput_space()" classname="model.GameNormalSoloTest" time="0.003"/>
+  <testcase name="testKeyInput_incorrectCharacter()" classname="model.GameNormalSoloTest" time="0.003"/>
+  <system-out><![CDATA[Adding character: a
+Expected d ; got a
+Adding character: a
+Adding character: b
+Adding character: t
+Adding character: e
+Adding character: s
+Adding character: t
+Finished word: test , score = 1
+Adding character: d
+Expected a ; got d
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

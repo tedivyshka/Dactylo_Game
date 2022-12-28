@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="model.GameCompetitiveSoloTest" tests="7" skipped="0" failures="0" errors="0" timestamp="2022-12-28T16:46:24" hostname="pop-os" time="0.052">
+  <properties/>
+  <testcase name="testKeyInput_CorrectCharacter()" classname="model.GameCompetitiveSoloTest" time="0.01"/>
+  <testcase name="testInit()" classname="model.GameCompetitiveSoloTest" time="0.011"/>
+  <testcase name="testUpdateList()" classname="model.GameCompetitiveSoloTest" time="0.009"/>
+  <testcase name="testLevelUp()" classname="model.GameCompetitiveSoloTest" time="0.003"/>
+  <testcase name="testKeyInput_LoseLife()" classname="model.GameCompetitiveSoloTest" time="0.006"/>
+  <testcase name="testKeyInput_Space()" classname="model.GameCompetitiveSoloTest" time="0.007"/>
+  <testcase name="testKeyInput_WrongCharacter()" classname="model.GameCompetitiveSoloTest" time="0.002"/>
+  <system-out><![CDATA[Adding new word
+
+Adding character: t
+Adding new word
+
+Adding new word
+
+Added blue word, current blue word count: 
+1
+Adding new word
+
+Adding character: z
+Adding new word
+
+Expected t ; got z
+Adding new word
+
+Adding character: t
+Adding character: e
+Adding character: s
+Adding character: t
+Finished word: test , lives left = 20
+Adding new word
+
+Adding character: z
+Expected t ; got z
+]]></system-out>
+  <system-err><![CDATA[Exception in thread "Timer-0" java.lang.NullPointerException: Cannot invoke "controller.Controller.update()" because "this.this$0.controller" is null
+	at model.GameCompetitiveSolo$1.run(GameCompetitiveSolo.java:109)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:566)
+	at java.base/java.util.TimerThread.run(Timer.java:516)
+Exception in thread "Timer-1" java.lang.NullPointerException: Cannot invoke "controller.Controller.update()" because "this.this$0.controller" is null
+	at model.GameCompetitiveSolo$1.run(GameCompetitiveSolo.java:109)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:566)
+	at java.base/java.util.TimerThread.run(Timer.java:516)
+Exception in thread "Timer-2" java.lang.NullPointerException: Cannot invoke "controller.Controller.update()" because "this.this$0.controller" is null
+	at model.GameCompetitiveSolo$1.run(GameCompetitiveSolo.java:109)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:566)
+	at java.base/java.util.TimerThread.run(Timer.java:516)
+Exception in thread "Timer-3" java.lang.NullPointerException: Cannot invoke "controller.Controller.update()" because "this.this$0.controller" is null
+	at model.GameCompetitiveSolo$1.run(GameCompetitiveSolo.java:109)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:566)
+	at java.base/java.util.TimerThread.run(Timer.java:516)
+Exception in thread "Timer-4" java.lang.NullPointerException: Cannot invoke "controller.Controller.update()" because "this.this$0.controller" is null
+	at model.GameCompetitiveSolo$1.run(GameCompetitiveSolo.java:109)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:566)
+	at java.base/java.util.TimerThread.run(Timer.java:516)
+Exception in thread "Timer-5" java.lang.NullPointerException: Cannot invoke "controller.Controller.update()" because "this.this$0.controller" is null
+	at model.GameCompetitiveSolo$1.run(GameCompetitiveSolo.java:109)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:566)
+	at java.base/java.util.TimerThread.run(Timer.java:516)
+Exception in thread "Timer-6" java.lang.NullPointerException: Cannot invoke "controller.Controller.update()" because "this.this$0.controller" is null
+	at model.GameCompetitiveSolo$1.run(GameCompetitiveSolo.java:109)
+	at java.base/java.util.TimerThread.mainLoop(Timer.java:566)
+]]></system-err>
+</testsuite>

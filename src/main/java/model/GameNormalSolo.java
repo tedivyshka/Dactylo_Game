@@ -11,7 +11,6 @@ public class GameNormalSolo extends Game {
 	@Override
 	public void init(Controller c) {
 		super.mode = Mode.SOLO;
-
 		WordList.generateList();
 		this.currentList = WordList.startingList();
 		this.currentPos = 0;
@@ -35,12 +34,9 @@ public class GameNormalSolo extends Game {
 				this.score++;
 				this.currentPos = 0;
 
-				if(wordsToWin - this.score >= this.currentList.size()){
-					WordList.update(currentList,true); //Update list, remove head and add new word
-				}else{
-					WordList.update(currentList,false);
-				}
-				if(this.wordsToWin == this.score) {
+				//Update list, remove head and add new word
+				WordList.update(currentList, wordsToWin - this.score >= this.currentList.size());
+				if(wordsToWin == this.score) {
 					System.out.println("Game finished");
 					gameFinished();
 				}
@@ -82,16 +78,6 @@ public class GameNormalSolo extends Game {
 		System.out.println("Precision: " + precision + "%");
 		System.out.println("Regularity: " + regularity + "ms");
 		this.gameRunning = false;
-	}
-
-	@Override
-	public String getWord() {
-		return this.currentList.get(0);
-	}
-
-	@Override
-	public List<String> getList() {
-		return this.currentList;
 	}
 
 

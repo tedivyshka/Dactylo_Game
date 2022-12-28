@@ -180,10 +180,10 @@ public class View extends Application {
     }
 
 
-    public void printLives(int lives) {
-        this.additionnalInfo.replaceText("lives : " + lives);
-;
+    public void printLivesAndLevel(int lives,int level) {
+        this.additionnalInfo.replaceText("lives : " + lives + "\n" + "level : " + level);
     }
+
 
 }
 
