@@ -20,7 +20,7 @@ public class GameCompetitiveSolo extends Game{
     private long regularitySum;
     private long previousCorrectCharTime;
     private List<Integer> blueWordsPos; //Les positions des mots bleu qui ajoutent des vies
-    private static final int maxWordsInList = 16;
+    private static final int maxWordsInList = 18;
     private Timer timer;
     private Controller controller;
 
@@ -45,7 +45,10 @@ public class GameCompetitiveSolo extends Game{
     }
 
     public void cancelTimer() {
-        this.timer.cancel();
+        try{
+            this.timer.cancel();
+        }
+        catch (IllegalStateException ex){}
     }
 
     public List<Integer> getBlueWordsPos() {
@@ -65,9 +68,9 @@ public class GameCompetitiveSolo extends Game{
                 this.correctCharacters++;
                 this.currentPos = 0;
                 this.score++;
-                if(score == 100) this.levelUp();
+                if(score % 100 == 0) this.levelUp();
                 if(this.blueWordsPos.size() > 0 && this.blueWordsPos.get(0) == 0){
-                    this.lives++;
+                    this.lives+= word.length();
                     this.blueWordsPos.remove(0);
                 }
                 System.out.println("Finished word: " + word + " , lives left = " + this.lives);
@@ -82,7 +85,7 @@ public class GameCompetitiveSolo extends Game{
             if(word.length() == this.currentPos) {
                 System.out.println("Wrong character");
                 this.lives--;
-                if(this.lives == 0) this.gameRunning = false;
+                if(this.lives <= 0) this.gameRunning = false;
                 return false; //Wrong input, waiting for space
             }
             else if (k == word.charAt(this.currentPos)) {
