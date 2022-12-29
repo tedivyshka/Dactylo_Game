@@ -22,7 +22,7 @@ public abstract class Game {
 		switch(gamemode) {
 			case 0 : return new GameNormalSolo();
 			case 1 : return new GameCompetitiveSolo();
-			case 2 : return null; //TODO Game MultiPlayer
+			case 2 : return new GameMultiPlayer();
 		}
 		return null;
 	}

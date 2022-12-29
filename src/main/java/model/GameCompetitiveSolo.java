@@ -134,8 +134,11 @@ public class GameCompetitiveSolo extends Game{
     }
 
     public void updateList(){
-        boolean addNew = this.currentList.size() < 8;
+        //If the list is half or less full we add a new word
+        boolean addNew = this.currentList.size() < (maxWordsInList / 2);
         WordList.update(this.currentList,addNew);
+
+        //Update blueWordsPos
         this.blueWordsPos.replaceAll(integer -> integer - 1);
         Random rand = new Random();
         int randEntry = rand.nextInt(101);

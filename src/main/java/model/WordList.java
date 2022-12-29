@@ -34,7 +34,7 @@ public class WordList{
         List<String> list = new ArrayList<>();
         Random rand = new Random();
         for(int i = 0; i < startingWordCount; i++){
-            int randEntry = rand.nextInt(wordList.size() + 1);
+            int randEntry = rand.nextInt(wordList.size() );
             list.add(wordList.get(randEntry));
         }
         return list;
