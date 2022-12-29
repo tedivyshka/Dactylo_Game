@@ -17,30 +17,29 @@ public class GameMultiPlayer extends Game {
 
     private int lives;
     private int level;
-    private List<Integer> redWordsPos; //Les positions des mots bleu qui ajoutent des vies
+    private List<Integer> redWordsPos; //Les positions des mots rouges qu'on envoie aux adversaires
     private static final int maxWordsInList = 18;
     private Controller controller;
 
     private static String SERVER_HOST;
-    private static int SERVER_PORT;
 
     private static boolean isHost;
 
     private int nbPlayers;
 
-    public void setUp(String hostAddress, int port, boolean isHost){
-        this.SERVER_HOST = hostAddress;
-        this.SERVER_PORT = port;
-        this.isHost = isHost;
+    public void setUp(String hostAddress, boolean isHost){
+        SERVER_HOST = hostAddress;
+        GameMultiPlayer.isHost = isHost;
     }
 
-    public void setUpHost(int nbPlayers){
+    public String setUpHost(int nbPlayers){
         this.nbPlayers = nbPlayers;
         try{
             InetAddress localHost = InetAddress.getLocalHost();
             String ipAddress = localHost.getHostAddress();
             int port = 13000;
-            this.setUp(ipAddress,port,true);
+            this.setUp(ipAddress,true);
+            return ipAddress;
         } catch (UnknownHostException e) {
             throw new RuntimeException(e);
         }
@@ -149,6 +148,7 @@ public class GameMultiPlayer extends Game {
     }
 
     public void joinGame() throws IOException {
+        int SERVER_PORT = 13000;
         try (Socket socket = new Socket(SERVER_HOST, SERVER_PORT)) {
             // Create a reader and a writer for the socket
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
