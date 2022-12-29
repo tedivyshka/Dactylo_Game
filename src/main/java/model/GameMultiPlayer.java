@@ -178,8 +178,5 @@ public class GameMultiPlayer extends Game {
         System.out.println("Recieved line: " + line);
     }
 
-    public void setIsHost(boolean isHost){ this.isHost = isHost; }
-
-
     public List<Integer> getRedWordsPos() { return this.redWordsPos; }
 }

@@ -7,6 +7,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 // This class represents a client thread that communicates with the server
 class ClientThread extends Thread {
@@ -66,9 +68,10 @@ class ClientThread extends Thread {
 public class Server {
     public void runServer(int desiredNumClients) throws IOException {
         // Create a server socket and start listening for incoming connections
-        ServerSocket serverSocket = new ServerSocket(8080);
+        ServerSocket serverSocket = new ServerSocket(13000);
         List<ClientThread> clients = new ArrayList<>();
 
+        // Accept all clients
         while (true) {
             // Accept an incoming connection from a client
             Socket socket = serverSocket.accept();
@@ -79,11 +82,14 @@ public class Server {
             clients.add(clientThread);
 
             // Check if the desired number of clients has been reached
-            if (clients.size() == desiredNumClients) {
-                // Start the game
-                // TODO: Initialize the game state and send it to the clients
-                break;
-            }
+            if (clients.size() == desiredNumClients) break;
+        }
+
+
+        // Start the game
+        Executor executor = Executors.newFixedThreadPool(clients.size());
+        for(ClientThread clientThread : clients){
+            executor.execute(clientThread);
         }
     }
 }
