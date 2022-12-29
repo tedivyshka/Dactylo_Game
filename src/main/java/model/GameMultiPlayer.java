@@ -6,7 +6,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -24,11 +26,26 @@ public class GameMultiPlayer extends Game {
 
     private static boolean isHost;
 
+    private int nbPlayers;
+
     public void setUp(String hostAddress, int port, boolean isHost){
         this.SERVER_HOST = hostAddress;
         this.SERVER_PORT = port;
         this.isHost = isHost;
     }
+
+    public void setUpHost(int nbPlayers){
+        this.nbPlayers = nbPlayers;
+        try{
+            InetAddress localHost = InetAddress.getLocalHost();
+            String ipAddress = localHost.getHostAddress();
+            int port = 13000;
+            this.setUp(ipAddress,port,true);
+        } catch (UnknownHostException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void init(Controller c) {
         super.mode = Mode.MULTI;
 
@@ -122,7 +139,7 @@ public class GameMultiPlayer extends Game {
         Server server = new Server();
         Thread serverThread = new Thread(() -> {
             try {
-                server.runServer();
+                server.runServer(this.nbPlayers);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

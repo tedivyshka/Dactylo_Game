@@ -3,6 +3,7 @@ package controller;
 import javafx.application.Platform;
 import model.Game;
 import model.GameCompetitiveSolo;
+import model.GameMultiPlayer;
 import model.Mode;
 import view.View;
 
@@ -115,5 +116,10 @@ public class Controller {
 
     public void setMode3() {
         this.view.menuMultiplayer();
+        this.game = Game.of(2);
+    }
+
+    public void setUpHost(int nbPlayers) {
+        ((GameMultiPlayer)this.game).setUpHost(nbPlayers);
     }
 }

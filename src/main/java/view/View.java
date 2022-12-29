@@ -18,6 +18,8 @@ import org.fxmisc.richtext.StyleClassedTextArea;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.Border;
 
 import javafx.scene.control.*;
 
@@ -104,31 +106,64 @@ public class View extends Application {
     }
 
 
+    private void waitAsHostPage(int nbPlayers) {
+        //model part
+        controller.setUpHost(nbPlayers);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public void menuMultiplayer() {
-        // todo
+        // gui part
         root.getChildren().clear();
         root.requestFocus();
 
-        Button host = new Button();
+        TextArea message = new TextArea("Waiting for player to join.");
+        message.setWrapText(true);
+        message.setEditable(false);
+        HBox messageBox = new HBox(message);
+        messageBox.setAlignment(Pos.CENTER);
 
-        VBox hostJoin = new VBox();
+        ProgressIndicator progressIndicator = new ProgressIndicator();
+        VBox vbox = new VBox(messageBox,progressIndicator);
+        vbox.setAlignment(Pos.CENTER);
+
+        root.setCenter(vbox);
+    }
+
+
+    public void menuMultiplayer() {
+        root.getChildren().clear();
+        root.requestFocus();
+
+        //host button
+        MenuButton host = new MenuButton("Host (select the number of players)");
+
+        MenuItem two = new MenuItem("2");
+        two.setOnAction(e -> waitAsHostPage(2)); // appel controller
+
+        MenuItem three = new MenuItem("3");
+        three.setOnAction(e -> waitAsHostPage(3)); // appel controller
+
+        MenuItem four = new MenuItem("4");
+        four.setOnAction(e -> waitAsHostPage(4)); // appel controller
+
+        host.getItems().addAll(two,three,four);
+
+        // join button + ip text
+        TextField joinText = new TextField();
+        Button join = new Button("Join with the ip :");
+
+        HBox joinBox = new HBox(join,joinText);
+        joinBox.setAlignment(Pos.CENTER);
+
+        //or text
+        Label or = new Label("or");
+
+        //buttons box
+        VBox hostJoin = new VBox(host, or,joinBox);
+        hostJoin.setAlignment(Pos.CENTER);
+        hostJoin.setSpacing(10);
+
+
         root.setCenter(hostJoin);
+
 
 
     }

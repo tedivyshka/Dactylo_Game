@@ -64,7 +64,7 @@ class ClientThread extends Thread {
 }
 
 public class Server {
-    public static void runServer() throws IOException {
+    public void runServer(int desiredNumClients) throws IOException {
         // Create a server socket and start listening for incoming connections
         ServerSocket serverSocket = new ServerSocket(8080);
         List<ClientThread> clients = new ArrayList<>();
@@ -77,8 +77,6 @@ public class Server {
             ClientThread clientThread = new ClientThread(socket);
             clientThread.start();
             clients.add(clientThread);
-
-            int desiredNumClients = 2;  // Change this to the desired number of clients
 
             // Check if the desired number of clients has been reached
             if (clients.size() == desiredNumClients) {
