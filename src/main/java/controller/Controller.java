@@ -101,25 +101,35 @@ public class Controller {
 
 
     public void setMode1() {
-        this.view.startGame();
+        Platform.runLater(() -> {
+            this.view.startGame();
+        });
         this.game = Game.of(0);
         this.game.init(this);
         this.update();
     }
 
     public void setMode2() {
-        this.view.startGame();
+        Platform.runLater(() -> {
+            this.view.startGame();
+        });
         this.game = Game.of(1);
         this.game.init(this);
         this.update();
     }
 
     public void setMode3() {
-        this.view.menuMultiplayer();
+        Platform.runLater(() -> {
+            this.view.menuMultiplayer();
+        });
         this.game = Game.of(2);
     }
 
-    public void setUpHost(int nbPlayers) {
-        ((GameMultiPlayer)this.game).setUpHost(nbPlayers);
+    public String setUpHost(int nbPlayers) {
+        return ((GameMultiPlayer)this.game).setUpHost(nbPlayers);
+    }
+
+    public void setUpJoin(String ip) {
+        ((GameMultiPlayer)this.game).setUp(ip,false);
     }
 }

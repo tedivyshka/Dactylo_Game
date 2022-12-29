@@ -108,21 +108,22 @@ public class View extends Application {
 
     private void waitAsHostPage(int nbPlayers) {
         //model part
-        controller.setUpHost(nbPlayers);
+        String ip = controller.setUpHost(nbPlayers);
 
         // gui part
         root.getChildren().clear();
         root.requestFocus();
 
-        TextArea message = new TextArea("Waiting for player to join.");
+        Label message = new Label("Waiting for player to join.\nYour adresse is " + ip + ".");
         message.setWrapText(true);
-        message.setEditable(false);
+
         HBox messageBox = new HBox(message);
         messageBox.setAlignment(Pos.CENTER);
 
         ProgressIndicator progressIndicator = new ProgressIndicator();
         VBox vbox = new VBox(messageBox,progressIndicator);
         vbox.setAlignment(Pos.CENTER);
+        vbox.setSpacing(10);
 
         root.setCenter(vbox);
     }
@@ -136,19 +137,20 @@ public class View extends Application {
         MenuButton host = new MenuButton("Host (select the number of players)");
 
         MenuItem two = new MenuItem("2");
-        two.setOnAction(e -> waitAsHostPage(2)); // appel controller
+        two.setOnAction(e -> waitAsHostPage(2));
 
         MenuItem three = new MenuItem("3");
-        three.setOnAction(e -> waitAsHostPage(3)); // appel controller
+        three.setOnAction(e -> waitAsHostPage(3));
 
         MenuItem four = new MenuItem("4");
-        four.setOnAction(e -> waitAsHostPage(4)); // appel controller
+        four.setOnAction(e -> waitAsHostPage(4));
 
         host.getItems().addAll(two,three,four);
 
         // join button + ip text
         TextField joinText = new TextField();
         Button join = new Button("Join with the ip :");
+        join.setOnAction(e -> this.waitAsJoinerPage(joinText.getCharacters().toString()));
 
         HBox joinBox = new HBox(join,joinText);
         joinBox.setAlignment(Pos.CENTER);
@@ -167,6 +169,30 @@ public class View extends Application {
 
 
     }
+
+    private void waitAsJoinerPage(String ip) {
+        //model part
+        controller.setUpJoin(ip);
+
+        // gui part
+        root.getChildren().clear();
+        root.requestFocus();
+
+        Label message = new Label("Waiting for player to join.\nThe adresse joined is " + ip + ".");
+        message.setWrapText(true);
+
+        HBox messageBox = new HBox(message);
+        messageBox.setAlignment(Pos.CENTER);
+
+        ProgressIndicator progressIndicator = new ProgressIndicator();
+        VBox vbox = new VBox(messageBox,progressIndicator);
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setSpacing(10);
+
+        root.setCenter(vbox);
+
+    }
+
     public void startGame(){
 
         try{
