@@ -127,6 +127,7 @@ public class Controller {
 
     public void setUpHost(int nbPlayers) {
         String ip = ((GameMultiPlayer)this.game).setUpHost(nbPlayers);
+        this.game.init(this);
         Platform.runLater(() -> {
             this.view.waitAsHostPage(ip);
         });
@@ -134,6 +135,7 @@ public class Controller {
 
     public void setUpJoin(String ip) {
         ((GameMultiPlayer)this.game).setUp(ip,false);
+        this.game.init(this);
     }
 
 }

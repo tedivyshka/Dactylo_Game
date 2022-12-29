@@ -1,11 +1,10 @@
 package model;
 
+import com.google.gson.Gson;
 import controller.Controller;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
+import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -26,6 +25,7 @@ public class GameMultiPlayer extends Game {
     private static boolean isHost;
 
     private int nbPlayers;
+    private static Socket socket;
 
     public void setUp(String hostAddress, boolean isHost){
         SERVER_HOST = hostAddress;
@@ -33,6 +33,7 @@ public class GameMultiPlayer extends Game {
     }
 
     public String setUpHost(int nbPlayers){
+        System.out.println("Seeting host up\n");
         this.nbPlayers = nbPlayers;
         try{
             InetAddress localHost = InetAddress.getLocalHost();
@@ -46,6 +47,7 @@ public class GameMultiPlayer extends Game {
     }
 
     public void init(Controller c) {
+        System.out.println("Init game\n");
         super.mode = Mode.MULTI;
 
         WordList.generateList();
@@ -84,6 +86,18 @@ public class GameMultiPlayer extends Game {
                 this.score++;
                 if (this.redWordsPos.size() > 0 && this.redWordsPos.get(0) == 0) {
                     //TODO send word to server
+                    Gson gson = new Gson();
+                    Message message = new Message(word);
+                    String json = gson.toJson(message);
+
+                    PrintWriter out = null;
+                    try {
+                        out = new PrintWriter(new OutputStreamWriter(this.socket.getOutputStream()));
+                        out.println(json);
+                        out.flush();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
                 System.out.println("Finished word: " + word + " , lives left = " + this.lives);
                 this.updateList();
@@ -149,34 +163,55 @@ public class GameMultiPlayer extends Game {
 
     public void joinGame() throws IOException {
         int SERVER_PORT = 13000;
-        try (Socket socket = new Socket(SERVER_HOST, SERVER_PORT)) {
-            // Create a reader and a writer for the socket
-            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
+        System.out.println("Trying to join " + SERVER_HOST + "\n");
 
-            // Start a thread to receive messages from the server
-            Thread receiverThread = new Thread(() -> {
-                try {
-                    while (true) {
-                        String line = reader.readLine();
-                        if (line == null) {
-                            // The server has closed the connection, so we exit the loop
-                            break;
-                        }
-                        // Handle the message received from the server
-                        handleServerMessage(line);
+        Socket sock = new Socket(SERVER_HOST, SERVER_PORT);
+        this.socket = sock;
+        BufferedReader sock_br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        PrintWriter sock_pw = new PrintWriter(socket.getOutputStream(), true);
+        System.out.println("Connection established");
+
+
+
+
+        // Start a thread to receive messages from the server
+        Thread receiverThread = new Thread(() -> {
+            try {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
+                while (true) {
+                    String line = reader.readLine();
+                    if (line == null) {
+                        // The server has closed the connection, so we exit the loop
+                        break;
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    // Handle the message received from the server
+                    handleServerMessage(line);
                 }
-            });
-            receiverThread.start();
-        }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        });
+        receiverThread.start();
     }
 
     private void handleServerMessage(String line) {
-        System.out.println("Recieved line: " + line);
+        System.out.println("Recieved line from server: " + line);
+        Gson gson = new Gson();
+        Message message = gson.fromJson(line, Message.class);
+        String word = message.getWord();
+        this.currentList.add(word);
     }
 
     public List<Integer> getRedWordsPos() { return this.redWordsPos; }
+}
+
+class Message {
+    //int id;
+    private String word;
+
+    public String getWord(){ return this.word; }
+    public Message(String word){
+        this.word = word;
+    }
 }
