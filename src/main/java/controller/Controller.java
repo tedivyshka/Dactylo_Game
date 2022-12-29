@@ -13,7 +13,7 @@ import java.util.Iterator;
 import java.util.List;
 
 public class Controller {
-    private Game game = Game.of(0);
+    private Game game;
     private View view;
 
 
@@ -99,5 +99,21 @@ public class Controller {
     }
 
 
+    public void setMode1() {
+        this.view.startGame();
+        this.game = Game.of(0);
+        this.game.init(this);
+        this.update();
+    }
 
+    public void setMode2() {
+        this.view.startGame();
+        this.game = Game.of(1);
+        this.game.init(this);
+        this.update();
+    }
+
+    public void setMode3() {
+        this.view.menuMultiplayer();
+    }
 }

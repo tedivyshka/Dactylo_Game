@@ -3,8 +3,10 @@ package view;
 import com.sun.javafx.sg.prism.NGShape;
 import controller.Controller;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -26,6 +28,10 @@ public class View extends Application {
 
     private final Controller controller;
 
+    private final BorderPane root = new BorderPane();
+
+    private final Scene scene = new Scene(root, 1080, 180);
+
     private StyleClassedTextArea text = null;
 
     private StyleClassedTextArea additionnalInfo = null;
@@ -42,13 +48,98 @@ public class View extends Application {
 
 
     @Override
-    public void start(Stage primaryStage){
+    public void start(Stage primaryStage) {
         try {
 
-            BorderPane root = new BorderPane();
+
+            VBox menu = new VBox();
+            menu.setSpacing(20);
+
+            root.setCenter(menu);
+            menu.setAlignment(Pos.CENTER);
+
+
+            // Créez les boutons pour chaque mode de jeu
+            Button btnMode1 = new Button("Normal");
+            Button btnMode2 = new Button("Competitive");
+            Button btnMode3 = new Button("Multiplayer");
+
+            // Ajoutez les boutons au VBox
+            menu.getChildren().addAll(btnMode1, btnMode2, btnMode3);
+
+            // Ajoutez un gestionnaire d'événements pour chaque bouton
+            btnMode1.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    controller.setMode1();
+                }
+            });
+            btnMode2.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    controller.setMode2();
+                }
+            });
+            btnMode3.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    controller.setMode3();
+                }
+            });
+
+
+            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("style.css")).toExternalForm());
+
+            primaryStage.setTitle("Dactylo-Game");
+            primaryStage.setScene(scene);
+
+            root.requestFocus();
+            primaryStage.show();
+
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public void menuMultiplayer() {
+        // todo
+        root.getChildren().clear();
+        root.requestFocus();
+
+        Button host = new Button();
+
+        VBox hostJoin = new VBox();
+        root.setCenter(hostJoin);
+
+
+    }
+    public void startGame(){
+
+        try{
+
+            root.getChildren().clear();
+            root.requestFocus();
+
             MenuBar menuBar = new MenuBar();
-            Button exit = new Button("exit");
-            exit.setOnAction(e -> System.exit(0));
+
             Menu newGame = new Menu("New game");
 
             MenuItem soloMode = new MenuItem("Single-player");
@@ -63,9 +154,8 @@ public class View extends Application {
             newGame.getItems().addAll(soloMode, multiMode, competitiveMode);
             menuBar.getMenus().addAll(newGame);
 
-            HBox topBar = new HBox(menuBar, exit);
+            HBox topBar = new HBox(menuBar);
             HBox.setHgrow(menuBar, Priority.ALWAYS);
-            HBox.setHgrow(exit, Priority.NEVER);
             root.setTop(topBar);
 
 
@@ -79,15 +169,8 @@ public class View extends Application {
 
 
             VBox vbox = new VBox(text,additionnalInfo);
+
             root.setCenter(vbox);
-
-
-            Scene scene = new Scene(root, 1080, 180);
-            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("style.css")).toExternalForm());
-            primaryStage.setTitle("Dactylo-Game");
-            primaryStage.setScene(scene);
-
-
 
             scene.setOnKeyTyped(new EventHandler<KeyEvent>() {
                 @Override
@@ -110,8 +193,6 @@ public class View extends Application {
 
             });
 
-            root.requestFocus();
-            primaryStage.show();
         }
         catch (Exception e){
             e.printStackTrace();
@@ -155,10 +236,9 @@ public class View extends Application {
 
 
     public static void main(String[] args) {
-        Platform.setImplicitExit(false);
         Controller controller = new Controller();
-        controller.init();
-        controller.getGame().init(controller);
+        //controller.init();
+        //controller.getGame().init(controller);
         // on commence par start la GUI
         Platform.runLater(() -> {
             try {
@@ -171,7 +251,7 @@ public class View extends Application {
                 e.printStackTrace();
             }
         });
-        controller.update();
+        //controller.update();
     }
 
     public void setEndScreen(String stats) {
@@ -183,6 +263,7 @@ public class View extends Application {
     public void printLivesAndLevel(int lives,int level) {
         this.additionnalInfo.replaceText("lives : " + lives + "\n" + "level : " + level);
     }
+
 
 
 }
