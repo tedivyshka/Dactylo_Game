@@ -125,11 +125,15 @@ public class Controller {
         this.game = Game.of(2);
     }
 
-    public String setUpHost(int nbPlayers) {
-        return ((GameMultiPlayer)this.game).setUpHost(nbPlayers);
+    public void setUpHost(int nbPlayers) {
+        String ip = ((GameMultiPlayer)this.game).setUpHost(nbPlayers);
+        Platform.runLater(() -> {
+            this.view.waitAsHostPage(ip);
+        });
     }
 
     public void setUpJoin(String ip) {
         ((GameMultiPlayer)this.game).setUp(ip,false);
     }
+
 }

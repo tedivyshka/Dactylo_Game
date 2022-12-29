@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="model.WordListTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2022-12-29T13:17:58" hostname="pop-os" time="0.011">
+<testsuite name="model.WordListTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2022-12-29T15:53:45" hostname="pop-os" time="0.012">
   <properties/>
   <testcase name="testGenerateList()" classname="model.WordListTest" time="0.004"/>
   <testcase name="testAddWord()" classname="model.WordListTest" time="0.0"/>
-  <testcase name="testStartingList()" classname="model.WordListTest" time="0.004"/>
-  <testcase name="testUpdate()" classname="model.WordListTest" time="0.0"/>
+  <testcase name="testStartingList()" classname="model.WordListTest" time="0.005"/>
+  <testcase name="testUpdate()" classname="model.WordListTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

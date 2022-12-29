@@ -106,15 +106,11 @@ public class View extends Application {
     }
 
 
-    private void waitAsHostPage(int nbPlayers) {
-        //model part
-        String ip = controller.setUpHost(nbPlayers);
-
-        // gui part
+    public void waitAsHostPage(String ip) {
         root.getChildren().clear();
-        root.requestFocus();
 
-        Label message = new Label("Waiting for player to join.\nYour adresse is " + ip + ".");
+
+        Label message = new Label("Waiting for player to join.\nYour address is " + ip + ".");
         message.setWrapText(true);
 
         HBox messageBox = new HBox(message);
@@ -126,6 +122,7 @@ public class View extends Application {
         vbox.setSpacing(10);
 
         root.setCenter(vbox);
+
     }
 
 
@@ -137,13 +134,13 @@ public class View extends Application {
         MenuButton host = new MenuButton("Host (select the number of players)");
 
         MenuItem two = new MenuItem("2");
-        two.setOnAction(e -> waitAsHostPage(2));
+        two.setOnAction(e -> controller.setUpHost(2));
 
         MenuItem three = new MenuItem("3");
-        three.setOnAction(e -> waitAsHostPage(3));
+        three.setOnAction(e -> controller.setUpHost(3));
 
         MenuItem four = new MenuItem("4");
-        four.setOnAction(e -> waitAsHostPage(4));
+        four.setOnAction(e -> controller.setUpHost(4));
 
         host.getItems().addAll(two,three,four);
 
@@ -178,7 +175,7 @@ public class View extends Application {
         root.getChildren().clear();
         root.requestFocus();
 
-        Label message = new Label("Waiting for player to join.\nThe adresse joined is " + ip + ".");
+        Label message = new Label("Waiting for player to join.\nThe address joined is " + ip + ".");
         message.setWrapText(true);
 
         HBox messageBox = new HBox(message);
