@@ -63,12 +63,16 @@ public class GameMultiPlayer extends Game {
         if(isHost){
             try { hostGame(); }
             catch (IOException e) {
-                throw new RuntimeException(e);
+                this.controller.error(e);
+                System.out.println("error !!!\n");
+                //throw new RuntimeException(e);
             }
         }else{
             try { joinGame(); }
             catch (IOException e) {
-                throw new RuntimeException(e);
+                this.controller.error(e);
+                System.out.println("error !!!\n");
+                //throw new RuntimeException(e);
             }
         }
 
@@ -91,7 +95,7 @@ public class GameMultiPlayer extends Game {
 
                     PrintWriter out = null;
                     try {
-                        out = new PrintWriter(new OutputStreamWriter(this.socket.getOutputStream()));
+                        out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
                         out.println(json);
                         out.flush();
                     } catch (IOException e) {
@@ -169,6 +173,8 @@ public class GameMultiPlayer extends Game {
         BufferedReader sock_br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         PrintWriter sock_pw = new PrintWriter(socket.getOutputStream(), true);
         System.out.println("Connection established");
+
+        this.controller.startMultiPlayer();
 
 
 

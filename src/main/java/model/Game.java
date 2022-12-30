@@ -161,4 +161,5 @@ public abstract class Game {
 		Game.charactersForWord = charactersForWord;
 	}
 
+	public void stop() {}
 }

@@ -173,4 +173,11 @@ public class GameCompetitiveSolo extends Game{
     public void setLives(int i) {
         this.lives = i;
     }
+
+    @Override
+    public void stop(){
+        if(this.timer != null) {
+            this.timer.cancel();
+        }
+    }
 }
