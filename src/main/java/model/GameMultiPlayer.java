@@ -16,14 +16,12 @@ public class GameMultiPlayer extends Game {
     private List<Integer> redWordsPos; //Les positions des mots rouges qu'on envoie aux adversaires
     private static final int maxWordsInList = 18;
     private Controller controller;
-
     private static String SERVER_HOST;
-
     private static boolean isHost;
-
     private int nbPlayers;
     private static Socket socket;
     private Server server;
+    private int rank;
 
     public void setUp(String hostAddress, boolean isHost){
         SERVER_HOST = hostAddress;
@@ -57,6 +55,7 @@ public class GameMultiPlayer extends Game {
         this.level = 1;
         this.gameRunning = true;
         this.redWordsPos = new ArrayList<Integer>();
+        this.startTime = System.nanoTime();
 
         if(isHost){
             try { hostGame(); }
@@ -101,18 +100,15 @@ public class GameMultiPlayer extends Game {
                     }
                     this.redWordsPos.remove(0);
                 }
-                System.out.println("Finished word: " + word + " , lives left = " + this.lives);
                 this.updateList();
                 return true;
             }
             return false;
         } else {
-            System.out.println("Adding character: " + ((char) k));
             String word = this.currentList.get(0);
             if (word.length() == this.currentPos) {
-                System.out.println("Wrong character");
                 this.lives--;
-                if (this.lives <= 0) this.gameRunning = false;
+                if (this.lives <= 0) endGame();
                 return false; //Wrong input, waiting for space
             } else if (k == word.charAt(this.currentPos)) {
                 this.currentPos++;
@@ -125,9 +121,8 @@ public class GameMultiPlayer extends Game {
                 }
                 return true;
             } else {
-                System.out.println("Expected " + word.charAt(this.currentPos) + " ; got " + (char) k);
                 this.lives--;
-                if (this.lives == 0) this.gameRunning = false;
+                if (this.lives <= 0) endGame();
                 return false;
             }
         }
@@ -144,10 +139,54 @@ public class GameMultiPlayer extends Game {
         Random rand = new Random();
         int randEntry = rand.nextInt(101);
         // % possibilite d'avoir un mot bonus
-        int redWordRate = 40;
+        int redWordRate = 35;
         if (randEntry < redWordRate) {
             this.redWordsPos.add(this.currentList.size() - 1);
             System.out.println("Added red word, current red word count: \n" + this.redWordsPos.size());
+        }
+    }
+
+    private void validateCurrentWord() {
+        String word = this.currentList.get(0);
+        if(word.length() == this.currentPos) {
+            this.score++;
+            if (this.redWordsPos.size() > 0 && this.redWordsPos.get(0) == 0) {
+                Gson gson = new Gson();
+                Message message = new Message("WORD",word);
+                String json = gson.toJson(message);
+
+                PrintWriter out = null;
+                try {
+                    out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+                    out.println(json);
+                    out.flush();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                this.redWordsPos.remove(0);
+            }
+        }else{
+            this.lives--;
+            if (this.lives <= 0) endGame();
+        }
+        this.currentPos = 0;
+        this.currentList.remove(0);
+        for(int i = 0; i < this.redWordsPos.size() ; i++) this.redWordsPos.set(i, this.redWordsPos.get(i) - 1);
+    }
+
+    private void endGame() {
+        //Notify the server that the game has ended
+        Gson gson = new Gson();
+        Message message = new Message("END","");
+        String json = gson.toJson(message);
+
+        PrintWriter out = null;
+        try {
+            out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+            out.println(json);
+            out.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -180,6 +219,7 @@ public class GameMultiPlayer extends Game {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
                 while (true) {
                     if(this.socket.isClosed()) break;
+
                     String line;
                     try {
                         line = reader.readLine();
@@ -190,20 +230,25 @@ public class GameMultiPlayer extends Game {
 
                     if (line == null) {
                         // The server has closed the connection, so we exit the loop
-
-                        System.out.println("Received null line\n");
                         break;
                     }
                     // Handle the message received from the server
                     Gson gson = new Gson();
                     Message message = gson.fromJson(line, Message.class);
                     if(message.getType().equals("START")){
-                        //TODO start game in view
                         this.controller.startMultiPlayer();
                     }
                     else if(message.getType().equals("WORD")){
+                        System.out.println("Got new word");
                         String word = message.getWord();
                         handleServerMessage(word);
+                    }
+                    else if(message.getType().equals("RANK")){
+                        //TODO recieved rank from server -> print ranking in view
+                        String ranking = message.getWord();
+                        this.rank = Integer.parseInt(ranking);
+                        this.gameRunning = false;
+                        this.controller.getStats();
                     }
                 }
             } catch (IOException e) {
@@ -217,10 +262,13 @@ public class GameMultiPlayer extends Game {
     private void handleServerMessage(String word) {
         System.out.println("Received word from server: " + word);
         this.currentList.add(word);
+        if(currentList.size() > maxWordsInList) validateCurrentWord();
         this.controller.update();
     }
 
     public List<Integer> getRedWordsPos() { return this.redWordsPos; }
+
+    public int getRank(){ return this.rank; }
 
     @Override
     public void stop(){

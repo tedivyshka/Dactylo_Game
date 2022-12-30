@@ -13,13 +13,14 @@ import java.util.concurrent.Executors;
 // This class represents a client thread that communicates with the server
 class ClientThread extends Thread {
     private Socket socket;
-
+    private Server server;
     private final int id;
     private InputStream inputStream;
     private OutputStream outputStream;
 
-    public ClientThread(Socket socket, int id) {
+    public ClientThread(Socket socket, int id, Server server) {
         this.socket = socket;
+        this.server = server;
         try {
             inputStream = socket.getInputStream();
             outputStream = socket.getOutputStream();
@@ -63,30 +64,38 @@ class ClientThread extends Thread {
             String data = new String(buffer, 0, bytesRead);
 
             // Update the game state based on the data received from the client
-            System.out.println(this.id + " Got message: " + data);
             Message message = gson.fromJson(data, Message.class);
-            String word = message.getWord();
 
-            // Send data back to the client
-            Server.sendWord(word,this.id);
+            if(message.getType().equals("END")){
+                System.out.println("Client " + this.id + " has lost.\n");
+                Message endMessage = new Message("RANK",Integer.toString(this.server.getRank()));
+                String endJson = gson.toJson(endMessage);
+
+                PrintWriter end = null;
+                try {
+                    end = new PrintWriter(new OutputStreamWriter(this.socket.getOutputStream()));
+                    end.println(endJson);
+                    end.flush();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                break;
+            }
+            else {
+                String word = message.getWord();
+
+                // Send data back to the client
+                Server.sendWord(word, this.id);
+            }
         }
     }
-
-    public void sendData(String data) {
-        try {
-            byte[] buffer = data.getBytes();
-            outputStream.write(buffer, 0, buffer.length);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     public Socket getSocket() { return this.socket; }
 }
 
 public class Server {
     private static List<ClientThread> clients;
     private static ServerSocket server;
+    private static int stillPlaying;
 
     public void runServer(int desiredNumClients) throws IOException {
         // Create a server socket and start listening for incoming connections
@@ -101,7 +110,7 @@ public class Server {
             Socket socket = serverSocket.accept();
 
             // Create a new thread for the client
-            ClientThread clientThread = new ClientThread(socket, idCounter);
+            ClientThread clientThread = new ClientThread(socket, idCounter, this);
             idCounter++;
             clients.add(clientThread);
         }
@@ -111,6 +120,7 @@ public class Server {
         for(ClientThread clientThread : clients){
             executor.execute(clientThread);
         }
+        stillPlaying = clients.size(); //Used for the ranking at the end of the game
     }
 
     public static void sendWord(String word, int id) {
@@ -141,5 +151,10 @@ public class Server {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public int getRank(){
+        stillPlaying -= 1;
+        return stillPlaying + 1;
     }
 }

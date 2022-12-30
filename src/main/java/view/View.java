@@ -127,9 +127,8 @@ public class View extends Application {
             url = new URL("https://api.ipify.org");
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
             ipAddress = reader.readLine();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        } catch (Exception e) {}
+
         Label message = new Label("Waiting for player to join.\nYour address is " + ipAddress + "." +
                 "\n If this game is hosted locally, use 127.0.1.1 as the address.");
         message.setWrapText(true);
@@ -257,7 +256,6 @@ public class View extends Application {
                             if(controller.getGame().getMode().equals(Mode.COMPETITIVE)) ((GameCompetitiveSolo) controller.getGame()).cancelTimer();
 
                             System.out.println("game no more running\n");
-                            System.out.println(this);
                             //on affiche les statistiques
                             controller.getStats();
                         }
@@ -281,7 +279,6 @@ public class View extends Application {
 
 
     public void resetText() {
-        System.out.println(this);
         this.text.replaceText("");
     }
 

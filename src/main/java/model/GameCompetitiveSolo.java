@@ -15,7 +15,6 @@ public class GameCompetitiveSolo extends Game{
     private Timer timer;
     private Controller controller;
 
-
     public void init(Controller c) {
         super.mode = Mode.COMPETITIVE;
 
@@ -126,8 +125,8 @@ public class GameCompetitiveSolo extends Game{
             }
         }else{
             this.lives--;
+            if(this.lives == 0) this.gameRunning = false;
         }
-        System.out.print(this.lives + "\n");
         this.currentPos = 0;
         this.currentList.remove(0);
         for(int i = 0; i < this.blueWordsPos.size() ; i++) this.blueWordsPos.set(i, this.blueWordsPos.get(i) - 1);
@@ -174,6 +173,7 @@ public class GameCompetitiveSolo extends Game{
     public void setLives(int i) {
         this.lives = i;
     }
+
 
     @Override
     public void stop(){
