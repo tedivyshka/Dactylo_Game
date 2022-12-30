@@ -33,7 +33,6 @@ public class GameMultiPlayer extends Game {
     }
 
     public String setUpHost(int nbPlayers){
-        System.out.println("Seeting host up\n");
         this.nbPlayers = nbPlayers;
         try{
             InetAddress localHost = InetAddress.getLocalHost();
@@ -193,6 +192,15 @@ public class GameMultiPlayer extends Game {
 
         });
         receiverThread.start();
+
+        PrintWriter out = null;
+        try {
+            out = new PrintWriter(new OutputStreamWriter(this.socket.getOutputStream()));
+            out.println("hello");
+            out.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void handleServerMessage(String line) {

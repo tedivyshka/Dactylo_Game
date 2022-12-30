@@ -49,14 +49,15 @@ class ClientThread extends Thread {
             // TODO: Update the game state based on the data received from the client
             System.out.println(this.id + " Got message: " + data);
 
+            /*
             Gson gson = new Gson();
             Message message = gson.fromJson(data, Message.class);
             String word = message.getWord();
-
+*/
 
 
             // Send data back to the client
-            Server.sendWord(word,this.id);
+            Server.sendWord(data,this.id);
 
 
         }
@@ -84,7 +85,7 @@ public class Server {
 
         // Accept all clients
         int idCounter = 0;
-        while (clients.size() < 1 /*desiredNumClients*/) {
+        while (clients.size() < desiredNumClients) {
             // Accept an incoming connection from a client
             Socket socket = serverSocket.accept();
 
