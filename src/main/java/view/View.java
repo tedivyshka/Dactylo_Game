@@ -23,6 +23,11 @@ import javafx.scene.layout.Border;
 
 import javafx.scene.control.*;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -116,8 +121,17 @@ public class View extends Application {
 
         returnMenuButton();
         //todo peut-etre interrupt le server
-
-        Label message = new Label("Waiting for player to join.\nYour address is " + ip + ".");
+        String ipAddress = "127.0.1.1";
+        URL url = null;
+        try {
+            url = new URL("https://api.ipify.org");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            ipAddress = reader.readLine();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        Label message = new Label("Waiting for player to join.\nYour address is " + ipAddress + "." +
+                "\n If this game is hosted locally, use 127.0.1.1 as the address.");
         message.setWrapText(true);
 
         HBox messageBox = new HBox(message);
