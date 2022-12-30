@@ -9,6 +9,7 @@ import view.View;
 
 import javafx.scene.input.KeyEvent;
 
+import java.io.IOException;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.List;
@@ -136,6 +137,27 @@ public class Controller {
     public void setUpJoin(String ip) {
         ((GameMultiPlayer)this.game).setUp(ip,false);
         this.game.init(this);
+        Platform.runLater(() -> {
+            this.view.waitAsJoinerPage(ip);
+        });
     }
 
+    public void resetAndGoMenu() {
+        this.game.stop();
+        this.game = null;
+        Platform.runLater(() -> this.view.startingMenuGui());
+
+    }
+
+    public void startMultiPlayer() {
+        Platform.runLater(() -> {
+            this.view.startGame();
+        });
+    }
+
+    public void error(Exception e) {
+        Platform.runLater(() -> {
+            this.view.printError(e);
+        });
+    }
 }

@@ -46,6 +46,46 @@ public class View extends Application {
     public View(Controller c) {
         this.controller = c;
     }
+    
+    
+    public void startingMenuGui(){
+        root.getChildren().clear();
+
+        VBox menu = new VBox();
+        menu.setSpacing(20);
+
+        root.setCenter(menu);
+        menu.setAlignment(Pos.CENTER);
+
+
+        // Créez les boutons pour chaque mode de jeu
+        Button btnMode1 = new Button("Normal");
+        Button btnMode2 = new Button("Competitive");
+        Button btnMode3 = new Button("Multiplayer");
+
+        // Ajoutez les boutons au VBox
+        menu.getChildren().addAll(btnMode1, btnMode2, btnMode3);
+
+        // Ajoutez un gestionnaire d'événements pour chaque bouton
+        btnMode1.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                controller.setMode1();
+            }
+        });
+        btnMode2.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                controller.setMode2();
+            }
+        });
+        btnMode3.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                controller.setMode3();
+            }
+        });
+    }
 
 
 
@@ -53,44 +93,8 @@ public class View extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
-
-
-            VBox menu = new VBox();
-            menu.setSpacing(20);
-
-            root.setCenter(menu);
-            menu.setAlignment(Pos.CENTER);
-
-
-            // Créez les boutons pour chaque mode de jeu
-            Button btnMode1 = new Button("Normal");
-            Button btnMode2 = new Button("Competitive");
-            Button btnMode3 = new Button("Multiplayer");
-
-            // Ajoutez les boutons au VBox
-            menu.getChildren().addAll(btnMode1, btnMode2, btnMode3);
-
-            // Ajoutez un gestionnaire d'événements pour chaque bouton
-            btnMode1.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    controller.setMode1();
-                }
-            });
-            btnMode2.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    controller.setMode2();
-                }
-            });
-            btnMode3.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
-                    controller.setMode3();
-                }
-            });
-
-
+            startingMenuGui();
+            
             scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("style.css")).toExternalForm());
 
             primaryStage.setTitle("Dactylo-Game");
@@ -109,6 +113,8 @@ public class View extends Application {
     public void waitAsHostPage(String ip) {
         root.getChildren().clear();
 
+        returnMenuButton();
+        //todo peut-etre interrupt le server
 
         Label message = new Label("Waiting for player to join.\nYour address is " + ip + ".");
         message.setWrapText(true);
@@ -130,6 +136,8 @@ public class View extends Application {
         root.getChildren().clear();
         root.requestFocus();
 
+        returnMenuButton();
+
         //host button
         MenuButton host = new MenuButton("Host (select the number of players)");
 
@@ -147,7 +155,7 @@ public class View extends Application {
         // join button + ip text
         TextField joinText = new TextField();
         Button join = new Button("Join with the ip :");
-        join.setOnAction(e -> this.waitAsJoinerPage(joinText.getCharacters().toString()));
+        join.setOnAction(e -> controller.setUpJoin(joinText.getCharacters().toString()));
 
         HBox joinBox = new HBox(join,joinText);
         joinBox.setAlignment(Pos.CENTER);
@@ -167,13 +175,12 @@ public class View extends Application {
 
     }
 
-    private void waitAsJoinerPage(String ip) {
-        //model part
-        controller.setUpJoin(ip);
-
-        // gui part
+    public void waitAsJoinerPage(String ip) {
         root.getChildren().clear();
         root.requestFocus();
+
+        returnMenuButton();
+        //todo peut-etre interrupt le server
 
         Label message = new Label("Waiting for player to join.\nThe address joined is " + ip + ".");
         message.setWrapText(true);
@@ -190,6 +197,18 @@ public class View extends Application {
 
     }
 
+    private void returnMenuButton(){
+        MenuBar menuBar = new MenuBar();
+
+        Button newGame = new Button("Return menu");
+        newGame.setOnAction(e -> controller.resetAndGoMenu());
+
+
+        HBox topBar = new HBox(newGame);
+        HBox.setHgrow(menuBar, Priority.ALWAYS);
+        root.setTop(topBar);
+    }
+
     public void startGame(){
 
         try{
@@ -197,25 +216,7 @@ public class View extends Application {
             root.getChildren().clear();
             root.requestFocus();
 
-            MenuBar menuBar = new MenuBar();
-
-            Menu newGame = new Menu("New game");
-
-            MenuItem soloMode = new MenuItem("Single-player");
-            soloMode.setOnAction(e -> this.controller.changeMode(0)); // appel controller
-
-            MenuItem multiMode = new MenuItem("Multiplayer");
-            multiMode.setOnAction(e -> this.controller.changeMode(2)); // appel controller
-
-            MenuItem competitiveMode = new MenuItem("Normal Competitive");
-            competitiveMode.setOnAction(e -> this.controller.changeMode(1)); // appel controller
-
-            newGame.getItems().addAll(soloMode, multiMode, competitiveMode);
-            menuBar.getMenus().addAll(newGame);
-
-            HBox topBar = new HBox(menuBar);
-            HBox.setHgrow(menuBar, Priority.ALWAYS);
-            root.setTop(topBar);
+            returnMenuButton();
 
 
             this.text = new StyleClassedTextArea();
@@ -343,7 +344,10 @@ public class View extends Application {
     }
 
 
-
+    public void printError(Exception e) {
+        Label error = new Label("Error :" + e.toString());
+        this.root.setBottom(error);
+    }
 }
 
 
