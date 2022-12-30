@@ -137,6 +137,7 @@ public class GameCompetitiveSolo extends Game{
         //If the list is half or less full we add a new word
         boolean addNew = this.currentList.size() < (maxWordsInList / 2);
         WordList.update(this.currentList,addNew);
+        //if(!addNew) return;
 
         //Update blueWordsPos
         this.blueWordsPos.replaceAll(integer -> integer - 1);

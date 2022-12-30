@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import controller.Controller;
 
 import java.io.*;
-import java.net.ConnectException;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import java.net.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -26,6 +23,7 @@ public class GameMultiPlayer extends Game {
 
     private int nbPlayers;
     private static Socket socket;
+    private Server server;
 
     public void setUp(String hostAddress, boolean isHost){
         SERVER_HOST = hostAddress;
@@ -88,9 +86,9 @@ public class GameMultiPlayer extends Game {
                 this.currentPos = 0;
                 this.score++;
                 if (this.redWordsPos.size() > 0 && this.redWordsPos.get(0) == 0) {
-                    //TODO send word to server
+                    //Send word to server
                     Gson gson = new Gson();
-                    Message message = new Message(word);
+                    Message message = new Message("WORD",word);
                     String json = gson.toJson(message);
 
                     PrintWriter out = null;
@@ -101,6 +99,7 @@ public class GameMultiPlayer extends Game {
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
+                    this.redWordsPos.remove(0);
                 }
                 System.out.println("Finished word: " + word + " , lives left = " + this.lives);
                 this.updateList();
@@ -138,13 +137,14 @@ public class GameMultiPlayer extends Game {
         //If the list is half or less full we add a new word
         boolean addNew = this.currentList.size() < (maxWordsInList / 2);
         WordList.update(this.currentList, addNew);
+        if(!addNew) return;
 
         //Update redWordsPos
         this.redWordsPos.replaceAll(integer -> integer - 1);
         Random rand = new Random();
         int randEntry = rand.nextInt(101);
         // % possibilite d'avoir un mot bonus
-        int redWordRate = 20;
+        int redWordRate = 40;
         if (randEntry < redWordRate) {
             this.redWordsPos.add(this.currentList.size() - 1);
             System.out.println("Added red word, current red word count: \n" + this.redWordsPos.size());
@@ -152,7 +152,7 @@ public class GameMultiPlayer extends Game {
     }
 
     private void hostGame() throws IOException{
-        Server server = new Server();
+        this.server = new Server();
         Thread serverThread = new Thread(() -> {
             try {
                 server.runServer(this.nbPlayers);
@@ -174,23 +174,37 @@ public class GameMultiPlayer extends Game {
         PrintWriter sock_pw = new PrintWriter(socket.getOutputStream(), true);
         System.out.println("Connection established");
 
-        this.controller.startMultiPlayer();
-
-
-
-
         // Start a thread to receive messages from the server
         Thread receiverThread = new Thread(() -> {
             try {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
                 while (true) {
-                    String line = reader.readLine();
+                    if(this.socket.isClosed()) break;
+                    String line;
+                    try {
+                        line = reader.readLine();
+                    }
+                    catch(SocketException ex){
+                        break; //Socket is closed
+                    }
+
                     if (line == null) {
                         // The server has closed the connection, so we exit the loop
+
+                        System.out.println("Received null line\n");
                         break;
                     }
                     // Handle the message received from the server
-                    handleServerMessage(line);
+                    Gson gson = new Gson();
+                    Message message = gson.fromJson(line, Message.class);
+                    if(message.getType().equals("START")){
+                        //TODO start game in view
+                        this.controller.startMultiPlayer();
+                    }
+                    else if(message.getType().equals("WORD")){
+                        String word = message.getWord();
+                        handleServerMessage(word);
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -198,34 +212,36 @@ public class GameMultiPlayer extends Game {
 
         });
         receiverThread.start();
-
-        PrintWriter out = null;
-        try {
-            out = new PrintWriter(new OutputStreamWriter(this.socket.getOutputStream()));
-            out.println("hello");
-            out.flush();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
-    private void handleServerMessage(String line) {
-        System.out.println("Recieved line from server: " + line);
-        Gson gson = new Gson();
-        Message message = gson.fromJson(line, Message.class);
-        String word = message.getWord();
+    private void handleServerMessage(String word) {
+        System.out.println("Received word from server: " + word);
         this.currentList.add(word);
+        this.controller.update();
     }
 
     public List<Integer> getRedWordsPos() { return this.redWordsPos; }
+
+    @Override
+    public void stop(){
+        try {
+            if(this.socket != null) this.socket.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        if(this.isHost) this.server.closeServer();
+    }
 }
 
 class Message {
-    //int id;
+    private String type; // START -> start game  ;  WORD -> add word
+
     private String word;
 
+    public String getType(){ return this.type; }
     public String getWord(){ return this.word; }
-    public Message(String word){
+    public Message(String type, String word) {
+        this.type = type;
         this.word = word;
     }
 }

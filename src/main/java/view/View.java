@@ -23,6 +23,7 @@ import javafx.scene.layout.Border;
 
 import javafx.scene.control.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -275,8 +276,7 @@ public class View extends Application {
         this.text.setStyleClass(0, pos, "green");
 
         if(this.controller.getGame().getMode().equals( Mode.COMPETITIVE)) {
-            System.out.println("COLORING BLUE");
-            this.text.setStyleClass(pos, this.text.getLength(), "black");
+            //this.text.setStyleClass(pos, this.text.getLength(), "black");
             List<Integer> blueWordList = ((GameCompetitiveSolo) this.controller.getGame()).getBlueWordsPos();
             List<String> currentList = this.controller.getGame().getList();
             if (blueWordList != null) {
@@ -290,11 +290,10 @@ public class View extends Application {
                     this.text.setStyleClass(position, position + currentList.get(i).length(), "blue");
                 }
             }
-            this.text.setStyleClass(0, pos, "green");
+            this.text.setStyleClass(0, pos, "red");
         }
         else if(this.controller.getGame().getMode().equals( Mode.MULTI)) {
-            System.out.println("COLORING RED");
-            this.text.setStyleClass(pos, this.text.getLength(), "black");
+            //this.text.setStyleClass(pos, this.text.getLength(), "black");
             List<Integer> redWordList = ((GameMultiPlayer) this.controller.getGame()).getRedWordsPos();
             List<String> currentList = this.controller.getGame().getList();
             if (redWordList != null) {

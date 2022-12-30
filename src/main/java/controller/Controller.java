@@ -152,6 +152,7 @@ public class Controller {
     public void startMultiPlayer() {
         Platform.runLater(() -> {
             this.view.startGame();
+            this.update();
         });
     }
 
