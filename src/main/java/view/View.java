@@ -236,6 +236,7 @@ public class View extends Application {
             this.text = new StyleClassedTextArea();
             text.setEditable(false);
             text.setWrapText(true);
+            text.setStyleClass(0,text.getLength(),"black");
 
             this.additionnalInfo = new StyleClassedTextArea();
             additionnalInfo.setEditable(false);
@@ -351,6 +352,7 @@ public class View extends Application {
 
     public void printLivesAndLevel(int lives,int level) {
         this.additionnalInfo.replaceText("lives : " + lives + "\n" + "level : " + level);
+        this.additionnalInfo.setStyleClass(0,this.additionnalInfo.getLength(),"black");
     }
 
 
