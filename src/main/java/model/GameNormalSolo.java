@@ -7,7 +7,10 @@ import java.util.List;
 public class GameNormalSolo extends Game {
 	private static int wordsToWin = 20;
 
-
+	/**
+	 * Initialize the game by starting all the variables
+	 * @param c
+	 */
 	@Override
 	public void init(Controller c) {
 		super.mode = Mode.SOLO;
@@ -22,7 +25,11 @@ public class GameNormalSolo extends Game {
 		this.previousCorrectCharTime = 0;
 	}
 
-
+	/**
+	 * Handle the character typed by the player
+	 * @param k character number
+	 * @return boolean if the typed character was correct or not
+	 */
 	@Override
 	public boolean keyInput(int k) {
 		this.typedCharacters++;
@@ -36,24 +43,19 @@ public class GameNormalSolo extends Game {
 
 				//Update list, remove head and add new word
 				WordList.update(currentList, wordsToWin - this.score >= this.currentList.size());
-				if(wordsToWin == this.score) {
-					System.out.println("Game finished");
-					gameFinished();
-				}
-
-				System.out.println("Finished word: " + word + " , score = " + this.score);
+				gameRunning = !(wordsToWin == this.score);
 				return true;
 			}
 			return false;
 		}
 		else {
-			System.out.println("Adding character: " + ((char)k));
 			String word = this.currentList.get(0);
 			if(word.length() == this.currentPos) {
-				System.out.println("Wrong character");
-				return false; //Wrong input, waiting for space
+				//Word done but did not receive space -> error by the player
+				return false;
 			}
 			else if (k == word.charAt(this.currentPos)) {
+				//Character typed is the correct one
 				this.currentPos++;
 				this.correctCharacters++;
 				if(this.previousCorrectCharTime == 0){
@@ -64,21 +66,9 @@ public class GameNormalSolo extends Game {
 				}
 				return true;
 			}else {
-				System.out.println("Expected " + word.charAt(this.currentPos) + " ; got " + (char)k);
+				//Character typed is the wrong one
 				return false;
 			}
 		}
 	}
-
-	private void gameFinished() {
-		double precision = this.getPrecision();
-		double speed = this.getSpeed(); //vitesse
-		double regularity = this.getRegularity();
-		System.out.println("Speed: " + speed + " MPM");
-		System.out.println("Precision: " + precision + "%");
-		System.out.println("Regularity: " + regularity + "ms");
-		this.gameRunning = false;
-	}
-
-
 }

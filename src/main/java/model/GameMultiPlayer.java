@@ -13,21 +13,32 @@ public class GameMultiPlayer extends Game {
 
     private int lives;
     private int level;
-    private List<Integer> redWordsPos; //Les positions des mots rouges qu'on envoie aux adversaires
+    private List<Integer> redWordsPos; // List of positions of red (bonus) words
+    private static final int redWordRate = 35; // % to get a red word
     private static final int maxWordsInList = 18;
     private Controller controller;
-    private static String SERVER_HOST;
-    private static boolean isHost;
+    private static String SERVER_HOST; // Address of the server to join
+    private static boolean isHost; // Whether the current client is hosting a server
     private int nbPlayers;
     private static Socket socket;
     private Server server;
     private int rank;
 
+    /**
+     * Set up the server address and isHost boolean
+     * @param hostAddress
+     * @param isHost
+     */
     public void setUp(String hostAddress, boolean isHost){
         SERVER_HOST = hostAddress;
         GameMultiPlayer.isHost = isHost;
     }
 
+    /**
+     * Set up the host: call setUp with current address
+     * @param nbPlayers
+     * @return
+     */
     public String setUpHost(int nbPlayers){
         this.nbPlayers = nbPlayers;
         try{
@@ -39,7 +50,12 @@ public class GameMultiPlayer extends Game {
             throw new RuntimeException(e);
         }
     }
-
+    /**
+     * Initialize the game by starting all the variables
+     * If this is the host, start the server
+     * At the end join the server
+     * @param c
+     */
     public void init(Controller c) {
         System.out.println("Init game\n");
         super.mode = Mode.MULTI;
@@ -53,7 +69,7 @@ public class GameMultiPlayer extends Game {
         this.lives = 20;
         this.level = 1;
         this.gameRunning = true;
-        this.redWordsPos = new ArrayList<Integer>();
+        this.redWordsPos = new ArrayList<>();
         this.startTime = System.nanoTime();
 
         if(isHost){
@@ -61,19 +77,22 @@ public class GameMultiPlayer extends Game {
             catch (IOException e) {
                 this.controller.error(e);
                 System.out.println("error !!!\n");
-                //throw new RuntimeException(e);
             }
         }else{
             try { joinGame(); }
             catch (IOException e) {
                 this.controller.error(e);
                 System.out.println("error !!!\n");
-                //throw new RuntimeException(e);
             }
         }
 
     }
 
+    /**
+     * Handle the character typed by the player
+     * @param k character number
+     * @return boolean if the typed character was correct or not
+     */
     public boolean keyInput(int k) {
         this.typedCharacters++;
         if (k == ' ') {
@@ -106,10 +125,12 @@ public class GameMultiPlayer extends Game {
         } else {
             String word = this.currentList.get(0);
             if (word.length() == this.currentPos) {
+                //Word done but did not receive space -> error by the player
                 this.lives--;
                 if (this.lives <= 0) endGame();
-                return false; //Wrong input, waiting for space
+                return false;
             } else if (k == word.charAt(this.currentPos)) {
+                //Character typed is the correct one
                 this.currentPos++;
                 this.correctCharacters++;
                 if (this.previousCorrectCharTime == 0) {
@@ -120,6 +141,7 @@ public class GameMultiPlayer extends Game {
                 }
                 return true;
             } else {
+                //Character typed is the wrong one
                 this.lives--;
                 if (this.lives <= 0) endGame();
                 return false;
@@ -127,6 +149,11 @@ public class GameMultiPlayer extends Game {
         }
     }
 
+    /**
+     * Update the list when a word was correctly typed:
+     * remove the word in position 0 and if the list is halfway or less full
+     * add a new word, randomly decide if it's a red word
+     */
     public void updateList() {
         //If the list is half or less full we add a new word
         boolean addNew = this.currentList.size() < (maxWordsInList / 2);
@@ -137,19 +164,21 @@ public class GameMultiPlayer extends Game {
         this.redWordsPos.replaceAll(integer -> integer - 1);
         Random rand = new Random();
         int randEntry = rand.nextInt(101);
-        // % possibilite d'avoir un mot bonus
-        int redWordRate = 35;
-        if (randEntry < redWordRate) {
-            this.redWordsPos.add(this.currentList.size() - 1);
-            System.out.println("Added red word, current red word count: \n" + this.redWordsPos.size());
-        }
+        if (randEntry < redWordRate) this.redWordsPos.add(this.currentList.size() - 1);
+
     }
 
+    /**
+     * Validate current word when a new word has been added and the limit of
+     * words has been reached
+     */
     private void validateCurrentWord() {
         String word = this.currentList.get(0);
         if(word.length() == this.currentPos) {
+            //The current word has been completed
             this.score++;
             if (this.redWordsPos.size() > 0 && this.redWordsPos.get(0) == 0) {
+                // Validated word is red, send it to the server
                 Gson gson = new Gson();
                 Request message = new Request("WORD",word);
                 String json = gson.toJson(message);
@@ -165,14 +194,18 @@ public class GameMultiPlayer extends Game {
                 this.redWordsPos.remove(0);
             }
         }else{
+            //The current word has not been completed
             this.lives--;
             if (this.lives <= 0) endGame();
         }
         this.currentPos = 0;
         this.currentList.remove(0);
-        for(int i = 0; i < this.redWordsPos.size() ; i++) this.redWordsPos.set(i, this.redWordsPos.get(i) - 1);
+        this.redWordsPos.replaceAll(integer -> integer - 1);
     }
 
+    /**
+     * Notify the server that the game has ended
+     */
     private void endGame() {
         //Notify the server that the game has ended
         Gson gson = new Gson();
@@ -189,6 +222,10 @@ public class GameMultiPlayer extends Game {
         }
     }
 
+    /**
+     * Method to host the game, start the server and then join it
+     * @throws IOException
+     */
     private void hostGame() throws IOException{
         this.server = new Server();
         Thread serverThread = new Thread(() -> {
@@ -202,6 +239,11 @@ public class GameMultiPlayer extends Game {
         joinGame();
     }
 
+    /**
+     * Join the game and start the thread to listen to it
+     * Handle requests sent from the server in the thread
+     * @throws IOException
+     */
     public void joinGame() throws IOException {
         int SERVER_PORT = 13000;
         System.out.println("Trying to join " + SERVER_HOST + "\n");
@@ -229,6 +271,7 @@ public class GameMultiPlayer extends Game {
                         // The server has closed the connection, so we exit the loop
                         break;
                     }
+
                     // Handle the message received from the server
                     Gson gson = new Gson();
                     Request message = gson.fromJson(line, Request.class);
@@ -241,7 +284,7 @@ public class GameMultiPlayer extends Game {
                         handleServerMessage(word);
                     }
                     else if(message.getType().equals("RANK")){
-                        //TODO recieved rank from server -> print ranking in view
+                        // Game has ended, server has sent the rank. Update the view
                         String ranking = message.getWord();
                         this.rank = Integer.parseInt(ranking);
                         this.gameRunning = false;
@@ -256,17 +299,20 @@ public class GameMultiPlayer extends Game {
         receiverThread.start();
     }
 
+    /**
+     * Handle the request of type WORD sent from the server:
+     * add the word to the current list
+     * @param word to add to the list
+     */
     private void handleServerMessage(String word) {
-        System.out.println("Received word from server: " + word);
         this.currentList.add(word);
         if(currentList.size() > maxWordsInList) validateCurrentWord();
         this.controller.update();
     }
 
-    public List<Integer> getRedWordsPos() { return this.redWordsPos; }
-
-    public int getRank(){ return this.rank; }
-
+    /**
+     * Close the socket and if this is the host close the server
+     */
     @Override
     public void stop(){
         try {
@@ -276,4 +322,8 @@ public class GameMultiPlayer extends Game {
         }
         if(this.isHost) this.server.closeServer();
     }
+
+    public List<Integer> getRedWordsPos() { return this.redWordsPos; }
+
+    public int getRank(){ return this.rank; }
 }

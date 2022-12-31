@@ -17,7 +17,11 @@ public abstract class Game {
 	protected List<String> currentList;
 	protected static int charactersForWord = 5;
 
-
+	/**
+	 * Static factory pattern to create a game
+	 * @param gamemode the mode of the game
+	 * @return Game object according to the gamemode
+	 */
 	public static Game of(int gamemode) {
 		switch(gamemode) {
 			case 0 : return new GameNormalSolo();
@@ -27,12 +31,20 @@ public abstract class Game {
 		return null;
 	}
 
+	/**
+	 * Get the precision statistic of the game
+	 * @return precision
+	 */
 	public double getPrecision(){
 		double result = ( (float) this.correctCharacters / (float) this.typedCharacters ) * 100;
 		result = Math.round(result * 10);
 		return result / 10;
 	}
 
+	/**
+	 * Get the speed statistic of the game
+	 * @return speed
+	 */
 	public double getSpeed(){
 		long timeToFinishMillisecond = (System.nanoTime() - this.startTime) / 1000000;
 		double timeToFinish = ((double) timeToFinishMillisecond) / 1000;
@@ -43,6 +55,10 @@ public abstract class Game {
 		return (double) tmp / 1000;
 	}
 
+	/**
+	 * Get the regularity statistic of the game
+	 * @return regularity
+	 */
 	public double getRegularity(){
 		double result = (double) this.regularitySum / (double) (1000000 * (this.correctCharacters-1)) ;
 		result = result * 1000;
@@ -56,10 +72,13 @@ public abstract class Game {
 		return this.currentList;
 	}
 
+	public abstract void init(Controller controller);
 
 	public String getWord() {
 		return this.currentList.get(0);
 	}
+
+	public void stop() {}
 
 	public int getPos(){
 		return this.currentPos;
@@ -68,10 +87,6 @@ public abstract class Game {
 	public boolean isRunning(){
 		return this.gameRunning;
 	}
-
-	public abstract void init(Controller controller);
-
-
 
 	public Mode getMode() {
 		return mode;
@@ -160,6 +175,4 @@ public abstract class Game {
 	public static void setCharactersForWord(int charactersForWord) {
 		Game.charactersForWord = charactersForWord;
 	}
-
-	public void stop() {}
 }

@@ -9,13 +9,17 @@ import java.util.concurrent.Future;
 public class GameCompetitiveSolo extends Game{
     private int lives;
     private int level;
-    private int timeBetweenWords; //Ajouter un mot après chaque timeBetweenWords en secondes
-    private List<Integer> blueWordsPos; //Les positions des mots bleu qui ajoutent des vies
+    private int timeBetweenWords; // Time in seconds between two words added by the game
+    private List<Integer> blueWordsPos; // List of positions of blue (bonus) words
+    private static final int bonusRate = 20; // % to get a blue word
     private static final int maxWordsInList = 18;
-    private static int bonusRate = 20; // % to get a blue word
     private Timer timer;
     private Controller controller;
 
+    /**
+     * Initialize the game by starting all the variables and starting the timer
+     * @param c
+     */
     public void init(Controller c) {
         super.mode = Mode.COMPETITIVE;
 
@@ -35,6 +39,9 @@ public class GameCompetitiveSolo extends Game{
         this.startTime = System.nanoTime();
     }
 
+    /**
+     * Function that cancels the current timer
+     */
     public void cancelTimer() {
         try{
             this.timer.cancel();
@@ -42,7 +49,11 @@ public class GameCompetitiveSolo extends Game{
         catch (IllegalStateException ex){}
     }
 
-
+    /**
+     * Handle the character typed by the player
+     * @param k character number
+     * @return boolean if the typed character was correct or not
+     */
     public boolean keyInput(int k) {
         this.typedCharacters++;
         if(k == ' ') {
@@ -57,22 +68,21 @@ public class GameCompetitiveSolo extends Game{
                     this.lives+= word.length();
                     this.blueWordsPos.remove(0);
                 }
-                System.out.println("Finished word: " + word + " , lives left = " + this.lives);
                 this.updateList();
                 return true;
             }
             return false;
         }
         else {
-            System.out.println("Adding character: " + ((char)k));
             String word = this.currentList.get(0);
             if(word.length() == this.currentPos) {
-                System.out.println("Wrong character");
+                //Word done but did not receive space -> error by the player
                 this.lives--;
-                if(this.lives <= 0) this.gameRunning = false;
-                return false; //Wrong input, waiting for space
+                this.gameRunning = (this.lives > 0);
+                return false;
             }
             else if (k == word.charAt(this.currentPos)) {
+                //Character typed is the correct one
                 this.currentPos++;
                 this.correctCharacters++;
                 if(this.previousCorrectCharTime == 0){
@@ -83,14 +93,18 @@ public class GameCompetitiveSolo extends Game{
                 }
                 return true;
             }else {
-                System.out.println("Expected " + word.charAt(this.currentPos) + " ; got " + (char)k);
+                //Character typed is the wrong one
                 this.lives--;
-                if(this.lives == 0) this.gameRunning = false;
+                this.gameRunning = (this.lives > 0);
                 return false;
             }
         }
     }
 
+    /**
+     * Method to level up when the score has increased by 100 since the last level
+     * Update the timeBetweenWords and restart the timer
+     */
     void levelUp() {
         this.level++;
         this.score = 0;
@@ -102,6 +116,11 @@ public class GameCompetitiveSolo extends Game{
         timerStart(false);
     }
 
+    /**
+     * Start the timer which runs repeatedly after timeBetweenWords seconds
+     * If this is the beginning of the game, delay by 2.5 seconds to give the player a chance to start easily
+     * @param startOfGame beginning of the game or not
+     */
     void timerStart(boolean startOfGame) {
         int delay = (startOfGame) ? 2500 : 0; // In the beginning of the game we give the player 2.5 seconds before starting the timer
         TimerTask task = new TimerTask(){
@@ -121,24 +140,11 @@ public class GameCompetitiveSolo extends Game{
         timer.schedule(task,delay,this.timeBetweenWords * 1000L);
     }
 
-    private void validateCurrentWord() {
-        String word = this.currentList.get(0);
-        if(word.length() == this.currentPos) {
-            this.score++;
-            if (score % 100 == 0) this.levelUp();
-            if (this.blueWordsPos.size() > 0 && this.blueWordsPos.get(0) == 0) {
-                this.lives+= word.length();
-                this.blueWordsPos.remove(0);
-            }
-        }else{
-            this.lives--;
-            if(this.lives == 0) this.gameRunning = false;
-        }
-        this.currentPos = 0;
-        this.currentList.remove(0);
-        for(int i = 0; i < this.blueWordsPos.size() ; i++) this.blueWordsPos.set(i, this.blueWordsPos.get(i) - 1);
-    }
-
+    /**
+     * Update the list when a word was correctly typed:
+     * remove the word in position 0 and if the list is halfway or less full
+     * add a new word, randomly decide if it's a blue word
+     */
     public void updateList(){
         //If the list is half or less full we add a new word
         boolean addNew = this.currentList.size() < (maxWordsInList / 2);
@@ -155,6 +161,32 @@ public class GameCompetitiveSolo extends Game{
         }
 
         controller.update();
+    }
+
+    /**
+     * Validate current word when a new word has been added and the limit of
+     * words has been reached
+     */
+    private void validateCurrentWord() {
+        String word = this.currentList.get(0);
+
+        if(word.length() == this.currentPos) {
+            //The current word has been completed
+            this.score++;
+            if (score % 100 == 0) this.levelUp();
+            if (this.blueWordsPos.size() > 0 && this.blueWordsPos.get(0) == 0) {
+                this.lives+= word.length();
+                this.blueWordsPos.remove(0);
+            }
+        }else{
+            //The current word has not been completed
+            this.lives--;
+            if(this.lives == 0) this.gameRunning = false;
+        }
+
+        this.currentPos = 0;
+        this.currentList.remove(0);
+        this.blueWordsPos.replaceAll(integer -> integer - 1);
     }
 
     public List<Integer> getBlueWordsPos() {
@@ -181,7 +213,9 @@ public class GameCompetitiveSolo extends Game{
         this.lives = i;
     }
 
-
+    /**
+     * Stop the timer
+     */
     @Override
     public void stop(){
         if(this.timer != null) {
