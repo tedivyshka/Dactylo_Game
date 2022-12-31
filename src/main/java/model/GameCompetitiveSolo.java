@@ -12,6 +12,7 @@ public class GameCompetitiveSolo extends Game{
     private int timeBetweenWords; //Ajouter un mot après chaque timeBetweenWords en secondes
     private List<Integer> blueWordsPos; //Les positions des mots bleu qui ajoutent des vies
     private static final int maxWordsInList = 18;
+    private static int bonusRate = 20; // % to get a blue word
     private Timer timer;
     private Controller controller;
 
@@ -30,7 +31,7 @@ public class GameCompetitiveSolo extends Game{
         this.gameRunning = true;
         this.blueWordsPos = new ArrayList<Integer>();
         this.timer = new Timer();
-        timerStart();
+        timerStart(true);
         this.startTime = System.nanoTime();
     }
 
@@ -98,20 +99,26 @@ public class GameCompetitiveSolo extends Game{
             this.timer.cancel();
         }
         catch (IllegalStateException ex){}
-        timerStart();
+        timerStart(false);
     }
 
-    void timerStart() {
+    void timerStart(boolean startOfGame) {
+        int delay = (startOfGame) ? 2500 : 0; // In the beginning of the game we give the player 2.5 seconds before starting the timer
         TimerTask task = new TimerTask(){
             @Override
             public void run() {
-                System.out.println("Adding new word\n");
                 WordList.addWord(currentList);
                 if(currentList.size() > maxWordsInList) validateCurrentWord();
+                //Update blueWordsPos
+                Random rand = new Random();
+                int randEntry = rand.nextInt(101);
+                if(randEntry < bonusRate){
+                    blueWordsPos.add(currentList.size() - 1);
+                }
                 controller.update();
             }
         };
-        timer.schedule(task,0,this.timeBetweenWords * 1000L);
+        timer.schedule(task,delay,this.timeBetweenWords * 1000L);
     }
 
     private void validateCurrentWord() {
@@ -136,18 +143,18 @@ public class GameCompetitiveSolo extends Game{
         //If the list is half or less full we add a new word
         boolean addNew = this.currentList.size() < (maxWordsInList / 2);
         WordList.update(this.currentList,addNew);
-        //if(!addNew) return;
 
         //Update blueWordsPos
         this.blueWordsPos.replaceAll(integer -> integer - 1);
+        if(!addNew) return;
+
         Random rand = new Random();
         int randEntry = rand.nextInt(101);
-        // % possibilite d'avoir un mot bonus
-        int bonusRate = 20;
         if(randEntry < bonusRate){
             this.blueWordsPos.add(this.currentList.size() - 1);
-            System.out.println("Added blue word, current blue word count: \n" + this.blueWordsPos.size());
         }
+
+        controller.update();
     }
 
     public List<Integer> getBlueWordsPos() {

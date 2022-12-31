@@ -301,7 +301,7 @@ public class View extends Application {
                     this.text.setStyleClass(position, position + currentList.get(i).length(), "blue");
                 }
             }
-            this.text.setStyleClass(0, pos, "red");
+            this.text.setStyleClass(0, pos, "green");
         }
         else if(this.controller.getGame().getMode().equals( Mode.MULTI)) {
             //this.text.setStyleClass(pos, this.text.getLength(), "black");
