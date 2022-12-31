@@ -33,7 +33,6 @@ public class GameMultiPlayer extends Game {
         try{
             InetAddress localHost = InetAddress.getLocalHost();
             String ipAddress = localHost.getHostAddress();
-            int port = 13000;
             this.setUp(ipAddress,true);
             return ipAddress;
         } catch (UnknownHostException e) {
@@ -87,10 +86,10 @@ public class GameMultiPlayer extends Game {
                 if (this.redWordsPos.size() > 0 && this.redWordsPos.get(0) == 0) {
                     //Send word to server
                     Gson gson = new Gson();
-                    Message message = new Message("WORD",word);
+                    Request message = new Request("WORD",word);
                     String json = gson.toJson(message);
 
-                    PrintWriter out = null;
+                    PrintWriter out;
                     try {
                         out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
                         out.println(json);
@@ -152,10 +151,10 @@ public class GameMultiPlayer extends Game {
             this.score++;
             if (this.redWordsPos.size() > 0 && this.redWordsPos.get(0) == 0) {
                 Gson gson = new Gson();
-                Message message = new Message("WORD",word);
+                Request message = new Request("WORD",word);
                 String json = gson.toJson(message);
 
-                PrintWriter out = null;
+                PrintWriter out;
                 try {
                     out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
                     out.println(json);
@@ -177,10 +176,10 @@ public class GameMultiPlayer extends Game {
     private void endGame() {
         //Notify the server that the game has ended
         Gson gson = new Gson();
-        Message message = new Message("END","");
+        Request message = new Request("END","");
         String json = gson.toJson(message);
 
-        PrintWriter out = null;
+        PrintWriter out;
         try {
             out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
             out.println(json);
@@ -210,19 +209,17 @@ public class GameMultiPlayer extends Game {
         Socket sock = new Socket(SERVER_HOST, SERVER_PORT);
         this.socket = sock;
         BufferedReader sock_br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        PrintWriter sock_pw = new PrintWriter(socket.getOutputStream(), true);
         System.out.println("Connection established");
 
         // Start a thread to receive messages from the server
         Thread receiverThread = new Thread(() -> {
             try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(this.socket.getInputStream()));
                 while (true) {
                     if(this.socket.isClosed()) break;
 
                     String line;
                     try {
-                        line = reader.readLine();
+                        line = sock_br.readLine();
                     }
                     catch(SocketException ex){
                         break; //Socket is closed
@@ -234,7 +231,7 @@ public class GameMultiPlayer extends Game {
                     }
                     // Handle the message received from the server
                     Gson gson = new Gson();
-                    Message message = gson.fromJson(line, Message.class);
+                    Request message = gson.fromJson(line, Request.class);
                     if(message.getType().equals("START")){
                         this.controller.startMultiPlayer();
                     }
@@ -278,18 +275,5 @@ public class GameMultiPlayer extends Game {
             throw new RuntimeException(e);
         }
         if(this.isHost) this.server.closeServer();
-    }
-}
-
-class Message {
-    private String type; // START -> start game  ;  WORD -> add word
-
-    private String word;
-
-    public String getType(){ return this.type; }
-    public String getWord(){ return this.word; }
-    public Message(String type, String word) {
-        this.type = type;
-        this.word = word;
     }
 }
