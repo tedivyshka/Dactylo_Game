@@ -2,6 +2,7 @@ package model;
 
 import controller.Controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameNormalSolo extends Game {
@@ -23,6 +24,7 @@ public class GameNormalSolo extends Game {
 		this.gameRunning = true;
 		this.startTime = System.nanoTime();
 		this.previousCorrectCharTime = 0;
+		this.regularityList = new ArrayList<>();
 	}
 
 	/**

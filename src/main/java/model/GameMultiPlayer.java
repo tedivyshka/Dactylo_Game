@@ -71,6 +71,7 @@ public class GameMultiPlayer extends Game {
         this.gameRunning = true;
         this.redWordsPos = new ArrayList<>();
         this.startTime = System.nanoTime();
+        this.regularityList = new ArrayList<>();
 
         if(isHost){
             try { hostGame(); }
@@ -121,13 +122,24 @@ public class GameMultiPlayer extends Game {
                 this.updateList();
                 return true;
             }
+            if (this.redWordsPos.size() > 0 && this.redWordsPos.get(0) == 0) {
+                // Red words only get sent if they are typed with no errors
+                // If current word is red -> turn it into a normal word
+                this.redWordsPos.remove(0);
+            }
             return false;
         } else {
             String word = this.currentList.get(0);
             if (word.length() == this.currentPos) {
                 //Word done but did not receive space -> error by the player
+                if (this.redWordsPos.size() > 0 && this.redWordsPos.get(0) == 0) {
+                    // Red words only get sent if they are typed with no errors
+                    // If current word is red -> turn it into a normal word
+                    this.redWordsPos.remove(0);
+                }
                 this.lives--;
                 if (this.lives <= 0) endGame();
+
                 return false;
             } else if (k == word.charAt(this.currentPos)) {
                 //Character typed is the correct one
@@ -142,6 +154,11 @@ public class GameMultiPlayer extends Game {
                 return true;
             } else {
                 //Character typed is the wrong one
+                if (this.redWordsPos.size() > 0 && this.redWordsPos.get(0) == 0) {
+                    // Red words only get sent if they are typed with no errors
+                    // If current word is red -> turn it into a normal word
+                    this.redWordsPos.remove(0);
+                }
                 this.lives--;
                 if (this.lives <= 0) endGame();
                 return false;

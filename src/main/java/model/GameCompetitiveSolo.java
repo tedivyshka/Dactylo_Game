@@ -34,6 +34,7 @@ public class GameCompetitiveSolo extends Game{
         this.timeBetweenWords = 3;
         this.gameRunning = true;
         this.blueWordsPos = new ArrayList<Integer>();
+        this.regularityList = new ArrayList<>();
         this.timer = new Timer();
         timerStart(true);
         this.startTime = System.nanoTime();
