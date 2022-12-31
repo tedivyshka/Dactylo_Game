@@ -70,6 +70,7 @@ public class GameMultiPlayer extends Game {
         this.level = 1;
         this.gameRunning = true;
         this.redWordsPos = new ArrayList<>();
+        this.initRedWords();
         this.startTime = System.nanoTime();
         this.regularityList = new ArrayList<>();
 
@@ -87,6 +88,14 @@ public class GameMultiPlayer extends Game {
             }
         }
 
+    }
+
+    private void initRedWords() {
+        for(int i = 0; i < this.currentList.size(); i++){
+            Random rand = new Random();
+            int randEntry = rand.nextInt(101);
+            if (randEntry < redWordRate) this.redWordsPos.add(i);
+        }
     }
 
     /**
