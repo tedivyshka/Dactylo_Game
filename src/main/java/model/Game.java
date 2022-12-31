@@ -19,11 +19,11 @@ public abstract class Game {
 
 	/**
 	 * Static factory pattern to create a game
-	 * @param gamemode the mode of the game
-	 * @return Game object according to the gamemode
+	 * @param gameMode the mode of the game
+	 * @return Game object according to the game mode
 	 */
-	public static Game of(int gamemode) {
-		switch(gamemode) {
+	public static Game of(int gameMode) {
+		switch(gameMode) {
 			case 0 : return new GameNormalSolo();
 			case 1 : return new GameCompetitiveSolo();
 			case 2 : return new GameMultiPlayer();
@@ -32,7 +32,9 @@ public abstract class Game {
 	}
 
 	/**
-	 * Get the precision statistic of the game
+	 * Get the precision statistic of the game:
+	 * Number of correct characters divided by the number of total characters typed
+	 * Multiplied by 100 in order to display as percentage
 	 * @return precision
 	 */
 	public double getPrecision(){
@@ -42,7 +44,9 @@ public abstract class Game {
 	}
 
 	/**
-	 * Get the speed statistic of the game
+	 * Get the speed statistic of the game:
+	 * The number of correct characters divided by the time the game took in minutes,
+	 * divided by the number of characters per word in average (here: 5)
 	 * @return speed
 	 */
 	public double getSpeed(){
@@ -56,7 +60,8 @@ public abstract class Game {
 	}
 
 	/**
-	 * Get the regularity statistic of the game
+	 * Get the regularity statistic of the game:
+	 * Average time between two correct characters typed
 	 * @return regularity
 	 */
 	public double getRegularity(){
