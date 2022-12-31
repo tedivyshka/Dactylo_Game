@@ -136,7 +136,7 @@ public class GameMultiPlayer extends Game {
                 if (this.previousCorrectCharTime == 0) {
                     this.previousCorrectCharTime = System.nanoTime();
                 } else {
-                    this.regularitySum += (System.nanoTime() - this.previousCorrectCharTime);
+                    this.regularityList.add((System.nanoTime() - this.previousCorrectCharTime));
                     this.previousCorrectCharTime = System.nanoTime();
                 }
                 return true;

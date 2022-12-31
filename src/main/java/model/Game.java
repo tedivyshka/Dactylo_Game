@@ -9,7 +9,7 @@ public abstract class Game {
 	protected int currentPos;
 	protected int score;
 	protected boolean gameRunning;
-	protected long regularitySum;
+	protected List<Long> regularityList;
 	protected long previousCorrectCharTime;
 	protected long startTime;
 	protected int correctCharacters;
@@ -65,10 +65,17 @@ public abstract class Game {
 	 * @return regularity
 	 */
 	public double getRegularity(){
+		//TODO calculate regularity
+		//TODO explain in the javadoc
+		//TODO remove regularity getter and setter -> fix tests
+
+		/*
 		double result = (double) this.regularitySum / (double) (1000000 * (this.correctCharacters-1)) ;
 		result = result * 1000;
 		long tmp = Math.round(result);
 		return (double) tmp / 1000;
+		*/
+		 return 0;
 	}
 
 	public abstract boolean keyInput(int k);
@@ -126,11 +133,12 @@ public abstract class Game {
 	}
 
 	public long getRegularitySum() {
-		return regularitySum;
+		//return regularitySum;
+		return 0;
 	}
 
 	public void setRegularitySum(long regularitySum) {
-		this.regularitySum = regularitySum;
+		//this.regularitySum = regularitySum;
 	}
 
 	public long getPreviousCorrectCharTime() {
