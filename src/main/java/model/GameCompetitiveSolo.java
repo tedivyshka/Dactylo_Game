@@ -116,6 +116,7 @@ public class GameCompetitiveSolo extends Game{
             this.timer.cancel();
         }
         catch (IllegalStateException ex){}
+        this.timer = new Timer();
         timerStart(false);
     }
 
