@@ -67,9 +67,9 @@ public class Controller {
      */
     public void getStats() {
         String s = "Speed: " + game.getSpeed() + " MPM\n"
-                + "Precision: " + game.getPrecision()
-                + "%\n"
+                + "Precision: " + game.getPrecision() + "%\n"
                 + "Regularity: " + game.getRegularity() + " second(s)\n"
+                + "Score: " + game.getScore() + " word(s)\n"
                 + ((this.game instanceof  GameMultiPlayer) ? "Rank: " + ((GameMultiPlayer)game).getRank() + "\n" : "");
 
         Platform.runLater(() -> view.setEndScreen(s));

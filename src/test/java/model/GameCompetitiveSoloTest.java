@@ -52,7 +52,7 @@ public class GameCompetitiveSoloTest {
         assertEquals(0, game.getCurrentPos());
         assertEquals(0, game.getCorrectCharacters());
         assertEquals(1, game.getTypedCharacters());
-        assertEquals(20, game.getLives());
+        assertEquals(19, game.getLives());
 
         // Type the entire first word
         game.keyInput('t');
@@ -64,7 +64,7 @@ public class GameCompetitiveSoloTest {
         assertEquals(0, game.getCurrentPos());
         assertEquals(5, game.getCorrectCharacters());
         assertEquals(6, game.getTypedCharacters());
-        assertEquals(20, game.getLives());
+        assertEquals(19, game.getLives());
     }
 
     @Test

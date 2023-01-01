@@ -350,6 +350,7 @@ public class View extends Application {
      * @param stats statistics of the game
      */
     public void setEndScreen(String stats) {
+        this.resetAdditionalInfo();
         this.text.replaceText(stats);
         this.text.setStyleClass(0, this.text.getLength(), "black");
     }

@@ -85,7 +85,9 @@ public abstract class Game {
 		// divided by the size of the series
 		sum /= reg.size();
 		// square root
-		return Math.sqrt(sum);
+		double sqrt = Math.sqrt(sum);
+		sqrt = Math.round(sqrt * 100.0) / 100.0;
+		return sqrt;
 	}
 
 	public abstract boolean keyInput(int k);
@@ -140,5 +142,9 @@ public abstract class Game {
 
 	public void setTypedCharacters(int typedCharacters) {
 		this.typedCharacters = typedCharacters;
+	}
+
+	public int getScore() {
+		return this.score;
 	}
 }
