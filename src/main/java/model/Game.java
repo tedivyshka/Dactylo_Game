@@ -2,6 +2,7 @@ package model;
 
 import controller.Controller;
 
+import java.util.Collections;
 import java.util.List;
 
 public abstract class Game {
@@ -27,8 +28,8 @@ public abstract class Game {
 			case 0 : return new GameNormalSolo();
 			case 1 : return new GameCompetitiveSolo();
 			case 2 : return new GameMultiPlayer();
+			default : return null;
 		}
-		return null;
 	}
 
 	/**
@@ -60,22 +61,31 @@ public abstract class Game {
 	}
 
 	/**
-	 * Get the regularity statistic of the game:
-	 * Average time between two correct characters typed
+	 * The series under study is the regularityList
+	 * which contains the duration between 2 consecutive useful characters
+	 *
+	 * To calculate the regularity, we proceed as follows:
+	 * 1 - Calculate the arithmetic average of the series.
+	 * 2 - Calculate the square of the deviation from the average of each value in the series.
+	 * 3 - Calculate the sum of the values obtained.
+	 * 4 - We divide by the size of the series.
+	 * 5 - Calculate the square root of the result.
+	 *
 	 * @return regularity
 	 */
 	public double getRegularity(){
-		//TODO calculate regularity
-		//TODO explain in the javadoc
-		//TODO remove regularity getter and setter -> fix tests
-
-		/*
-		double result = (double) this.regularitySum / (double) (1000000 * (this.correctCharacters-1)) ;
-		result = result * 1000;
-		long tmp = Math.round(result);
-		return (double) tmp / 1000;
-		*/
-		 return 0;
+		// conversion in seconds
+		List<Double> reg = this.regularityList.stream().mapToDouble(x -> x / 1000000000f).boxed().toList();
+		// calcul of average
+		double average = reg.stream().reduce(0D ,Double::sum) / reg.size();
+		// distance from the average of each of the values in the series.
+		double sum = reg.stream().map(x -> Math.abs(average - x))
+				// to square // sum of list
+				.map(x -> x * x).reduce(0D, Double::sum);
+		// divided by the size of the series
+		sum /= reg.size();
+		// square root
+		return Math.sqrt(sum);
 	}
 
 	public abstract boolean keyInput(int k);
@@ -112,47 +122,6 @@ public abstract class Game {
 		return currentPos;
 	}
 
-	public void setCurrentPos(int currentPos) {
-		this.currentPos = currentPos;
-	}
-
-	public int getScore() {
-		return score;
-	}
-
-	public void setScore(int score) {
-		this.score = score;
-	}
-
-	public boolean isGameRunning() {
-		return gameRunning;
-	}
-
-	public void setGameRunning(boolean gameRunning) {
-		this.gameRunning = gameRunning;
-	}
-
-	public long getRegularitySum() {
-		//return regularitySum;
-		return 0;
-	}
-
-	public void setRegularitySum(long regularitySum) {
-		//this.regularitySum = regularitySum;
-	}
-
-	public long getPreviousCorrectCharTime() {
-		return previousCorrectCharTime;
-	}
-
-	public void setPreviousCorrectCharTime(long previousCorrectCharTime) {
-		this.previousCorrectCharTime = previousCorrectCharTime;
-	}
-
-	public long getStartTime() {
-		return startTime;
-	}
-
 	public void setStartTime(long startTime) {
 		this.startTime = startTime;
 	}
@@ -171,21 +140,5 @@ public abstract class Game {
 
 	public void setTypedCharacters(int typedCharacters) {
 		this.typedCharacters = typedCharacters;
-	}
-
-	public List<String> getCurrentList() {
-		return currentList;
-	}
-
-	public void setCurrentList(List<String> currentList) {
-		this.currentList = currentList;
-	}
-
-	public static int getCharactersForWord() {
-		return charactersForWord;
-	}
-
-	public static void setCharactersForWord(int charactersForWord) {
-		Game.charactersForWord = charactersForWord;
 	}
 }

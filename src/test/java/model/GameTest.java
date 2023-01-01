@@ -49,11 +49,5 @@ class GameTest {
         assertEquals(60, game.getSpeed(), 0.1);
     }
 
-    @Test
-    public void testGetRegularity() {
-        game.setRegularitySum(5000000); // 5ms
-        game.setCorrectCharacters(2);
-        assertEquals(5, game.getRegularity(), 0.1);
-    }
 
 }

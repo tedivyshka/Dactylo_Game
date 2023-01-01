@@ -1,14 +1,10 @@
 package view;
 
-import com.sun.javafx.sg.prism.NGShape;
 import controller.Controller;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import model.GameCompetitiveSolo;
@@ -19,16 +15,12 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Border;
 
 import javafx.scene.control.*;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -52,8 +44,10 @@ public class View extends Application {
     public View(Controller c) {
         this.controller = c;
     }
-    
-    
+
+    /**
+     * the start menu where you choose the game mode.
+     */
     public void startingMenuGui(){
         root.getChildren().clear();
 
@@ -64,15 +58,12 @@ public class View extends Application {
         menu.setAlignment(Pos.CENTER);
 
 
-        // Créez les boutons pour chaque mode de jeu
         Button btnMode1 = new Button("Normal");
         Button btnMode2 = new Button("Competitive");
         Button btnMode3 = new Button("Multiplayer");
 
-        // Ajoutez les boutons au VBox
         menu.getChildren().addAll(btnMode1, btnMode2, btnMode3);
 
-        // Ajoutez un gestionnaire d'événements pour chaque bouton
         btnMode1.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -94,8 +85,13 @@ public class View extends Application {
     }
 
 
-
-
+    /**
+     * start function for JavaFX
+     * @param primaryStage the primary stage for this application, onto which
+     * the application scene can be set.
+     * Applications may create other stages, if needed, but they will not be
+     * primary stages.
+     */
     @Override
     public void start(Stage primaryStage) {
         try {
@@ -115,19 +111,21 @@ public class View extends Application {
         }
     }
 
-
+    /**
+     * waiting page for the host.
+     * @param ip the IP of the host
+     */
     public void waitAsHostPage(String ip) {
         root.getChildren().clear();
 
         returnMenuButton();
-        //todo peut-etre interrupt le server
         String ipAddress = "127.0.1.1";
         URL url = null;
         try {
             url = new URL("https://api.ipify.org");
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
             ipAddress = reader.readLine();
-        } catch (Exception e) {}
+        } catch (Exception ignored) {}
 
         Label message = new Label("Waiting for player to join.\nYour address is " + ipAddress + "." +
                 "\n If this game is hosted locally, use 127.0.1.1 as the address.");
@@ -146,6 +144,9 @@ public class View extends Application {
     }
 
 
+    /**
+     * the multiplayer menu where you can choose if you want to host a game or join one.
+     */
     public void menuMultiplayer() {
         root.getChildren().clear();
         root.requestFocus();
@@ -189,12 +190,15 @@ public class View extends Application {
 
     }
 
+    /**
+     * waiting page for the player who joined a game.
+     * @param ip the IP of the host
+     */
     public void waitAsJoinerPage(String ip) {
         root.getChildren().clear();
         root.requestFocus();
 
         returnMenuButton();
-        //todo peut-etre interrupt le server
 
         Label message = new Label("Waiting for player to join.\nThe address joined is " + ip + ".");
         message.setWrapText(true);
@@ -211,6 +215,9 @@ public class View extends Application {
 
     }
 
+    /**
+     * the button to return to the menu.
+     */
     private void returnMenuButton(){
         MenuBar menuBar = new MenuBar();
 
@@ -223,66 +230,66 @@ public class View extends Application {
         root.setTop(topBar);
     }
 
+    /**
+     * the display of a game, regardless of the game mode.
+     */
     public void startGame(){
+        root.getChildren().clear();
+        root.requestFocus();
 
-        try{
+        returnMenuButton();
 
-            root.getChildren().clear();
-            root.requestFocus();
+        this.text = new StyleClassedTextArea();
+        text.setEditable(false);
+        text.setWrapText(true);
+        text.setStyleClass(0,text.getLength(),"black");
 
-            returnMenuButton();
+        this.additionnalInfo = new StyleClassedTextArea();
+        additionnalInfo.setEditable(false);
+        additionnalInfo.setWrapText(false);
 
+        VBox vbox = new VBox(text,additionnalInfo);
 
-            this.text = new StyleClassedTextArea();
-            text.setEditable(false);
-            text.setWrapText(true);
-            text.setStyleClass(0,text.getLength(),"black");
+        root.setCenter(vbox);
 
-            this.additionnalInfo = new StyleClassedTextArea();
-            additionnalInfo.setEditable(false);
-            additionnalInfo.setWrapText(false);
+        scene.setOnKeyTyped(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if(controller.isGameRunning()) {
+                    controller.keyPressed(event);
+                    controller.update();
+                    if(!controller.isGameRunning()){
+                        if(controller.getGame().getMode().equals(Mode.COMPETITIVE)) ((GameCompetitiveSolo) controller.getGame()).cancelTimer();
 
-
-            VBox vbox = new VBox(text,additionnalInfo);
-
-            root.setCenter(vbox);
-
-            scene.setOnKeyTyped(new EventHandler<KeyEvent>() {
-                @Override
-                public void handle(KeyEvent event) {
-                    if(controller.isGameRunning()) {
-                        controller.keyPressed(event);
-                        controller.update();
-                        if(!controller.isGameRunning()){
-                            if(controller.getGame().getMode().equals(Mode.COMPETITIVE)) ((GameCompetitiveSolo) controller.getGame()).cancelTimer();
-
-                            System.out.println("game no more running\n");
-                            //on affiche les statistiques
-                            controller.getStats();
-                        }
+                        System.out.println("game no more running\n");
+                        //on affiche les statistiques
+                        controller.getStats();
                     }
-
                 }
-
-
-            });
-
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
-
+            }
+        });
     }
 
+    /**
+     * text display
+     * @param s text to print
+     */
     public void printText(String s) {
         this.text.appendText(s + " ");
     }
 
-
+    /**
+     * reset the displayed text.
+     */
     public void resetText() {
         this.text.replaceText("");
     }
 
+    /**
+     * color the words being written.
+     * Also color the words in blue and red for some game modes.
+     * @param pos the location of the writing cursor in the first word.
+     */
     public void colorWord(int pos){
         this.text.setStyleClass(0, this.text.getLength(), "black");
         this.text.setStyleClass(0, pos, "green");
@@ -324,41 +331,67 @@ public class View extends Application {
     }
 
 
-
+    /**
+     * main function to start our dactylo game.
+     * @param args
+     */
     public static void main(String[] args) {
         Controller controller = new Controller();
-        //controller.init();
-        //controller.getGame().init(controller);
-        // on commence par start la GUI
         Platform.runLater(() -> {
-            try {
-                View v1 = new View(controller);
-                controller.setView(v1);
-                Stage stage = new Stage();
-                v1.start(stage);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            View v1 = new View(controller);
+            controller.setView(v1);
+            Stage stage = new Stage();
+            v1.start(stage);
         });
-        //controller.update();
     }
 
+    /**
+     * display the end screen with the stats of the game.
+     * @param stats statistics of the game
+     */
     public void setEndScreen(String stats) {
         this.text.replaceText(stats);
         this.text.setStyleClass(0, this.text.getLength(), "black");
     }
 
 
-    public void printLivesAndLevel(int lives,int level) {
-        this.additionnalInfo.replaceText("lives : " + lives + "\n" + "level : " + level);
+    /**
+     * print lives.
+     * @param lives
+     */
+    public void printLives(int lives) {
+        this.additionnalInfo.appendText("lives : " + lives + "\n");
         this.additionnalInfo.setStyleClass(0,this.additionnalInfo.getLength(),"black");
     }
 
+    /**
+     * print the level
+     * @param level
+     */
+    public void printLevel(int level){
+        this.additionnalInfo.appendText("level : " + level + "\n");
+        this.additionnalInfo.setStyleClass(0,this.additionnalInfo.getLength(),"black");
+    }
 
+    /**
+     * reset the additional information text (level and lives).
+     */
+    public void resetAdditionalInfo(){
+        this.additionnalInfo.replaceText("");
+    }
+
+    /**
+     * error page.
+     * @param e error
+     */
     public void printError(Exception e) {
+        root.getChildren().clear();
+        root.requestFocus();
+
+        returnMenuButton();
+
         Label error = new Label("Error :" + e.toString());
-        this.root.setBottom(error);
+        this.root.setCenter(error);
     }
 }
 

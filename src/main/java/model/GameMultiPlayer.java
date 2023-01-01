@@ -11,18 +11,17 @@ import java.util.Random;
 
 public class GameMultiPlayer extends Game {
 
-    private int lives;
-    private int level;
-    private List<Integer> redWordsPos; // List of positions of red (bonus) words
-    private static final int redWordRate = 35; // % to get a red word
-    private static final int maxWordsInList = 18;
-    private Controller controller;
-    private static String SERVER_HOST; // Address of the server to join
-    private static boolean isHost; // Whether the current client is hosting a server
-    private int nbPlayers;
-    private static Socket socket;
-    private Server server;
-    private int rank;
+    protected int lives;
+    protected List<Integer> redWordsPos; // List of positions of red (bonus) words
+    protected static final int redWordRate = 35; // % to get a red word
+    protected static final int maxWordsInList = 18;
+    protected Controller controller;
+    protected static String SERVER_HOST; // Address of the server to join
+    protected static boolean isHost; // Whether the current client is hosting a server
+    protected int nbPlayers;
+    protected static Socket socket;
+    protected Server server;
+    protected int rank;
 
     /**
      * Set up the server address and isHost boolean
@@ -37,7 +36,7 @@ public class GameMultiPlayer extends Game {
     /**
      * Set up the host: call setUp with current address
      * @param nbPlayers
-     * @return
+     * @return the ip address of the host.
      */
     public String setUpHost(int nbPlayers){
         this.nbPlayers = nbPlayers;
@@ -57,7 +56,6 @@ public class GameMultiPlayer extends Game {
      * @param c
      */
     public void init(Controller c) {
-        System.out.println("Init game\n");
         super.mode = Mode.MULTI;
 
         WordList.generateList();
@@ -67,7 +65,6 @@ public class GameMultiPlayer extends Game {
         this.correctCharacters = 0;
         this.typedCharacters = 0;
         this.lives = 20;
-        this.level = 1;
         this.gameRunning = true;
         this.redWordsPos = new ArrayList<>();
         this.initRedWords();
@@ -78,19 +75,17 @@ public class GameMultiPlayer extends Game {
             try { hostGame(); }
             catch (IOException e) {
                 this.controller.error(e);
-                System.out.println("error !!!\n");
             }
         }else{
             try { joinGame(); }
             catch (IOException e) {
                 this.controller.error(e);
-                System.out.println("error !!!\n");
             }
         }
 
     }
 
-    private void initRedWords() {
+    void initRedWords() {
         for(int i = 0; i < this.currentList.size(); i++){
             Random rand = new Random();
             int randEntry = rand.nextInt(101);
@@ -105,8 +100,8 @@ public class GameMultiPlayer extends Game {
      */
     public boolean keyInput(int k) {
         this.typedCharacters++;
+        String word = this.currentList.get(0);
         if (k == ' ') {
-            String word = this.currentList.get(0);
             if (word.length() == this.currentPos) {
                 //Word done -> move to next one
                 this.correctCharacters++;
@@ -138,7 +133,6 @@ public class GameMultiPlayer extends Game {
             }
             return false;
         } else {
-            String word = this.currentList.get(0);
             if (word.length() == this.currentPos) {
                 //Word done but did not receive space -> error by the player
                 if (this.redWordsPos.size() > 0 && this.redWordsPos.get(0) == 0) {
@@ -198,7 +192,7 @@ public class GameMultiPlayer extends Game {
      * Validate current word when a new word has been added and the limit of
      * words has been reached
      */
-    private void validateCurrentWord() {
+    void validateCurrentWord() {
         String word = this.currentList.get(0);
         if(word.length() == this.currentPos) {
             //The current word has been completed
@@ -274,8 +268,7 @@ public class GameMultiPlayer extends Game {
         int SERVER_PORT = 13000;
         System.out.println("Trying to join " + SERVER_HOST + "\n");
 
-        Socket sock = new Socket(SERVER_HOST, SERVER_PORT);
-        this.socket = sock;
+        socket = new Socket(SERVER_HOST, SERVER_PORT);
         BufferedReader sock_br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         System.out.println("Connection established");
 
@@ -283,7 +276,7 @@ public class GameMultiPlayer extends Game {
         Thread receiverThread = new Thread(() -> {
             try {
                 while (true) {
-                    if(this.socket.isClosed()) break;
+                    if(socket.isClosed()) break;
 
                     String line;
                     try {
@@ -342,14 +335,18 @@ public class GameMultiPlayer extends Game {
     @Override
     public void stop(){
         try {
-            if(this.socket != null) this.socket.close();
+            if(socket != null) socket.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        if(this.isHost) this.server.closeServer();
+        if(isHost) this.server.closeServer();
     }
 
     public List<Integer> getRedWordsPos() { return this.redWordsPos; }
 
     public int getRank(){ return this.rank; }
+
+    public int getLives() {
+        return this.lives;
+    }
 }

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< HEAD
 <testsuite name="model.GameCompetitiveSoloTest" tests="6" skipped="0" failures="1" errors="0" timestamp="2023-01-01T16:53:04" hostname="tedi-VirtualBox" time="0.052">
   <properties/>
   <testcase name="testKeyInput_CorrectCharacter()" classname="model.GameCompetitiveSoloTest" time="0.021"/>
@@ -100,6 +101,15 @@
   <testcase name="testKeyInput_LoseLife()" classname="model.GameCompetitiveSoloTest" time="0.006"/>
   <testcase name="testKeyInput_Space()" classname="model.GameCompetitiveSoloTest" time="0.004"/>
   <testcase name="testKeyInput_WrongCharacter()" classname="model.GameCompetitiveSoloTest" time="0.002"/>
+=======
+<testsuite name="model.GameCompetitiveSoloTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2023-01-01T16:44:01" hostname="pop-os" time="0.047">
+  <properties/>
+  <testcase name="testKeyInput_CorrectCharacter()" classname="model.GameCompetitiveSoloTest" time="0.026"/>
+  <testcase name="testInit()" classname="model.GameCompetitiveSoloTest" time="0.005"/>
+  <testcase name="testKeyInput_LoseLife()" classname="model.GameCompetitiveSoloTest" time="0.005"/>
+  <testcase name="testKeyInput_Space()" classname="model.GameCompetitiveSoloTest" time="0.004"/>
+  <testcase name="testKeyInput_WrongCharacter()" classname="model.GameCompetitiveSoloTest" time="0.004"/>
+>>>>>>> d186f5946f7811e9292f0a512c977a859b5b218b
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

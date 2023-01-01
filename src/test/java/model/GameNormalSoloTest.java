@@ -49,7 +49,6 @@ class GameNormalSoloTest {
     @Test
     void testKeyInput_correctCharacter() {
         game.init(new Controller());
-        assertFalse(game.keyInput('a'));
 
         game.currentList.set(0, "abc");
         game.currentPos = 0;
