@@ -73,6 +73,7 @@ public class GameCompetitiveSolo extends Game{
                 return true;
             }
             this.lives--;
+            this.gameRunning = (this.lives > 0);
             return false;
         }
         else {

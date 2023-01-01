@@ -132,6 +132,7 @@ public class GameMultiPlayer extends Game {
                 this.redWordsPos.remove(0);
             }
             this.lives--;
+            if (this.lives <= 0) endGame();
             return false;
         } else {
             if (word.length() == this.currentPos) {
