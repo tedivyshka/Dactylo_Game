@@ -184,10 +184,10 @@ public class GameMultiPlayer extends Game {
         //If the list is half or less full we add a new word
         boolean addNew = this.currentList.size() < (maxWordsInList / 2);
         WordList.update(this.currentList, addNew);
-        if(!addNew) return;
-
-        //Update redWordsPos
         this.redWordsPos.replaceAll(integer -> integer - 1);
+        
+        if(!addNew) return;
+        //Update redWordsPos
         Random rand = new Random();
         int randEntry = rand.nextInt(101);
         if (randEntry < redWordRate) this.redWordsPos.add(this.currentList.size() - 1);
