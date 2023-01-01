@@ -72,6 +72,7 @@ public class GameCompetitiveSolo extends Game{
                 this.updateList();
                 return true;
             }
+            this.lives--;
             return false;
         }
         else {

@@ -131,6 +131,7 @@ public class GameMultiPlayer extends Game {
                 // If current word is red -> turn it into a normal word
                 this.redWordsPos.remove(0);
             }
+            this.lives--;
             return false;
         } else {
             if (word.length() == this.currentPos) {
