@@ -37,10 +37,6 @@ public class View extends Application {
 
     private StyleClassedTextArea additionnalInfo = null;
 
-
-
-
-
     public View(Controller c) {
         this.controller = c;
     }
@@ -84,7 +80,6 @@ public class View extends Application {
         });
     }
 
-
     /**
      * start function for JavaFX
      * @param primaryStage the primary stage for this application, onto which
@@ -94,55 +89,16 @@ public class View extends Application {
      */
     @Override
     public void start(Stage primaryStage) {
-        try {
-            startingMenuGui();
-            
-            scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("style.css")).toExternalForm());
+        startingMenuGui();
 
-            primaryStage.setTitle("Dactylo-Game");
-            primaryStage.setScene(scene);
+        scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("style.css")).toExternalForm());
 
-            root.requestFocus();
-            primaryStage.show();
+        primaryStage.setTitle("Dactylo-Game");
+        primaryStage.setScene(scene);
 
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
+        root.requestFocus();
+        primaryStage.show();
     }
-
-    /**
-     * waiting page for the host.
-     * @param ip the IP of the host
-     */
-    public void waitAsHostPage(String ip) {
-        root.getChildren().clear();
-
-        returnMenuButton();
-        String ipAddress = "127.0.1.1";
-        URL url = null;
-        try {
-            url = new URL("https://api.ipify.org");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            ipAddress = reader.readLine();
-        } catch (Exception ignored) {}
-
-        Label message = new Label("Waiting for player to join.\nYour address is " + ipAddress + "." +
-                "\n If this game is hosted locally, use 127.0.1.1 as the address.");
-        message.setWrapText(true);
-
-        HBox messageBox = new HBox(message);
-        messageBox.setAlignment(Pos.CENTER);
-
-        ProgressIndicator progressIndicator = new ProgressIndicator();
-        VBox vbox = new VBox(messageBox,progressIndicator);
-        vbox.setAlignment(Pos.CENTER);
-        vbox.setSpacing(10);
-
-        root.setCenter(vbox);
-
-    }
-
 
     /**
      * the multiplayer menu where you can choose if you want to host a game or join one.
@@ -183,10 +139,38 @@ public class View extends Application {
         hostJoin.setAlignment(Pos.CENTER);
         hostJoin.setSpacing(10);
 
-
         root.setCenter(hostJoin);
+    }
 
+    /**
+     * waiting page for the host.
+     * @param ip the IP of the host
+     */
+    public void waitAsHostPage(String ip) {
+        root.getChildren().clear();
 
+        returnMenuButton();
+        String ipAddress = "127.0.1.1";
+        URL url = null;
+        try {
+            url = new URL("https://api.ipify.org");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            ipAddress = reader.readLine();
+        } catch (Exception ignored) {}
+
+        Label message = new Label("Waiting for player(s) to join.\nYour address is " + ipAddress + ".\n" +
+                "If this game is hosted locally, use 127.0.1.1 as the address.\n");
+        message.setWrapText(true);
+
+        HBox messageBox = new HBox(message);
+        messageBox.setAlignment(Pos.CENTER);
+
+        ProgressIndicator progressIndicator = new ProgressIndicator();
+        VBox vbox = new VBox(messageBox,progressIndicator);
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setSpacing(10);
+
+        root.setCenter(vbox);
 
     }
 
