@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="model.GameNormalSoloTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2022-12-30T00:03:27" hostname="pop-os" time="0.017">
+<testsuite name="model.GameNormalSoloTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2023-01-01T16:44:01" hostname="pop-os" time="0.013">
   <properties/>
   <testcase name="testInit()" classname="model.GameNormalSoloTest" time="0.004"/>
-  <testcase name="testKeyInput_correctCharacter()" classname="model.GameNormalSoloTest" time="0.004"/>
-  <testcase name="testKeyInput_space()" classname="model.GameNormalSoloTest" time="0.003"/>
-  <testcase name="testKeyInput_incorrectCharacter()" classname="model.GameNormalSoloTest" time="0.004"/>
-  <system-out><![CDATA[Adding character: a
-Expected c ; got a
-Adding character: a
-Adding character: b
-Adding character: t
-Adding character: e
-Adding character: s
-Adding character: t
-Finished word: test , score = 1
-Adding character: d
-Expected a ; got d
-]]></system-out>
-  <system-err><![CDATA[]]></system-err>
+  <testcase name="testKeyInput_correctCharacter()" classname="model.GameNormalSoloTest" time="0.003"/>
+  <testcase name="testKeyInput_space()" classname="model.GameNormalSoloTest" time="0.001"/>
+  <testcase name="testKeyInput_incorrectCharacter()" classname="model.GameNormalSoloTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Exception in thread "Thread-10" java.lang.IllegalStateException: Toolkit not initialized
+	at com.sun.javafx.application.PlatformImpl.runLater(PlatformImpl.java:437)
+	at com.sun.javafx.application.PlatformImpl.runLater(PlatformImpl.java:432)
+	at javafx.application.Platform.runLater(Platform.java:162)
+	at controller.Controller.startMultiPlayer(Controller.java:143)
+	at model.GameMultiPlayer.lambda$joinGame$3(GameMultiPlayer.java:298)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+Exception in thread "Thread-12" java.lang.IllegalStateException: Toolkit not initialized
+	at com.sun.javafx.application.PlatformImpl.runLater(PlatformImpl.java:437)
+	at com.sun.javafx.application.PlatformImpl.runLater(PlatformImpl.java:432)
+	at javafx.application.Platform.runLater(Platform.java:162)
+	at controller.Controller.startMultiPlayer(Controller.java:143)
+	at model.GameMultiPlayer.lambda$joinGame$3(GameMultiPlayer.java:298)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+]]></system-err>
 </testsuite>

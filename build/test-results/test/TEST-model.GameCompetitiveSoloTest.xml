@@ -1,66 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="model.GameCompetitiveSoloTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2022-12-30T00:03:27" hostname="pop-os" time="0.068">
+<testsuite name="model.GameCompetitiveSoloTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2023-01-01T16:44:01" hostname="pop-os" time="0.047">
   <properties/>
-  <testcase name="testKeyInput_CorrectCharacter()" classname="model.GameCompetitiveSoloTest" time="0.031"/>
-  <testcase name="testInit()" classname="model.GameCompetitiveSoloTest" time="0.004"/>
-  <testcase name="testUpdateList()" classname="model.GameCompetitiveSoloTest" time="0.01"/>
-  <testcase name="testKeyInput_LoseLife()" classname="model.GameCompetitiveSoloTest" time="0.008"/>
-  <testcase name="testKeyInput_Space()" classname="model.GameCompetitiveSoloTest" time="0.008"/>
-  <testcase name="testKeyInput_WrongCharacter()" classname="model.GameCompetitiveSoloTest" time="0.003"/>
-  <system-out><![CDATA[Adding new word
-
-Adding character: t
-Adding new word
-
-Adding new word
-
-Added blue word, current blue word count: 
-1
-Adding new word
-
-Adding character: z
-Expected t ; got z
-Adding new word
-
-Adding character: t
-Adding character: e
-Adding character: s
-Adding character: t
-Finished word: test , lives left = 20
-Adding new word
-
-Adding character: z
-Expected t ; got z
-]]></system-out>
-  <system-err><![CDATA[Exception in thread "Timer-0" java.lang.NullPointerException: Cannot invoke "model.Game.getPos()" because "this.game" is null
-	at controller.Controller.update(Controller.java:46)
-	at model.GameCompetitiveSolo$1.run(GameCompetitiveSolo.java:112)
-	at java.base/java.util.TimerThread.mainLoop(Timer.java:566)
-	at java.base/java.util.TimerThread.run(Timer.java:516)
-Exception in thread "Timer-1" java.lang.NullPointerException: Cannot invoke "model.Game.getPos()" because "this.game" is null
-	at controller.Controller.update(Controller.java:46)
-	at model.GameCompetitiveSolo$1.run(GameCompetitiveSolo.java:112)
-	at java.base/java.util.TimerThread.mainLoop(Timer.java:566)
-	at java.base/java.util.TimerThread.run(Timer.java:516)
-Exception in thread "Timer-2" java.lang.NullPointerException: Cannot invoke "model.Game.getPos()" because "this.game" is null
-	at controller.Controller.update(Controller.java:46)
-	at model.GameCompetitiveSolo$1.run(GameCompetitiveSolo.java:112)
-	at java.base/java.util.TimerThread.mainLoop(Timer.java:566)
-	at java.base/java.util.TimerThread.run(Timer.java:516)
-Exception in thread "Timer-3" java.lang.NullPointerException: Cannot invoke "model.Game.getPos()" because "this.game" is null
-	at controller.Controller.update(Controller.java:46)
-	at model.GameCompetitiveSolo$1.run(GameCompetitiveSolo.java:112)
-	at java.base/java.util.TimerThread.mainLoop(Timer.java:566)
-	at java.base/java.util.TimerThread.run(Timer.java:516)
-Exception in thread "Timer-4" java.lang.NullPointerException: Cannot invoke "model.Game.getPos()" because "this.game" is null
-	at controller.Controller.update(Controller.java:46)
-	at model.GameCompetitiveSolo$1.run(GameCompetitiveSolo.java:112)
-	at java.base/java.util.TimerThread.mainLoop(Timer.java:566)
-	at java.base/java.util.TimerThread.run(Timer.java:516)
-Exception in thread "Timer-5" java.lang.NullPointerException: Cannot invoke "model.Game.getPos()" because "this.game" is null
-	at controller.Controller.update(Controller.java:46)
-	at model.GameCompetitiveSolo$1.run(GameCompetitiveSolo.java:112)
-	at java.base/java.util.TimerThread.mainLoop(Timer.java:566)
-	at java.base/java.util.TimerThread.run(Timer.java:516)
-]]></system-err>
+  <testcase name="testKeyInput_CorrectCharacter()" classname="model.GameCompetitiveSoloTest" time="0.026"/>
+  <testcase name="testInit()" classname="model.GameCompetitiveSoloTest" time="0.005"/>
+  <testcase name="testKeyInput_LoseLife()" classname="model.GameCompetitiveSoloTest" time="0.005"/>
+  <testcase name="testKeyInput_Space()" classname="model.GameCompetitiveSoloTest" time="0.004"/>
+  <testcase name="testKeyInput_WrongCharacter()" classname="model.GameCompetitiveSoloTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
 </testsuite>

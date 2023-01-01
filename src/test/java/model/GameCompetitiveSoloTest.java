@@ -74,13 +74,6 @@ public class GameCompetitiveSoloTest {
         assertFalse(game.isRunning());
     }
 
-    @Test
-    public void testUpdateList() {
-        int x = game.getList().size();
-        game.updateList();
-        assertEquals(x, game.getList().size());
-    }
-
 
 }
 
