@@ -279,7 +279,6 @@ public class View extends Application {
         this.text.setStyleClass(0, pos, "green");
 
         if(this.controller.getGame().getMode().equals( Mode.COMPETITIVE)) {
-            //this.text.setStyleClass(pos, this.text.getLength(), "black");
             List<Integer> blueWordList = ((GameCompetitiveSolo) this.controller.getGame()).getBlueWordsPos();
             List<String> currentList = this.controller.getGame().getList();
             if (blueWordList != null) {
@@ -296,8 +295,8 @@ public class View extends Application {
             this.text.setStyleClass(0, pos, "green");
         }
         else if(this.controller.getGame().getMode().equals( Mode.MULTI)) {
-            //this.text.setStyleClass(pos, this.text.getLength(), "black");
             List<Integer> redWordList = ((GameMultiPlayer) this.controller.getGame()).getRedWordsPos();
+            List<Integer> blueWordList = ((GameMultiPlayer) this.controller.getGame()).getBlueWordsPos();
             List<String> currentList = this.controller.getGame().getList();
             if (redWordList != null) {
                 for (Integer i : redWordList) {
@@ -308,6 +307,17 @@ public class View extends Application {
                         position++;
                     }
                     this.text.setStyleClass(position, position + currentList.get(i).length(), "red");
+                }
+            }
+            if (blueWordList != null) {
+                for (Integer i : blueWordList) {
+                    if (i < 0) continue;
+                    int position = 0;
+                    for (int j = 0; j < i; j++) {
+                        position += currentList.get(j).length();
+                        position++;
+                    }
+                    this.text.setStyleClass(position, position + currentList.get(i).length(), "blue");
                 }
             }
             this.text.setStyleClass(0, pos, "green");

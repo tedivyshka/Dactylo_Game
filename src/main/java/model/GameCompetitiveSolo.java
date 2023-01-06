@@ -33,7 +33,7 @@ public class GameCompetitiveSolo extends Game{
         this.level = 1;
         this.timeBetweenWords = 3;
         this.gameRunning = true;
-        this.blueWordsPos = new ArrayList<Integer>();
+        this.initBlueWords();
         this.regularityList = new ArrayList<>();
         this.timer = new Timer();
         timerStart(true);
@@ -217,6 +217,17 @@ public class GameCompetitiveSolo extends Game{
         this.lives = i;
     }
 
+    public void initBlueWords(){
+        this.blueWordsPos = new ArrayList<>();
+        for(int i = 0; i < this.currentList.size(); i++){
+            Random rand = new Random();
+            int randEntry = rand.nextInt(101);
+            if(randEntry < bonusRate){
+                this.blueWordsPos.add(i);
+            }
+        }
+    }
+
     /**
      * Stop the timer
      */
@@ -227,10 +238,3 @@ public class GameCompetitiveSolo extends Game{
         }
     }
 }
-
-/*
-– Vitesse (MPM) : le nombre de caractères utiles, divisé par le temps en minute, divisé encore
-par 5 (ici, on considère par convention qu’un mot fait en moyenne 5 caractères).
-– Précision (%) : le nombre de caractères utiles divisé par le nombre d’appuis de touche (×100).
-– Régularité : c’est l’écart-type de la durée entre 2 caractères utiles consécutifs.
- */

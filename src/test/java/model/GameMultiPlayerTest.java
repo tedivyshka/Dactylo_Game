@@ -60,7 +60,7 @@ class GameMultiPlayerTest {
     @Test
     public void testInitRedWords() {
         game.currentList = WordList.startingList();
-        game.initRedWords();
+        game.initRedBlueWords();
         assertNotNull(game.redWordsPos);
         assertTrue(game.redWordsPos.size() <= game.currentList.size());
     }

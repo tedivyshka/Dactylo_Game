@@ -164,6 +164,6 @@ public class Controller {
 
 
     public boolean isGameRunning() {
-        return game.isRunning();
+        return game != null && game.isRunning();
     }
 }

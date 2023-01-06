@@ -14,6 +14,9 @@ public class GameMultiPlayer extends Game {
     protected int lives;
     protected List<Integer> redWordsPos; // List of positions of red (bonus) words
     protected static final int redWordRate = 35; // % to get a red word
+    private List<Integer> blueWordsPos; // List of positions of blue (bonus) words
+    private static final int bonusRate = 20; // % to get a blue word
+
     protected static final int maxWordsInList = 18;
     protected Controller controller;
     protected static String SERVER_HOST; // Address of the server to join
@@ -67,7 +70,8 @@ public class GameMultiPlayer extends Game {
         this.lives = 20;
         this.gameRunning = true;
         this.redWordsPos = new ArrayList<>();
-        this.initRedWords();
+        this.blueWordsPos = new ArrayList<Integer>();
+        this.initRedBlueWords();
         this.startTime = System.nanoTime();
         this.regularityList = new ArrayList<>();
 
@@ -85,11 +89,12 @@ public class GameMultiPlayer extends Game {
 
     }
 
-    void initRedWords() {
+    void initRedBlueWords() {
         for(int i = 0; i < this.currentList.size(); i++){
             Random rand = new Random();
             int randEntry = rand.nextInt(101);
             if (randEntry < redWordRate) this.redWordsPos.add(i);
+            else if (randEntry < redWordRate + bonusRate) this.blueWordsPos.add(i);
         }
     }
 
@@ -122,6 +127,10 @@ public class GameMultiPlayer extends Game {
                         throw new RuntimeException(e);
                     }
                     this.redWordsPos.remove(0);
+                }
+                else if(this.blueWordsPos.size() > 0 && this.blueWordsPos.get(0) == 0){
+                    this.lives+= word.length();
+                    this.blueWordsPos.remove(0);
                 }
                 this.updateList();
                 return true;
@@ -181,13 +190,21 @@ public class GameMultiPlayer extends Game {
         boolean addNew = this.currentList.size() < (maxWordsInList / 2);
         WordList.update(this.currentList, addNew);
         this.redWordsPos.replaceAll(integer -> integer - 1);
-        
+
+        //Update blueWordsPos
+        this.blueWordsPos.replaceAll(integer -> integer - 1);
         if(!addNew) return;
-        //Update redWordsPos
+
         Random rand = new Random();
         int randEntry = rand.nextInt(101);
-        if (randEntry < redWordRate) this.redWordsPos.add(this.currentList.size() - 1);
+        if(randEntry < bonusRate){
+            this.blueWordsPos.add(this.currentList.size() - 1);
+        }
 
+        //Update redWordsPos
+        rand = new Random();
+        randEntry = rand.nextInt(101);
+        if (randEntry < redWordRate) this.redWordsPos.add(this.currentList.size() - 1);
     }
 
     /**
@@ -215,6 +232,10 @@ public class GameMultiPlayer extends Game {
                 }
                 this.redWordsPos.remove(0);
             }
+            else if (this.blueWordsPos.size() > 0 && this.blueWordsPos.get(0) == 0) {
+                this.lives+= word.length();
+                this.blueWordsPos.remove(0);
+            }
         }else{
             //The current word has not been completed
             this.lives--;
@@ -223,6 +244,7 @@ public class GameMultiPlayer extends Game {
         this.currentPos = 0;
         this.currentList.remove(0);
         this.redWordsPos.replaceAll(integer -> integer - 1);
+        this.blueWordsPos.replaceAll(integer -> integer - 1);
     }
 
     /**
@@ -351,4 +373,6 @@ public class GameMultiPlayer extends Game {
     public int getLives() {
         return this.lives;
     }
+
+    public List<Integer> getBlueWordsPos() { return this.blueWordsPos; }
 }
