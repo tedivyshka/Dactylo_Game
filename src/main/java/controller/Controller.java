@@ -134,6 +134,7 @@ public class Controller {
      * @param ip the IP of the host.
      */
     public void setUpJoin(String ip) {
+        this.game = Game.of(2);
         ((GameMultiPlayer)this.game).setUp(ip,false);
         Platform.runLater(() -> this.view.waitAsJoinerPage(ip));
         this.game.init(this);

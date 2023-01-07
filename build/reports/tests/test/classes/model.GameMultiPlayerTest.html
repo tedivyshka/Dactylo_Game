@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.039s</div>
+<div class="counter">0.053s</div>
 <p>duration</p>
 </div>
 </td>
@@ -82,27 +82,27 @@
 </thead>
 <tr>
 <td class="success">testInit()</td>
-<td class="success">0.002s</td>
+<td class="success">0.003s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">testInitRedWords()</td>
-<td class="success">0.002s</td>
+<td class="success">0.003s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">testKeyInputCorrectCharacter()</td>
-<td class="success">0.011s</td>
+<td class="success">0.036s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">testKeyInputLivesExpired()</td>
-<td class="success">0.018s</td>
+<td class="success">0.003s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
 <td class="success">testSetUp()</td>
-<td class="success">0.002s</td>
+<td class="success">0.003s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
@@ -112,7 +112,7 @@
 </tr>
 <tr>
 <td class="success">testUpdateList()</td>
-<td class="success">0.002s</td>
+<td class="success">0.003s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -158,7 +158,7 @@ Caused by: java.net.BindException: Adresse déjà utilisée
 	at java.base/java.net.ServerSocket.bind(ServerSocket.java:388)
 	at java.base/java.net.ServerSocket.&lt;init&gt;(ServerSocket.java:274)
 	at java.base/java.net.ServerSocket.&lt;init&gt;(ServerSocket.java:167)
-	at model.Server.runServer(Server.java:115)
+	at model.Server.runServer(Server.java:118)
 	at model.GameMultiPlayer.lambda$hostGame$4(GameMultiPlayer.java:280)
 	... 1 more
 Exception in thread &quot;Thread-14&quot; java.lang.RuntimeException: java.net.BindException: Adresse déjà utilisée
@@ -172,7 +172,7 @@ Caused by: java.net.BindException: Adresse déjà utilisée
 	at java.base/java.net.ServerSocket.bind(ServerSocket.java:388)
 	at java.base/java.net.ServerSocket.&lt;init&gt;(ServerSocket.java:274)
 	at java.base/java.net.ServerSocket.&lt;init&gt;(ServerSocket.java:167)
-	at model.Server.runServer(Server.java:115)
+	at model.Server.runServer(Server.java:118)
 	at model.GameMultiPlayer.lambda$hostGame$4(GameMultiPlayer.java:280)
 	... 1 more
 Exception in thread &quot;Thread-16&quot; java.lang.RuntimeException: java.net.BindException: Adresse déjà utilisée
@@ -186,9 +186,23 @@ Caused by: java.net.BindException: Adresse déjà utilisée
 	at java.base/java.net.ServerSocket.bind(ServerSocket.java:388)
 	at java.base/java.net.ServerSocket.&lt;init&gt;(ServerSocket.java:274)
 	at java.base/java.net.ServerSocket.&lt;init&gt;(ServerSocket.java:167)
-	at model.Server.runServer(Server.java:115)
+	at model.Server.runServer(Server.java:118)
 	at model.GameMultiPlayer.lambda$hostGame$4(GameMultiPlayer.java:280)
 	... 1 more
+Exception in thread &quot;Thread-10&quot; java.lang.IllegalStateException: Toolkit not initialized
+	at com.sun.javafx.application.PlatformImpl.runLater(PlatformImpl.java:437)
+	at com.sun.javafx.application.PlatformImpl.runLater(PlatformImpl.java:432)
+	at javafx.application.Platform.runLater(Platform.java:162)
+	at controller.Controller.startMultiPlayer(Controller.java:155)
+	at model.GameMultiPlayer.lambda$joinGame$5(GameMultiPlayer.java:346)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+Exception in thread &quot;Thread-13&quot; java.lang.IllegalStateException: Toolkit not initialized
+	at com.sun.javafx.application.PlatformImpl.runLater(PlatformImpl.java:437)
+	at com.sun.javafx.application.PlatformImpl.runLater(PlatformImpl.java:432)
+	at javafx.application.Platform.runLater(Platform.java:162)
+	at controller.Controller.startMultiPlayer(Controller.java:155)
+	at model.GameMultiPlayer.lambda$joinGame$5(GameMultiPlayer.java:346)
+	at java.base/java.lang.Thread.run(Thread.java:833)
 Exception in thread &quot;Thread-18&quot; java.lang.RuntimeException: java.net.BindException: Adresse déjà utilisée
 	at model.GameMultiPlayer.lambda$hostGame$4(GameMultiPlayer.java:282)
 	at java.base/java.lang.Thread.run(Thread.java:833)
@@ -200,7 +214,7 @@ Caused by: java.net.BindException: Adresse déjà utilisée
 	at java.base/java.net.ServerSocket.bind(ServerSocket.java:388)
 	at java.base/java.net.ServerSocket.&lt;init&gt;(ServerSocket.java:274)
 	at java.base/java.net.ServerSocket.&lt;init&gt;(ServerSocket.java:167)
-	at model.Server.runServer(Server.java:115)
+	at model.Server.runServer(Server.java:118)
 	at model.GameMultiPlayer.lambda$hostGame$4(GameMultiPlayer.java:280)
 	... 1 more
 Exception in thread &quot;Thread-20&quot; java.lang.RuntimeException: java.net.BindException: Adresse déjà utilisée
@@ -214,7 +228,7 @@ Caused by: java.net.BindException: Adresse déjà utilisée
 	at java.base/java.net.ServerSocket.bind(ServerSocket.java:388)
 	at java.base/java.net.ServerSocket.&lt;init&gt;(ServerSocket.java:274)
 	at java.base/java.net.ServerSocket.&lt;init&gt;(ServerSocket.java:167)
-	at model.Server.runServer(Server.java:115)
+	at model.Server.runServer(Server.java:118)
 	at model.GameMultiPlayer.lambda$hostGame$4(GameMultiPlayer.java:280)
 	... 1 more
 Exception in thread &quot;Thread-22&quot; java.lang.RuntimeException: java.net.BindException: Adresse déjà utilisée
@@ -227,10 +241,6 @@ Caused by: java.net.BindException: Adresse déjà utilisée
 	at java.base/sun.nio.ch.NioSocketImpl.bind(NioSocketImpl.java:643)
 	at java.base/java.net.ServerSocket.bind(ServerSocket.java:388)
 	at java.base/java.net.ServerSocket.&lt;init&gt;(ServerSocket.java:274)
-	at java.base/java.net.ServerSocket.&lt;init&gt;(ServerSocket.java:167)
-	at model.Server.runServer(Server.java:115)
-	at model.GameMultiPlayer.lambda$hostGame$4(GameMultiPlayer.java:280)
-	... 1 more
 </pre>
 </span>
 </div>
@@ -242,7 +252,7 @@ Caused by: java.net.BindException: Adresse déjà utilisée
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 7.4</a> at 7 janv. 2023, 18:55:37</p>
+<a href="http://www.gradle.org">Gradle 7.4</a> at 7 janv. 2023, 21:14:30</p>
 </div>
 </div>
 </body>

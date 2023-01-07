@@ -6,6 +6,7 @@ import controller.Controller;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -14,9 +15,9 @@ public class GameMultiPlayer extends Game {
     protected int lives;
     protected List<Integer> redWordsPos; // List of positions of red (bonus) words
     protected List<Integer> blueWordsPos; // List of positions of blue (bonus) words
-    protected int bonusRate = 20; // % to get a blue word
-    protected int redWordRate = 35; // % to get a red word
-    protected int maxWordsInList = 18;
+    protected int bonusRate; // % to get a blue word
+    protected int redWordRate; // % to get a red word
+    protected int maxWordsInList;
 
     protected Controller controller;
     protected static String SERVER_HOST; // Address of the server to join
@@ -70,11 +71,9 @@ public class GameMultiPlayer extends Game {
         this.currentPos = 0;
         this.correctCharacters = 0;
         this.typedCharacters = 0;
-        this.lives = 20;
         this.gameRunning = true;
-        this.redWordsPos = new ArrayList<>();
+        this.redWordsPos = new ArrayList<Integer>();
         this.blueWordsPos = new ArrayList<Integer>();
-        this.initRedBlueWords();
         this.startTime = System.nanoTime();
         this.regularityList = new ArrayList<>();
 
@@ -107,6 +106,13 @@ public class GameMultiPlayer extends Game {
      * @return boolean if the typed character was correct or not
      */
     public boolean keyInput(int k) {
+
+        System.out.println("In Game PARAM " + this.nbPlayers + ","
+                + this.lives + ","
+                + this.maxWordsInList + ","
+                + this.redWordRate + ","
+                + this.bonusRate);
+
         this.typedCharacters++;
         String word = this.currentList.get(0);
         if (k == ' ') {
@@ -283,6 +289,7 @@ public class GameMultiPlayer extends Game {
             }
         });
         serverThread.start();
+
         joinGame();
     }
 
@@ -298,6 +305,32 @@ public class GameMultiPlayer extends Game {
         socket = new Socket(SERVER_HOST, SERVER_PORT);
         BufferedReader sock_br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         System.out.println("Connection established");
+
+        if(isHost) {
+            this.initRedBlueWords();
+            System.out.println("send PARAM" + this.nbPlayers + ","
+                    + this.lives + ","
+                    + this.maxWordsInList + ","
+                    + this.redWordRate + ","
+                    + this.bonusRate);
+            // we send host parameters to other players
+            Gson gson = new Gson();
+            Request message = new Request("PARAM", "" + this.nbPlayers + ","
+                    + this.lives + ","
+                    + this.maxWordsInList + ","
+                    + this.redWordRate + ","
+                    + this.bonusRate);
+            String json = gson.toJson(message);
+
+            PrintWriter out;
+            try {
+                out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+                out.println(json);
+                out.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
 
         // Start a thread to receive messages from the server
         Thread receiverThread = new Thread(() -> {
@@ -335,6 +368,21 @@ public class GameMultiPlayer extends Game {
                         this.rank = Integer.parseInt(ranking);
                         this.gameRunning = false;
                         this.controller.getStats();
+                    } else if (message.getType().equals("PARAM")) {
+                        // We set the parameters of the game
+                        List<String> strParam = Arrays.stream(message.getWord().split(",")).toList();
+                        List<Integer> param = strParam.stream().mapToInt(Integer::parseInt).boxed().toList();
+                        this.nbPlayers = param.get(0);
+                        this.lives = param.get(1);
+                        this.maxWordsInList = param.get(2);
+                        this.redWordRate = param.get(3);
+                        this.bonusRate = param.get(4);
+                        this.initRedBlueWords();
+                        System.out.println("receive PARAM" + this.nbPlayers + ","
+                                + this.lives + ","
+                                + this.maxWordsInList + ","
+                                + this.redWordRate + ","
+                                + this.bonusRate);
                     }
                 }
             } catch (IOException e) {

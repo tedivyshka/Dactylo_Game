@@ -51,8 +51,6 @@ class ClientThread extends Thread {
         out.println(json);
         out.flush();
 
-
-
         // Read data from the client and process it
         while (true) {
             // Read data from the client
@@ -81,6 +79,11 @@ class ClientThread extends Thread {
                 end.println(endJson);
                 end.flush();
                 break;
+            }else if(message.getType().equals("PARAM")){
+                String param = message.getWord();
+
+                // Send data back to the client
+                Server.sendParam(param, this.id);
             }
             else {
                 String word = message.getWord();
@@ -148,6 +151,27 @@ public class Server {
             //Serialize the word and send it to the client
             Gson gson = new Gson();
             Request request = new Request("WORD",word);
+            String json = gson.toJson(request);
+
+            PrintWriter out;
+            try {
+                out = new PrintWriter(new OutputStreamWriter(current.getOutputStream()));
+                out.println(json);
+                out.flush();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public static void sendParam(String param, int id) {
+        for(int i = 0; i < clients.size(); i++){
+            if(i == id) continue; //The word was sent by this client -> ignore
+            Socket current = clients.get(i).getSocket();
+
+            //Serialize the word and send it to the client
+            Gson gson = new Gson();
+            Request request = new Request("PARAM",param);
             String json = gson.toJson(request);
 
             PrintWriter out;
