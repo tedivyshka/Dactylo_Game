@@ -16,6 +16,7 @@ public class GameCompetitiveSoloTest {
     @BeforeEach
     public void setUp() {
         game = new GameCompetitiveSolo();
+        game.setParams(20,1,3,20,18);
         game.init(new Controller());
         game.getList().set(0,"test");
     }

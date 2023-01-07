@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="model.GameNormalSoloTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2023-01-07T17:55:37" hostname="pop-os" time="0.009">
+  <properties/>
+  <testcase name="testInit()" classname="model.GameNormalSoloTest" time="0.003"/>
+  <testcase name="testKeyInput_correctCharacter()" classname="model.GameNormalSoloTest" time="0.001"/>
+  <testcase name="testKeyInput_space()" classname="model.GameNormalSoloTest" time="0.001"/>
+  <testcase name="testKeyInput_incorrectCharacter()" classname="model.GameNormalSoloTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[Exception in thread "Thread-13" java.lang.IllegalStateException: Toolkit not initialized
+	at com.sun.javafx.application.PlatformImpl.runLater(PlatformImpl.java:437)
+	at com.sun.javafx.application.PlatformImpl.runLater(PlatformImpl.java:432)
+	at javafx.application.Platform.runLater(Platform.java:162)
+	at controller.Controller.startMultiPlayer(Controller.java:155)
+	at model.GameMultiPlayer.lambda$joinGame$5(GameMultiPlayer.java:325)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+Exception in thread "Thread-10" java.lang.IllegalStateException: Toolkit not initialized
+	at com.sun.javafx.application.PlatformImpl.runLater(PlatformImpl.java:437)
+	at com.sun.javafx.application.PlatformImpl.runLater(PlatformImpl.java:432)
+	at javafx.application.Platform.runLater(Platform.java:162)
+	at controller.Controller.startMultiPlayer(Controller.java:155)
+	at model.GameMultiPlayer.lambda$joinGame$5(GameMultiPlayer.java:325)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+]]></system-err>
+</testsuite>

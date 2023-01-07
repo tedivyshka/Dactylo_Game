@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameNormalSolo extends Game {
-	private static final int wordsToWin = 20;
+	private int wordsToWin = 20;
 
 	/**
 	 * Initialize the game by starting all the variables
@@ -72,5 +72,9 @@ public class GameNormalSolo extends Game {
 				return false;
 			}
 		}
+	}
+
+	public void setNbWord(int nbWord) {
+		this.wordsToWin = nbWord;
 	}
 }

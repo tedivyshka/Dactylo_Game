@@ -13,11 +13,11 @@ public class GameMultiPlayer extends Game {
 
     protected int lives;
     protected List<Integer> redWordsPos; // List of positions of red (bonus) words
-    protected static final int redWordRate = 35; // % to get a red word
-    private List<Integer> blueWordsPos; // List of positions of blue (bonus) words
-    private static final int bonusRate = 20; // % to get a blue word
+    protected List<Integer> blueWordsPos; // List of positions of blue (bonus) words
+    protected int bonusRate = 20; // % to get a blue word
+    protected int redWordRate = 35; // % to get a red word
+    protected int maxWordsInList = 18;
 
-    protected static final int maxWordsInList = 18;
     protected Controller controller;
     protected static String SERVER_HOST; // Address of the server to join
     protected static boolean isHost; // Whether the current client is hosting a server
@@ -38,11 +38,14 @@ public class GameMultiPlayer extends Game {
 
     /**
      * Set up the host: call setUp with current address
-     * @param nbPlayers
      * @return the ip address of the host.
      */
-    public String setUpHost(int nbPlayers){
+    public String setUpHost(int nbPlayers, int lives, int maxWordsInList, int redWordRate, int bonusRate){
         this.nbPlayers = nbPlayers;
+        this.lives = lives;
+        this.maxWordsInList = maxWordsInList;
+        this.redWordRate = redWordRate;
+        this.bonusRate = bonusRate;
         try{
             InetAddress localHost = InetAddress.getLocalHost();
             String ipAddress = localHost.getHostAddress();

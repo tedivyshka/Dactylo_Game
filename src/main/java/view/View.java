@@ -4,6 +4,7 @@ import controller.Controller;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
@@ -23,6 +24,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.BiConsumer;
 
 
 public class View extends Application {
@@ -31,7 +34,7 @@ public class View extends Application {
 
     private final BorderPane root = new BorderPane();
 
-    private final Scene scene = new Scene(root, 1080, 180);
+    private final Scene scene = new Scene(root, 540, 360);
 
     private StyleClassedTextArea text = null;
 
@@ -54,28 +57,28 @@ public class View extends Application {
         menu.setAlignment(Pos.CENTER);
 
 
-        Button btnMode1 = new Button("Normal");
-        Button btnMode2 = new Button("Competitive");
-        Button btnMode3 = new Button("Multiplayer");
+        Button btnMode0 = new Button("Normal");
+        Button btnMode1 = new Button("Competitive");
+        Button btnMode2 = new Button("Multiplayer");
 
-        menu.getChildren().addAll(btnMode1, btnMode2, btnMode3);
+        menu.getChildren().addAll(btnMode0, btnMode1, btnMode2);
 
+        btnMode0.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                controller.parametersMode0();
+            }
+        });
         btnMode1.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                controller.setMode1();
+                controller.parametersMode1();
             }
         });
         btnMode2.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 controller.setMode2();
-            }
-        });
-        btnMode3.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                controller.setMode3();
             }
         });
     }
@@ -110,18 +113,8 @@ public class View extends Application {
         returnMenuButton();
 
         //host button
-        MenuButton host = new MenuButton("Host (select the number of players)");
-
-        MenuItem two = new MenuItem("2");
-        two.setOnAction(e -> controller.setUpHost(2));
-
-        MenuItem three = new MenuItem("3");
-        three.setOnAction(e -> controller.setUpHost(3));
-
-        MenuItem four = new MenuItem("4");
-        four.setOnAction(e -> controller.setUpHost(4));
-
-        host.getItems().addAll(two,three,four);
+        Button host = new Button("Host");
+        host.setOnAction((e) -> controller.parametersMode2());
 
         // join button + ip text
         TextField joinText = new TextField();
@@ -198,6 +191,376 @@ public class View extends Application {
         root.setCenter(vbox);
 
     }
+    public void paramMode0() {
+        root.getChildren().clear();
+        root.requestFocus();
+
+        returnMenuButton();
+
+        Label message = new Label("Select the number of word(s) to win.\n");
+        message.setWrapText(true);
+
+        AtomicInteger count = new AtomicInteger(20);
+        Label countLab = new Label(count.toString());
+
+        Button incrementButton = new Button("+");
+        incrementButton.setOnAction(event -> {
+            count.getAndIncrement();
+            countLab.setText(count.toString());
+        });
+
+        Button decrementButton = new Button("-");
+        decrementButton.setOnAction(event -> {
+            if(count.get() > 1) {
+                count.getAndDecrement();
+                countLab.setText(count.toString());
+            }
+        });
+
+        Button start = new Button("Start");
+        start.setOnAction((e) -> controller.setMode0(count.get()));
+        start.setAlignment(Pos.CENTER);
+
+        HBox nbWordsButtons = new HBox(decrementButton,countLab,incrementButton);
+        nbWordsButtons.setAlignment(Pos.CENTER);
+
+        VBox choiceBox = new VBox(message,nbWordsButtons,start);
+        choiceBox.setAlignment(Pos.CENTER);
+        VBox.setMargin(start,new Insets(15,0,0,0));
+
+        root.setCenter(choiceBox);
+    }
+    public void paramMode1() {
+        root.getChildren().clear();
+        root.requestFocus();
+
+        returnMenuButton();
+
+// button for lives
+        Label messageLives = new Label("Select the number of lives.\n");
+        messageLives.setWrapText(true);
+
+        AtomicInteger countLives = new AtomicInteger(20);
+        Label countLabLives = new Label(countLives.toString());
+
+        Button incrementButtonLives = new Button("+");
+        incrementButtonLives.setOnAction(event -> {
+            countLives.getAndIncrement();
+            countLabLives.setText(countLives.toString());
+        });
+
+        Button decrementButtonLives = new Button("-");
+        decrementButtonLives.setOnAction(event -> {
+            if(countLives.get() > 1) {
+                countLives.getAndDecrement();
+                countLabLives.setText(countLives.toString());
+            }
+        });
+
+// button for level
+        Label messageLevel = new Label("Select the level.\n");
+        messageLevel.setWrapText(true);
+
+        AtomicInteger countLevel = new AtomicInteger(1);
+        Label countLabLevel = new Label(countLevel.toString());
+
+        Button incrementButtonLevel = new Button("+");
+        incrementButtonLevel.setOnAction(event -> {
+            countLevel.getAndIncrement();
+            countLabLevel.setText(countLevel.toString());
+        });
+
+        Button decrementButtonLevel = new Button("-");
+        decrementButtonLevel.setOnAction(event -> {
+            if(countLevel.get() > 1) {
+                countLevel.getAndDecrement();
+                countLabLevel.setText(countLevel.toString());
+            }
+        });
+
+// button for timeBetweenWord
+        Label messageTimeBetweenWord = new Label("Select the time between words.\n");
+        messageTimeBetweenWord.setWrapText(true);
+
+        AtomicInteger countTimeBetweenWord = new AtomicInteger(3);
+        Label countLabTimeBetweenWord = new Label(countTimeBetweenWord.toString());
+
+        Button incrementButtonTimeBetweenWord = new Button("+");
+        incrementButtonTimeBetweenWord.setOnAction(event -> {
+            countTimeBetweenWord.getAndIncrement();
+            countLabTimeBetweenWord.setText(countTimeBetweenWord.toString());
+        });
+
+        Button decrementButtonTimeBetweenWord = new Button("-");
+        decrementButtonTimeBetweenWord.setOnAction(event -> {
+            if(countTimeBetweenWord.get() > 1) {
+                countTimeBetweenWord.getAndDecrement();
+                countLabTimeBetweenWord.setText(countTimeBetweenWord.toString());
+            }
+        });
+
+// button for bonusRate
+        Label messageBonusRate = new Label("Select the bonus rate in %.\n");
+        messageBonusRate.setWrapText(true);
+
+        AtomicInteger countBonusRate = new AtomicInteger(20);
+        Label countLabBonusRate = new Label(countBonusRate.toString());
+
+        Button incrementButtonBonusRate = new Button("+");
+        incrementButtonBonusRate.setOnAction(event -> {
+            if(countBonusRate.get() < 100) {
+                countBonusRate.getAndIncrement();
+                countLabBonusRate.setText(countBonusRate.toString());
+            }
+        });
+
+        Button decrementButtonBonusRate = new Button("-");
+        decrementButtonBonusRate.setOnAction(event -> {
+            if(countBonusRate.get() > 1) {
+                countBonusRate.getAndDecrement();
+                countLabBonusRate.setText(countBonusRate.toString());
+            }
+        });
+
+// button for maxWordsInList
+        Label messageMaxWordsInList = new Label("Select the maximum number of words in the list.\n");
+        messageMaxWordsInList.setWrapText(true);
+
+        AtomicInteger countMaxWordsInList = new AtomicInteger(18);
+        Label countLabMaxWordsInList = new Label(countMaxWordsInList.toString());
+
+        Button incrementButtonMaxWordsInList = new Button("+");
+        incrementButtonMaxWordsInList.setOnAction(event -> {
+            countMaxWordsInList.getAndIncrement();
+            countLabMaxWordsInList.setText(countMaxWordsInList.toString());
+        });
+
+        Button decrementButtonMaxWordsInList = new Button("-");
+        decrementButtonMaxWordsInList.setOnAction(event -> {
+            if(countMaxWordsInList.get() > 16) {
+                countMaxWordsInList.getAndDecrement();
+                countLabMaxWordsInList.setText(countMaxWordsInList.toString());
+            }
+        });
+
+
+
+// HBox for lives
+        HBox livesButtons = new HBox(decrementButtonLives,countLabLives,incrementButtonLives);
+        livesButtons.setAlignment(Pos.CENTER);
+
+// HBox for level
+        HBox levelButtons = new HBox(decrementButtonLevel,countLabLevel,incrementButtonLevel);
+        levelButtons.setAlignment(Pos.CENTER);
+
+// HBox for timeBetweenWord
+        HBox timeBetweenWordButtons = new HBox(decrementButtonTimeBetweenWord,countLabTimeBetweenWord,incrementButtonTimeBetweenWord);
+        timeBetweenWordButtons.setAlignment(Pos.CENTER);
+
+// HBox for bonusRate
+        HBox bonusRateButtons = new HBox(decrementButtonBonusRate,countLabBonusRate,incrementButtonBonusRate);
+        bonusRateButtons.setAlignment(Pos.CENTER);
+
+// HBox for maxWordsInList
+        HBox maxWordsInListButtons = new HBox(decrementButtonMaxWordsInList,countLabMaxWordsInList,incrementButtonMaxWordsInList);
+        maxWordsInListButtons.setAlignment(Pos.CENTER);
+
+
+// start button
+        Button start = new Button("Start");
+        start.setOnAction((e) -> controller.setMode1(countLives.get(),
+                countLevel.get(),
+                countTimeBetweenWord.get(),
+                countBonusRate.get(),
+                countMaxWordsInList.get())
+        );
+        start.setAlignment(Pos.CENTER);
+
+
+// VBox containing all the buttons
+        VBox choiceBox = new VBox(messageLives, livesButtons,
+                messageLevel, levelButtons,
+                messageTimeBetweenWord, timeBetweenWordButtons,
+                messageBonusRate, bonusRateButtons,
+                messageMaxWordsInList, maxWordsInListButtons,
+                start
+        );
+        choiceBox.setAlignment(Pos.CENTER);
+        choiceBox.setAlignment(Pos.CENTER);
+        VBox.setMargin(start,new Insets(15,0,0,0));
+        root.setCenter(choiceBox);
+    }
+
+
+    public void paramMode2() {
+        root.getChildren().clear();
+        root.requestFocus();
+
+        returnMenuButton();
+
+// button for red words rate
+        Label messageRedWordRate = new Label("Select the red word rate in %.\n");
+        messageRedWordRate.setWrapText(true);
+
+        AtomicInteger countRedWordRate = new AtomicInteger(20);
+        Label countLabRedWordRate = new Label(countRedWordRate.toString());
+
+        Button incrementButtonRedWordRate = new Button("+");
+        incrementButtonRedWordRate.setOnAction(event -> {
+            if(countRedWordRate.get() < 100) {
+                countRedWordRate.getAndIncrement();
+                countLabRedWordRate.setText(countRedWordRate.toString());
+            }
+        });
+
+        Button decrementButtonRedWordRate = new Button("-");
+        decrementButtonRedWordRate.setOnAction(event -> {
+            if(countRedWordRate.get() > 1) {
+                countRedWordRate.getAndDecrement();
+                countLabRedWordRate.setText(countRedWordRate.toString());
+            }
+        });
+
+// button for number of players
+        Label messageNbPlayer = new Label("Select the number of players.\n");
+        messageNbPlayer.setWrapText(true);
+
+        AtomicInteger countNbPlayer = new AtomicInteger(2);
+        Label countLabNbPlayer = new Label(countNbPlayer.toString());
+
+        Button incrementButtonNbPlayer = new Button("+");
+        incrementButtonNbPlayer.setOnAction(event -> {
+            if(countNbPlayer.get() < 4) {
+                countNbPlayer.getAndIncrement();
+                countLabNbPlayer.setText(countNbPlayer.toString());
+            }
+        });
+
+        Button decrementButtonNbPlayer = new Button("-");
+        decrementButtonNbPlayer.setOnAction(event -> {
+            if(countNbPlayer.get() > 2) {
+                countNbPlayer.getAndDecrement();
+                countLabNbPlayer.setText(countNbPlayer.toString());
+            }
+        });
+
+// button for lives
+        Label messageLives = new Label("Select the number of lives.\n");
+        messageLives.setWrapText(true);
+
+        AtomicInteger countLives = new AtomicInteger(20);
+        Label countLabLives = new Label(countLives.toString());
+
+        Button incrementButtonLives = new Button("+");
+        incrementButtonLives.setOnAction(event -> {
+            countLives.getAndIncrement();
+            countLabLives.setText(countLives.toString());
+        });
+
+        Button decrementButtonLives = new Button("-");
+        decrementButtonLives.setOnAction(event -> {
+            if(countLives.get() > 1) {
+                countLives.getAndDecrement();
+                countLabLives.setText(countLives.toString());
+            }
+        });
+
+// button for maxWordsInList
+        Label messageMaxWordsInList = new Label("Select the maximum number of words in the list.\n");
+        messageMaxWordsInList.setWrapText(true);
+
+        AtomicInteger countMaxWordsInList = new AtomicInteger(18);
+        Label countLabMaxWordsInList = new Label(countMaxWordsInList.toString());
+
+        Button incrementButtonMaxWordsInList = new Button("+");
+        incrementButtonMaxWordsInList.setOnAction(event -> {
+            countMaxWordsInList.getAndIncrement();
+            countLabMaxWordsInList.setText(countMaxWordsInList.toString());
+        });
+
+        Button decrementButtonMaxWordsInList = new Button("-");
+        decrementButtonMaxWordsInList.setOnAction(event -> {
+            if(countMaxWordsInList.get() > 16) {
+                countMaxWordsInList.getAndDecrement();
+                countLabMaxWordsInList.setText(countMaxWordsInList.toString());
+            }
+        });
+
+
+// button for bonusRate
+        Label messageBonusRate = new Label("Select the bonus rate in %.\n");
+        messageBonusRate.setWrapText(true);
+
+        AtomicInteger countBonusRate = new AtomicInteger(20);
+        Label countLabBonusRate = new Label(countBonusRate.toString());
+
+        Button incrementButtonBonusRate = new Button("+");
+        incrementButtonBonusRate.setOnAction(event -> {
+            if(countBonusRate.get() < 100) {
+                countBonusRate.getAndIncrement();
+                countLabBonusRate.setText(countBonusRate.toString());
+            }
+        });
+
+        Button decrementButtonBonusRate = new Button("-");
+        decrementButtonBonusRate.setOnAction(event -> {
+            if(countBonusRate.get() > 1) {
+                countBonusRate.getAndDecrement();
+                countLabBonusRate.setText(countBonusRate.toString());
+            }
+        });
+
+
+
+// HBox for lives
+        HBox livesButtons = new HBox(decrementButtonLives,countLabLives,incrementButtonLives);
+        livesButtons.setAlignment(Pos.CENTER);
+
+// HBox for number of players
+        HBox nbPlayerButtons = new HBox(decrementButtonNbPlayer,countLabNbPlayer,incrementButtonNbPlayer);
+        nbPlayerButtons.setAlignment(Pos.CENTER);
+
+// HBox for red word rate
+        HBox redWordRateButtons = new HBox(decrementButtonRedWordRate,countLabRedWordRate,incrementButtonRedWordRate);
+        redWordRateButtons.setAlignment(Pos.CENTER);
+
+// HBox for bonusRate
+        HBox bonusRateButtons = new HBox(decrementButtonBonusRate,countLabBonusRate,incrementButtonBonusRate);
+        bonusRateButtons.setAlignment(Pos.CENTER);
+
+// HBox for maxWordsInList
+        HBox maxWordsInListButtons = new HBox(decrementButtonMaxWordsInList,countLabMaxWordsInList,incrementButtonMaxWordsInList);
+        maxWordsInListButtons.setAlignment(Pos.CENTER);
+
+
+
+// start button
+        Button start = new Button("Start");
+        start.setOnAction((e) -> controller.setUpHost(countNbPlayer.get(),
+                countLives.get(),
+                countMaxWordsInList.get(),
+                countRedWordRate.get(),
+                countBonusRate.get()
+                ));
+        start.setAlignment(Pos.CENTER);
+
+
+// VBox containing all the buttons
+        VBox choiceBox = new VBox(messageNbPlayer, nbPlayerButtons,
+                messageLives, livesButtons,
+                messageMaxWordsInList, maxWordsInListButtons,
+                messageRedWordRate, redWordRateButtons,
+                messageBonusRate, bonusRateButtons,
+                start
+        );
+        choiceBox.setAlignment(Pos.CENTER);
+        choiceBox.setAlignment(Pos.CENTER);
+        VBox.setMargin(start,new Insets(15,0,0,0));
+        root.setCenter(choiceBox);
+
+    }
+
+
 
     /**
      * the button to return to the menu.
@@ -228,11 +591,17 @@ public class View extends Application {
         text.setWrapText(true);
         text.setStyleClass(0,text.getLength(),"black");
 
-        this.additionnalInfo = new StyleClassedTextArea();
-        additionnalInfo.setEditable(false);
-        additionnalInfo.setWrapText(false);
+        VBox vbox;
+        if(this.controller.getGame().getMode().equals(Mode.SOLO)){
+             vbox = new VBox(text);
+        }else {
+            this.additionnalInfo = new StyleClassedTextArea();
+            additionnalInfo.setEditable(false);
+            additionnalInfo.setWrapText(false);
 
-        VBox vbox = new VBox(text,additionnalInfo);
+            vbox = new VBox(text, additionnalInfo);
+        }
+
 
         root.setCenter(vbox);
 
@@ -344,7 +713,9 @@ public class View extends Application {
      * @param stats statistics of the game
      */
     public void setEndScreen(String stats) {
-        this.resetAdditionalInfo();
+        if (!controller.getGame().getMode().equals(Mode.SOLO)){
+            this.resetAdditionalInfo();
+        }
         this.text.replaceText(stats);
         this.text.setStyleClass(0, this.text.getLength(), "black");
     }
@@ -388,6 +759,8 @@ public class View extends Application {
         Label error = new Label("Error :" + e.toString());
         this.root.setCenter(error);
     }
+
+
 }
 
 

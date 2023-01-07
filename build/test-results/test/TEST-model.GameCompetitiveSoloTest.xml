@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="model.GameCompetitiveSoloTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2023-01-07T17:55:37" hostname="pop-os" time="0.046">
+  <properties/>
+  <testcase name="testKeyInput_CorrectCharacter()" classname="model.GameCompetitiveSoloTest" time="0.019"/>
+  <testcase name="testInit()" classname="model.GameCompetitiveSoloTest" time="0.003"/>
+  <testcase name="testKeyInput_LoseLife()" classname="model.GameCompetitiveSoloTest" time="0.008"/>
+  <testcase name="testKeyInput_Space()" classname="model.GameCompetitiveSoloTest" time="0.007"/>
+  <testcase name="testKeyInput_WrongCharacter()" classname="model.GameCompetitiveSoloTest" time="0.007"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

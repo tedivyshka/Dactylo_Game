@@ -1,10 +1,7 @@
 package controller;
 
 import javafx.application.Platform;
-import model.Game;
-import model.GameCompetitiveSolo;
-import model.GameMultiPlayer;
-import model.Mode;
+import model.*;
 import view.View;
 
 import javafx.scene.input.KeyEvent;
@@ -79,40 +76,55 @@ public class Controller {
      * Calls the game display function and calls the NormalSolo mode initialization function.
      * Then update the display
      */
-    public void setMode1() {
+    public void setMode0(int nbWord) {
         Platform.runLater(() -> this.view.startGame());
-        this.game = Game.of(0);
-        assert this.game != null;
+        ((GameNormalSolo)this.game).setNbWord(nbWord);
         this.game.init(this);
         this.update();
+    }
+
+    public void parametersMode0() {
+        this.game = Game.of(0);
+        assert this.game != null;
+        Platform.runLater(() -> this.view.paramMode0());
     }
 
     /**
      * Calls the game display function and calls the CompetitiveSolo mode initialization function.
      * Then update the display
      */
-    public void setMode2() {
+    public void setMode1(int lives, int level, int timeBetweenWords, int bonusRate, int maxWordsInList) {
         Platform.runLater(() -> this.view.startGame());
-        this.game = Game.of(1);
-        assert this.game != null;
+        ((GameCompetitiveSolo)this.game).setParams(lives, level, timeBetweenWords, bonusRate, maxWordsInList);
         this.game.init(this);
         this.update();
+    }
+
+    public void parametersMode1() {
+        this.game = Game.of(1);
+        assert this.game != null;
+        Platform.runLater(() -> this.view.paramMode1());
     }
 
     /**
      * Calls the game display function and set the game as MultiPlayer mode.
      */
-    public void setMode3() {
+    public void setMode2() {
         Platform.runLater(() -> this.view.menuMultiplayer());
+    }
+
+    public void parametersMode2() {
         this.game = Game.of(2);
+        assert this.game != null;
+        Platform.runLater(() -> this.view.paramMode2());
     }
 
     /**
      * set up the host for the multiplayer game mode.
      * @param nbPlayers the number of players selected.
      */
-    public void setUpHost(int nbPlayers) {
-        String ip = ((GameMultiPlayer)this.game).setUpHost(nbPlayers);
+    public void setUpHost(int nbPlayers, int lives, int maxWordsInList, int redWordRate, int bonusRate) {
+        String ip = ((GameMultiPlayer)this.game).setUpHost(nbPlayers, lives, maxWordsInList, redWordRate, bonusRate);
         Platform.runLater(() -> this.view.waitAsHostPage(ip));
         this.game.init(this);
     }
@@ -166,4 +178,6 @@ public class Controller {
     public boolean isGameRunning() {
         return game != null && game.isRunning();
     }
+
+
 }

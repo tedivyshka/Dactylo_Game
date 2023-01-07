@@ -11,14 +11,21 @@ public class GameCompetitiveSolo extends Game{
     private int level;
     private int timeBetweenWords; // Time in seconds between two words added by the game
     private List<Integer> blueWordsPos; // List of positions of blue (bonus) words
-    private static final int bonusRate = 20; // % to get a blue word
-    private static final int maxWordsInList = 18;
+    private int bonusRate; // % to get a blue word
+    private int maxWordsInList;
     private Timer timer;
     private Controller controller;
 
+    public void setParams(int lives, int level, int timeBetweenWords, int bonusRate, int maxWordsInList){
+        this.lives = lives;
+        this.level = level;
+        this.timeBetweenWords = timeBetweenWords;
+        this.bonusRate = bonusRate;
+        this.maxWordsInList = maxWordsInList;
+    }
     /**
      * Initialize the game by starting all the variables and starting the timer
-     * @param c
+     * @param c controller
      */
     public void init(Controller c) {
         super.mode = Mode.COMPETITIVE;
@@ -29,9 +36,6 @@ public class GameCompetitiveSolo extends Game{
         this.currentPos = 0;
         this.correctCharacters = 0;
         this.typedCharacters = 0;
-        this.lives = 20;
-        this.level = 1;
-        this.timeBetweenWords = 3;
         this.gameRunning = true;
         this.initBlueWords();
         this.regularityList = new ArrayList<>();

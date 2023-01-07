@@ -22,7 +22,7 @@ class GameMultiPlayerTest {
     public void setUp() {
         game = new GameMultiPlayer();
         Controller c = new Controller();
-        game.setUpHost(2);
+        game.setUpHost(2,20,18,35,20);
         game.init(c);
         game.getList().set(0,"test");
 
@@ -37,9 +37,11 @@ class GameMultiPlayerTest {
 
     @Test
     public void testSetUpHost() {
-        int nbPlayers = 2;
-        game.setUpHost(nbPlayers);
-        assertEquals(nbPlayers, game.nbPlayers);
+        game.setUpHost(2,20,18,35,20);
+        assertEquals(2, game.nbPlayers);
+        assertEquals(20,game.lives);
+        assertEquals(18,game.maxWordsInList);
+        assertEquals(35,game.redWordRate);
         assertTrue(GameMultiPlayer.isHost);
 
     }
