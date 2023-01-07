@@ -164,6 +164,11 @@ public class Server {
         }
     }
 
+    /**
+     * Send the parameters of the host
+     * @param param
+     * @param id of the host
+     */
     public static void sendParam(String param, int id) {
         for(int i = 0; i < clients.size(); i++){
             if(i == id) continue; //The word was sent by this client -> ignore

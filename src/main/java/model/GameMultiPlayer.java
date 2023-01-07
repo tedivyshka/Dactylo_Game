@@ -106,13 +106,6 @@ public class GameMultiPlayer extends Game {
      * @return boolean if the typed character was correct or not
      */
     public boolean keyInput(int k) {
-
-        System.out.println("In Game PARAM " + this.nbPlayers + ","
-                + this.lives + ","
-                + this.maxWordsInList + ","
-                + this.redWordRate + ","
-                + this.bonusRate);
-
         this.typedCharacters++;
         String word = this.currentList.get(0);
         if (k == ' ') {
@@ -168,12 +161,10 @@ public class GameMultiPlayer extends Game {
                 //Character typed is the correct one
                 this.currentPos++;
                 this.correctCharacters++;
-                if (this.previousCorrectCharTime == 0) {
-                    this.previousCorrectCharTime = System.nanoTime();
-                } else {
+                if (this.previousCorrectCharTime != 0) {
                     this.regularityList.add((System.nanoTime() - this.previousCorrectCharTime));
-                    this.previousCorrectCharTime = System.nanoTime();
                 }
+                this.previousCorrectCharTime = System.nanoTime();
                 return true;
             } else {
                 //Character typed is the wrong one
@@ -308,11 +299,6 @@ public class GameMultiPlayer extends Game {
 
         if(isHost) {
             this.initRedBlueWords();
-            System.out.println("send PARAM" + this.nbPlayers + ","
-                    + this.lives + ","
-                    + this.maxWordsInList + ","
-                    + this.redWordRate + ","
-                    + this.bonusRate);
             // we send host parameters to other players
             Gson gson = new Gson();
             Request message = new Request("PARAM", "" + this.nbPlayers + ","
@@ -378,11 +364,6 @@ public class GameMultiPlayer extends Game {
                         this.redWordRate = param.get(3);
                         this.bonusRate = param.get(4);
                         this.initRedBlueWords();
-                        System.out.println("receive PARAM" + this.nbPlayers + ","
-                                + this.lives + ","
-                                + this.maxWordsInList + ","
-                                + this.redWordRate + ","
-                                + this.bonusRate);
                     }
                 }
             } catch (IOException e) {

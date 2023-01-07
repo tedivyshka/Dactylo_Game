@@ -83,6 +83,10 @@ public class Controller {
         this.update();
     }
 
+    /**
+     * Calls a display function where the player choose the parameters of the game
+     * set the game as a Normal Solo Game
+     */
     public void parametersMode0() {
         this.game = Game.of(0);
         assert this.game != null;
@@ -100,6 +104,10 @@ public class Controller {
         this.update();
     }
 
+    /**
+     * Calls a display function where the player choose the parameters of the game
+     * set the game as a Competitive Game
+     */
     public void parametersMode1() {
         this.game = Game.of(1);
         assert this.game != null;
@@ -107,12 +115,16 @@ public class Controller {
     }
 
     /**
-     * Calls the game display function and set the game as MultiPlayer mode.
+     * Calls a display function for the multiplayer menu
      */
     public void setMode2() {
         Platform.runLater(() -> this.view.menuMultiplayer());
     }
 
+    /**
+     * Calls a display function where the host choose the parameters of the game
+     * set the game as a Multiplayer Game.
+     */
     public void parametersMode2() {
         this.game = Game.of(2);
         assert this.game != null;
@@ -181,4 +193,7 @@ public class Controller {
     }
 
 
+    public void stop() {
+        if(this.game != null) this.game.stop();
+    }
 }

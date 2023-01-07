@@ -8,6 +8,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
+import javafx.stage.WindowEvent;
 import model.GameCompetitiveSolo;
 import model.GameMultiPlayer;
 import model.Mode;
@@ -92,6 +93,13 @@ public class View extends Application {
      */
     @Override
     public void start(Stage primaryStage) {
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                controller.stop();
+            }
+        });
+
         startingMenuGui();
 
         scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("style.css")).toExternalForm());
@@ -144,7 +152,7 @@ public class View extends Application {
 
         returnMenuButton();
         String ipAddress = "127.0.1.1";
-        URL url = null;
+        URL url;
         try {
             url = new URL("https://api.ipify.org");
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -191,6 +199,10 @@ public class View extends Application {
         root.setCenter(vbox);
 
     }
+
+    /**
+     * Page where the player choose the parameters of his game.
+     */
     public void paramMode0() {
         root.getChildren().clear();
         root.requestFocus();
@@ -230,6 +242,10 @@ public class View extends Application {
 
         root.setCenter(choiceBox);
     }
+
+    /**
+     * Page where the player choose the parameters of his game.
+     */
     public void paramMode1() {
         root.getChildren().clear();
         root.requestFocus();
@@ -392,34 +408,17 @@ public class View extends Application {
     }
 
 
+    /**
+     * Page where the player choose the parameters of his game.
+     */
     public void paramMode2() {
         root.getChildren().clear();
         root.requestFocus();
 
         returnMenuButton();
 
-// button for red words rate
-        Label messageRedWordRate = new Label("Select the red word rate in %.\n");
-        messageRedWordRate.setWrapText(true);
 
-        AtomicInteger countRedWordRate = new AtomicInteger(20);
-        Label countLabRedWordRate = new Label(countRedWordRate.toString());
 
-        Button incrementButtonRedWordRate = new Button("+");
-        incrementButtonRedWordRate.setOnAction(event -> {
-            if(countRedWordRate.get() < 100) {
-                countRedWordRate.getAndIncrement();
-                countLabRedWordRate.setText(countRedWordRate.toString());
-            }
-        });
-
-        Button decrementButtonRedWordRate = new Button("-");
-        decrementButtonRedWordRate.setOnAction(event -> {
-            if(countRedWordRate.get() > 1) {
-                countRedWordRate.getAndDecrement();
-                countLabRedWordRate.setText(countRedWordRate.toString());
-            }
-        });
 
 // button for number of players
         Label messageNbPlayer = new Label("Select the number of players.\n");
@@ -486,17 +485,22 @@ public class View extends Application {
             }
         });
 
+// for this two, we set the AtomicInteger before
+// because each is defined in relation with the other
+        AtomicInteger countBonusRate = new AtomicInteger(20);
+        Label countLabBonusRate = new Label(countBonusRate.toString());
+
+        AtomicInteger countRedWordRate = new AtomicInteger(20);
+        Label countLabRedWordRate = new Label(countRedWordRate.toString());
+
 
 // button for bonusRate
         Label messageBonusRate = new Label("Select the bonus rate in %.\n");
         messageBonusRate.setWrapText(true);
 
-        AtomicInteger countBonusRate = new AtomicInteger(20);
-        Label countLabBonusRate = new Label(countBonusRate.toString());
-
         Button incrementButtonBonusRate = new Button("+");
         incrementButtonBonusRate.setOnAction(event -> {
-            if(countBonusRate.get() < 100) {
+            if(countBonusRate.get() < 100 - countRedWordRate.get()) {
                 countBonusRate.getAndIncrement();
                 countLabBonusRate.setText(countBonusRate.toString());
             }
@@ -507,6 +511,27 @@ public class View extends Application {
             if(countBonusRate.get() > 1) {
                 countBonusRate.getAndDecrement();
                 countLabBonusRate.setText(countBonusRate.toString());
+            }
+        });
+
+
+// button for red words rate
+        Label messageRedWordRate = new Label("Select the red word rate in %.\n");
+        messageRedWordRate.setWrapText(true);
+
+        Button incrementButtonRedWordRate = new Button("+");
+        incrementButtonRedWordRate.setOnAction(event -> {
+            if(countRedWordRate.get() < 100 - countBonusRate.get()) {
+                countRedWordRate.getAndIncrement();
+                countLabRedWordRate.setText(countRedWordRate.toString());
+            }
+        });
+
+        Button decrementButtonRedWordRate = new Button("-");
+        decrementButtonRedWordRate.setOnAction(event -> {
+            if(countRedWordRate.get() > 1) {
+                countRedWordRate.getAndDecrement();
+                countLabRedWordRate.setText(countRedWordRate.toString());
             }
         });
 
@@ -559,8 +584,6 @@ public class View extends Application {
         root.setCenter(choiceBox);
 
     }
-
-
 
     /**
      * the button to return to the menu.
@@ -693,7 +716,6 @@ public class View extends Application {
         }
     }
 
-
     /**
      * main function to start our dactylo game.
      * @param args
@@ -759,8 +781,4 @@ public class View extends Application {
         Label error = new Label("Error :" + e.toString());
         this.root.setCenter(error);
     }
-
-
 }
-
-
