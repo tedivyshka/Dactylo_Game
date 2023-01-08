@@ -347,7 +347,6 @@ public class GameMultiPlayer extends Game {
                         this.controller.startMultiPlayer();
                     }
                     else if(message.getType().equals("WORD")){
-                        System.out.println("Got new word");
                         String word = message.getWord();
                         handleServerMessage(word);
                     }
@@ -370,7 +369,6 @@ public class GameMultiPlayer extends Game {
                         this.initRedBlueWords();
                     }
                     else if(message.getType().equals("END")){
-                    	System.out.println("Ended\n");
                     	socket.close();
                     	socket = null;
                     	return;
