@@ -634,7 +634,6 @@ public class View extends Application {
                     if(!controller.isGameRunning()){
                         if(controller.getGame().getMode().equals(Mode.COMPETITIVE)) ((GameCompetitiveSolo) controller.getGame()).cancelTimer();
 
-                        System.out.println("game no more running\n");
                         //on affiche les statistiques
                         controller.getStats();
                     }
