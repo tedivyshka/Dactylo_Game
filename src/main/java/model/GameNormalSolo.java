@@ -16,7 +16,7 @@ public class GameNormalSolo extends Game {
 	public void init(Controller c) {
 		super.mode = Mode.SOLO;
 		WordList.generateList();
-		this.currentList = WordList.startingList();
+		this.currentList = WordList.startingList((this.wordsToWin>16)?16:this.wordsToWin);
 		this.currentPos = 0;
 		this.score = 0;
 		this.correctCharacters = 0;

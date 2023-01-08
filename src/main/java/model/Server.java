@@ -1,7 +1,6 @@
 package model;
 
 import com.google.gson.Gson;
-
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -52,7 +51,7 @@ class ClientThread extends Thread {
         out.flush();
 
         // Read data from the client and process it
-        while (true) {
+        while (!interrupted()) {
             // Read data from the client
             byte[] buffer = new byte[1024];
             int bytesRead;
@@ -71,13 +70,6 @@ class ClientThread extends Thread {
             Request message = gson.fromJson(data, Request.class);
 
             if(message.getType().equals("END")){
-                System.out.println("Client " + this.id + " has lost.\n");
-                Request endMessage = new Request("RANK",Integer.toString(this.server.getRank()));
-                String endJson = gson.toJson(endMessage);
-
-                PrintWriter end = new PrintWriter(new OutputStreamWriter(outputStream));
-                end.println(endJson);
-                end.flush();
                 break;
             }else if(message.getType().equals("PARAM")){
                 String param = message.getWord();
@@ -92,6 +84,13 @@ class ClientThread extends Thread {
                 Server.sendWord(word, this.id);
             }
         }
+        Request endMessage = new Request("RANK",Integer.toString(this.server.getRank()));
+        String endJson = gson.toJson(endMessage);
+
+        PrintWriter end = new PrintWriter(new OutputStreamWriter(outputStream));
+        end.println(endJson);
+        end.flush();
+        try { this.socket.close(); } catch(Exception ex) {}
     }
     public Socket getSocket() { return this.socket; }
 }
@@ -194,6 +193,9 @@ public class Server {
      * Close the server when the game is over
      */
     public void closeServer(){
+    	for(ClientThread c : clients){
+            c.interrupt();
+        }
         try {
             if(server != null) server.close();
         } catch (IOException e) {
@@ -217,7 +219,7 @@ public class Server {
  */
 class Request {
     /*  Possible request types:
-        START -> start game  ;  WORD -> add word
+        START -> start game  ; PARAM -> send parameters to clients ;  WORD -> add word
         END -> notify server of loss ; RANK -> give client their rank
      */
     private final String type;

@@ -32,7 +32,7 @@ public class GameCompetitiveSolo extends Game{
 
         WordList.generateList();
         this.controller = c;
-        this.currentList = WordList.startingList();
+        this.currentList = WordList.startingList(this.maxWordsInList);
         this.currentPos = 0;
         this.correctCharacters = 0;
         this.typedCharacters = 0;

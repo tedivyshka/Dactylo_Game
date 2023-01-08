@@ -152,13 +152,14 @@ public class View extends Application {
 
         returnMenuButton();
         String ipAddress = "127.0.1.1";
+        /*
         URL url;
         try {
             url = new URL("https://api.ipify.org");
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
             ipAddress = reader.readLine();
         } catch (Exception ignored) {}
-
+         */
         Label message = new Label("Waiting for player(s) to join.\nYour address is " + ipAddress + ".\n" +
                 "If this game is hosted locally, use 127.0.1.1 as the address.\n");
         message.setWrapText(true);

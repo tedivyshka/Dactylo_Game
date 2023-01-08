@@ -63,6 +63,7 @@ public class Controller {
      * calls the function of the view that displays the end of game statistics
      */
     public void getStats() {
+    	if(this.game == null) return;
         String s = "Speed: " + game.getSpeed() + " MPM\n"
                 + "Precision: " + game.getPrecision() + "%\n"
                 + "Regularity: " + game.getRegularity() + " second(s)\n"
@@ -156,8 +157,10 @@ public class Controller {
      * reset the game and calls up the menu view function.
      */
     public void resetAndGoMenu() {
-        this.game.stop();
-        this.game = null;
+    	if(this.game != null) {
+            this.game.stop();
+            this.game = null;
+    	}
         Platform.runLater(() -> this.view.startingMenuGui());
     }
 

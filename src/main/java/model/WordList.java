@@ -12,7 +12,6 @@ import java.util.Random;
 public class WordList{
 
     public static ArrayList<String> wordList = new ArrayList<>(); // wordlist generated from txt file
-    static int startingWordCount = 16; // The number of words in the beginning of the game
     static String sourceFile = "src/main/resources/wordlist.txt"; // File name of the word list
 
     /**
@@ -43,7 +42,7 @@ public class WordList{
      * Create starting list with random words from wordList
      * @return List<String> of size startingWordCount
      */
-    public static List<String> startingList(){
+    public static List<String> startingList(int startingWordCount){
         List<String> list = new ArrayList<>();
         Random rand = new Random();
         for(int i = 0; i < startingWordCount; i++){

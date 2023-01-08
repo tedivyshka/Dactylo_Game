@@ -26,6 +26,7 @@ public class GameMultiPlayer extends Game {
     protected static Socket socket;
     protected Server server;
     protected int rank;
+	private Thread serverThread;
 
     /**
      * Set up the server address and isHost boolean
@@ -67,7 +68,6 @@ public class GameMultiPlayer extends Game {
 
         WordList.generateList();
         this.controller = c;
-        this.currentList = WordList.startingList();
         this.currentPos = 0;
         this.correctCharacters = 0;
         this.typedCharacters = 0;
@@ -251,6 +251,7 @@ public class GameMultiPlayer extends Game {
      * Notify the server that the game has ended
      */
     private void endGame() {
+    	if(socket == null || socket.isClosed()) return;
         //Notify the server that the game has ended
         Gson gson = new Gson();
         Request message = new Request("END","");
@@ -276,10 +277,11 @@ public class GameMultiPlayer extends Game {
             try {
                 server.runServer(this.nbPlayers);
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                
             }
         });
         serverThread.start();
+        this.serverThread = serverThread;
 
         joinGame();
     }
@@ -298,6 +300,7 @@ public class GameMultiPlayer extends Game {
         System.out.println("Connection established");
 
         if(isHost) {
+            this.currentList = WordList.startingList(this.maxWordsInList);
             this.initRedBlueWords();
             // we send host parameters to other players
             Gson gson = new Gson();
@@ -322,7 +325,7 @@ public class GameMultiPlayer extends Game {
         Thread receiverThread = new Thread(() -> {
             try {
                 while (true) {
-                    if(socket.isClosed()) break;
+                    if(socket == null || socket.isClosed()) return;
 
                     String line;
                     try {
@@ -363,7 +366,14 @@ public class GameMultiPlayer extends Game {
                         this.maxWordsInList = param.get(2);
                         this.redWordRate = param.get(3);
                         this.bonusRate = param.get(4);
+                        this.currentList = WordList.startingList(this.maxWordsInList);
                         this.initRedBlueWords();
+                    }
+                    else if(message.getType().equals("END")){
+                    	System.out.println("Ended\n");
+                    	socket.close();
+                    	socket = null;
+                    	return;
                     }
                 }
             } catch (IOException e) {
@@ -390,12 +400,24 @@ public class GameMultiPlayer extends Game {
      */
     @Override
     public void stop(){
+    	if(isHost) {
+        	this.server.closeServer();
+        	this.serverThread.interrupt();
+        	this.serverThread = null;
+        	this.server = null;
+        }
         try {
+        	if(socket == null || socket.isClosed()) {
+        		socket = null;
+        		return;
+        	}
+        	this.endGame();
             if(socket != null) socket.close();
+            socket = null;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        if(isHost) this.server.closeServer();
+        
     }
 
     public List<Integer> getRedWordsPos() { return this.redWordsPos; }
