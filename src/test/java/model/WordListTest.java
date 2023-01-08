@@ -18,11 +18,12 @@ class WordListTest {
 
     @Test
     void testStartingList() {
+        int wordNb = 18;
         // Appel de la méthode à tester
-        List<String> startingList = WordList.startingList();
+        List<String> startingList = WordList.startingList(wordNb);
 
         // Vérifie que la liste retournée contient le nombre de mots attendu
-        assertEquals(WordList.startingWordCount, startingList.size());
+        assertEquals(wordNb, startingList.size());
 
         // Vérifie que chaque élément de la liste fait partie de la liste générale de mots
         for (String word : startingList) {
