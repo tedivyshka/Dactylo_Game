@@ -20,13 +20,9 @@ import javafx.scene.control.TextField;
 
 import javafx.scene.control.*;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.BiConsumer;
 
 
 public class View extends Application {

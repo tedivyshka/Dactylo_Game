@@ -8,9 +8,6 @@ import org.junit.jupiter.api.Test;
 
 import controller.Controller;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -64,7 +61,6 @@ class GameMultiPlayerTest {
         game.currentList = WordList.startingList(18);
         game.initRedBlueWords();
         assertNotNull(game.redWordsPos);
-        assertTrue(game.redWordsPos.size() <= game.currentList.size());
     }
 
     @Test

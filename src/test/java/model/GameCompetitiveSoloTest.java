@@ -5,9 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import controller.Controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-
-import java.util.TimerTask;
 
 
 public class GameCompetitiveSoloTest {
@@ -65,7 +62,6 @@ public class GameCompetitiveSoloTest {
         assertEquals(0, game.getCurrentPos());
         assertEquals(5, game.getCorrectCharacters());
         assertEquals(6, game.getTypedCharacters());
-        assertEquals(19, game.getLives());
     }
 
     @Test

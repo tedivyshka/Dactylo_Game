@@ -3,7 +3,6 @@ package model;
 import controller.Controller;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class GameNormalSolo extends Game {
 	private int wordsToWin = 20;
@@ -16,7 +15,7 @@ public class GameNormalSolo extends Game {
 	public void init(Controller c) {
 		super.mode = Mode.SOLO;
 		WordList.generateList();
-		this.currentList = WordList.startingList((this.wordsToWin>16)?16:this.wordsToWin);
+		this.currentList = WordList.startingList(Math.min(this.wordsToWin, 16));
 		this.currentPos = 0;
 		this.score = 0;
 		this.correctCharacters = 0;

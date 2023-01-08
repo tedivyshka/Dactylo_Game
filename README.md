@@ -1,3 +1,7 @@
+Vyshka Tedi - Martineau Clément 
+L3 INFO-4
+Binome 27
+
 Voici un document d'explication sur comment utiliser gradle pour compiler et exécuter ce projet java.
 
 
@@ -6,6 +10,7 @@ Les ressources dans src/main/java/resources/
 Les tests en JUnit5 sont dans test/java/model/
 
 Pour compiler ce projet, il suffit de faire une fois ./gradlew build
+Cela va build le projet en vérifiant que les tests sont vrais.
 
 Puis à chaque fois qu'on veut exécuter le code, il faut faire ./gradlew run
 
@@ -13,7 +18,7 @@ Si l'on veut lancer les tests il faut faire ./gradlew test
 
 
 
-Une fois le programme lancé, nous sommes dans un menu ou l'on peut choisir un des differents modes de jeu suivants :
+Une fois le programme lancé, nous sommes dans un menu ou l'on peut choisir un des différents modes de jeu suivants :
 
 1) Normal Solo:
     Il s'agit d'un mode non compétitif ou l'on a 20 mots à écrire, les fautes ne sont pas comptabilisées.
@@ -36,6 +41,9 @@ A la fin de chacun des modes de jeu, il y a un affichage des statistiques telles
 En plus de ces informations, nous pouvons préciser que lorsqu'on écrit pas la bonne lettre,
 elle n'est pas comptabilisée. Il n'est donc pas nécessaire de l'effacer. Par contre, si le mode de jeu
 le demande, une vie est effectivement perdue.
+
+On peut ajouter que le serveur est lancé sur la machine de la personne qui "host" une partie multijoueur.
+
 
 
 

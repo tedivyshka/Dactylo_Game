@@ -2,9 +2,7 @@ package model;
 
 import controller.Controller;
 
-import javax.tools.DocumentationTool;
 import java.util.*;
-import java.util.concurrent.Future;
 
 public class GameCompetitiveSolo extends Game{
     private int lives;
